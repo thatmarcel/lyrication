@@ -1,0 +1,9 @@
+Package: com.thatmarcel.tweaks.lyrication
+Name: Lyrication
+Depends: mobilesubstrate
+Version: 1.0.0
+Architecture: iphoneos-arm
+Description: Live Lyrics for Spotify
+Maintainer: Marcel Braun
+Author: Marcel Braun
+Section: Tweaks
