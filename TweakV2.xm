@@ -297,25 +297,6 @@
     }
 @end
 
-/* %hook SPTLyricsV2TextView
-
-- (void) layoutSubviews {
-	%orig;
-	[LCSTWInstance setLyricsView:self];
-
-	self.frame = CGRectMake(0, 0, self.superview.bounds.size.width, self.superview.bounds.size.height + 50.0);
-}
-
-- (void) setHidden:(BOOL)hidden {
-	%orig(NO);
-}
-
-- (void) setAlpha:(double)alpha {
-	%orig(1.0);
-}
-
-%end */
-
 %hook UIApplicationDelegate
 
 -(void)applicationWillEnterForeground:(id)arg1 {
@@ -415,37 +396,3 @@ BOOL addedBottomLyricsCardLabel = NO;
 }
 
 %end
-
-/* %hook SPTLyricsTrackCheckerImplementation
-
-- (BOOL) lyricsAvailableForTrack:(id)arg1 {
-    return YES;
-}
-
-%end
-
-%hook SPTLyricsV2Service
-
-- (BOOL) lyricsAvailableForTrack:(id)arg1 {
-    return YES;
-}
-
-%end
-
-%hook SPTLyricsV2TestManagerImplementation
-
-- (BOOL) isFeatureEnabled {
-    return YES;
-}
-
-%end
-
-%hook SPTLyricsTrackChecker
-
-- (BOOL) lyricsAvailableForTrack:(id)arg1 {
-    return YES;
-}
-
-%end */
-
-// SPTLyricsV2FullscreenHeaderViewController
