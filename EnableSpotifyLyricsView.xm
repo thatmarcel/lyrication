@@ -1,6 +1,6 @@
 #import "SpotifyInterfaces.h"
 
-%hook SPTLyricsV2LyricsView 
+%hook SPTLyricsV2LyricsView
 
 - (void) setHidden:(BOOL)hidden {
 	%orig(NO);
@@ -28,6 +28,30 @@
 
 - (BOOL) isFeatureEnabled {
 	return YES;
+}
+
+%end
+
+%hook SPTLyricsV2TextView
+
+- (void) setHidden:(BOOL)hidden {
+	%orig(YES);
+}
+
+- (void) setAlpha:(double)alpha {
+	%orig(0.0);
+}
+
+%end
+
+%hook SPTLyricsV2ErrorView
+
+- (void) setHidden:(BOOL)hidden {
+	%orig(YES);
+}
+
+- (void) setAlpha:(double)alpha {
+	%orig(0.0);
 }
 
 %end
