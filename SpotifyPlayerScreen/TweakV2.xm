@@ -274,7 +274,7 @@
 
 				    NSError* errorr;
 				    NSArray* json = (NSArray*) [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&errorr];
-				    if (errorr != nil) {
+				    if (errorr != nil || [json count] < 1) {
 					    [self showNoLyricsAvailable];
 					    return;
 				    }
