@@ -4,6 +4,8 @@ ARCHS = arm64 arm64e
 
 include $(THEOS)/makefiles/common.mk
 
-SUBPROJECTS = FetchingAgent SpotifyPlayerScreen ControlCenterModule
+SUBPROJECTS += FetchingAgent
+SUBPROJECTS += SpotifyPlayerScreen
+SUBPROJECTS += ControlCenterModule
 
 include $(THEOS_MAKE_PATH)/aggregate.mk
