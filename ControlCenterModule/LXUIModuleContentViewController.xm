@@ -1,5 +1,4 @@
 #import "LXUIModuleContentViewController.h"
-#import "WGHeaders.h"
 
 @implementation LXUIModuleContentViewController
     @synthesize lineLabel;
