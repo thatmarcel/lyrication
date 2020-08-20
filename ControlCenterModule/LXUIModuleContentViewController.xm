@@ -32,8 +32,8 @@
 
         [self.lineLabel.topAnchor constraintEqualToAnchor: self.view.topAnchor constant: 16].active = YES;
         [self.lineLabel.bottomAnchor constraintEqualToAnchor: self.view.bottomAnchor constant: -16].active = YES;
-        [self.lineLabel.leftAnchor constraintEqualToAnchor: self.view.leftAnchor constant: 16].active = YES;
-        [self.lineLabel.rightAnchor constraintEqualToAnchor: self.view.rightAnchor constant: -16].active = YES;
+        [self.lineLabel.leftAnchor constraintEqualToAnchor: self.view.leftAnchor constant: 24].active = YES;
+        [self.lineLabel.rightAnchor constraintEqualToAnchor: self.view.rightAnchor constant: -24].active = YES;
     }
 
     - (void) setupReceiver {
