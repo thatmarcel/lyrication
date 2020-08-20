@@ -44,12 +44,14 @@
 			NSString *infoTitle = (NSString *) info[@"kMRMediaRemoteNowPlayingInfoTitle"];
 			if (infoTitle == NULL || !isPlaying) {
                 self.lyrics = NULL;
+                self.lastSong = @"";
+                [self broadcastText: @"Paused"];
 				return;
 			}
 			NSString *infoArtist = (NSString *) info[@"kMRMediaRemoteNowPlayingInfoArtist"];
 			NSString *queryString = [NSString stringWithFormat: @"%@%@%@",  infoTitle, @" ", infoArtist];
 
-            if (queryString == lastSong) {
+            if ([queryString isEqual: lastSong]) {
                 return;
             }
 
