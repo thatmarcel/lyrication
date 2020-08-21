@@ -3,6 +3,10 @@
 
 #import "SpotifyInterfaces.h"
 
+#import "../ScrollingLyricsViewController/ScrollingLyricsViewControllerPresenter.h"
+
+ScrollingLyricsViewControllerPresenter *presenter;
+
 // The main class
 @interface LCSTW : NSObject
     // The Spotify player
@@ -375,6 +379,34 @@ BOOL addedBottomLyricsCardLabel = NO;
     [LCSTWInstance setBottomLyricsCardLabel4:label4];
 
     [LCSTWInstance setBottomLyricsCardView:self];
+
+    UIButton *fullLyricsButton = [[UIButton alloc] init];
+    fullLyricsButton.translatesAutoresizingMaskIntoConstraints = false;
+
+    [fullLyricsButton setTitle: @"Expand" forState: UIControlStateNormal];
+
+    fullLyricsButton.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent: 0.9];
+    [fullLyricsButton setTitleColor: [UIColor blackColor] forState: UIControlStateNormal];
+
+    fullLyricsButton.layer.masksToBounds = true;
+    fullLyricsButton.layer.cornerRadius = 8;
+
+    if (fullLyricsButton.titleLabel) {
+        fullLyricsButton.titleLabel.font = [UIFont systemFontOfSize: 16.0 weight: UIFontWeightBold];
+    }
+
+    [self addSubview: fullLyricsButton];
+
+    [fullLyricsButton.heightAnchor constraintEqualToConstant: 30].active = YES;
+    [fullLyricsButton.widthAnchor constraintEqualToConstant: 90].active = YES;
+    [fullLyricsButton.bottomAnchor constraintEqualToAnchor: self.bottomAnchor constant: -16].active = YES;
+    [fullLyricsButton.rightAnchor constraintEqualToAnchor: self.superview.rightAnchor constant: -24].active = YES;
+
+    [fullLyricsButton
+        addTarget: presenter
+        action: @selector(present)
+        forControlEvents: UIControlEventTouchUpInside
+    ];
 }
 
 %end
@@ -393,6 +425,8 @@ BOOL addedBottomLyricsCardLabel = NO;
 
     // Store a reference to the player used by the Spotify app to be able to get playback / control volume etc
     [LCSTWInstance setPlayer:[self player]];
+
+    presenter = [[ScrollingLyricsViewControllerPresenter alloc] initWithViewController: self];
 }
 
 %end
