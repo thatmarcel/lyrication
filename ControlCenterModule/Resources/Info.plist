@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleName</key>
-	<string>LyricationControlCenterModule</string>
+	<string>Lyrication</string>
 	<key>CFBundleExecutable</key>
 	<string>LyricationControlCenterModuleBundle</string>
 	<key>CFBundleIdentifier</key>
@@ -26,7 +26,7 @@
 		<integer>2</integer>
 	</array>
 	<key>NSPrincipalClass</key>
-	<string>LyricationControlCenterModule</string>
+	<string>Lyrication</string>
 	<key>CFBundleSupportedPlatforms</key>
 	<array>
 		<string>iPhoneOS</string>

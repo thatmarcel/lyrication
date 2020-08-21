@@ -1,6 +1,5 @@
 #import <UIKit/UIViewController.h>
 #import <ControlCenterUIKit/CCUIContentModuleContentViewController-Protocol.h>
-#import <Cephei/HBPreferences.h>
 #import "../NSDistributedNotificationCenter.h"
 
 @interface LXUIModuleContentViewController : UIViewController <CCUIContentModuleContentViewController>

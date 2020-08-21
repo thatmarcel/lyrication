@@ -1,8 +1,8 @@
-#import "LyricationControlCenterModule.h"
+#import "Lyrication.h"
 #import <ControlCenterUI/ControlCenterUI-Structs.h>
 #import <objc/runtime.h>
 
-@implementation LyricationControlCenterModule
+@implementation Lyrication
 
     - (instancetype) init {
         if ((self = [super init])) {

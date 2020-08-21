@@ -60,7 +60,9 @@
 
     - (void) controlCenterWillPresent { }
 
-    - (void) viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator { }
+    - (void) viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+        [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    }
 
     - (BOOL) _canShowWhileLocked {
 	    return YES;
