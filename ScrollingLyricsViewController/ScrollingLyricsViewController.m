@@ -254,6 +254,10 @@
     - (void) viewDidAppear:(BOOL)animated {
         [super viewDidAppear: animated];
 
+        if (self.artworkImageView) {
+            return;
+        }
+
         [self setupView];
         [self start];
     }
