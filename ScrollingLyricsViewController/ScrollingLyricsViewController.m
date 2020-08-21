@@ -65,8 +65,8 @@
     }
 
     - (void) start {
-        [self performSelector: @selector(fire) withObject: NULL afterDelay: 0.5];
-        [self performSelector: @selector(reloadMetadata) withObject: NULL afterDelay: 0.5];
+        [self fire];
+        [self reloadMetadata];
     }
 
     - (void) fire {
@@ -120,6 +120,7 @@
 
             self.lastSong = queryString;
 
+            self.lastIndex = -1;
             [self fetchLyricsForSong: queryString];
         });
     }
@@ -216,7 +217,9 @@
 		                [items addObject:newDict];
 	                }
 
-	                [self setLyrics:items];
+	                [self setLyrics: items];
+                    [self.tableView reloadData];
+                    [self updateLyricsForProgress: self.playbackProgress];
                     [self.tableView reloadData];
 			    });
     	    }];
@@ -251,8 +254,8 @@
         self.songArtistLabel.text = (NSString *) info[@"kMRMediaRemoteNowPlayingInfoArtist"];
     }
 
-    - (void) viewDidAppear:(BOOL)animated {
-        [super viewDidAppear: animated];
+    - (void) viewWillAppear:(BOOL)animated {
+        [super viewWillAppear: animated];
 
         if (self.artworkImageView) {
             return;
@@ -260,6 +263,17 @@
 
         [self setupView];
         [self start];
+    }
+
+    - (void) viewDidDisappear:(BOOL)animated {
+        [super viewDidDisappear: animated];
+
+        if (self.presenter && self.presenter.overlayWindow) {
+            [self.presenter.overlayViewController dismissViewControllerAnimated: false completion: nil];
+            self.presenter.overlayWindow.hidden = true;
+            self.presenter.overlayWindow = nil;
+            self.presenter.overlayViewController = nil;
+        }
     }
 
 @end

@@ -426,7 +426,7 @@ BOOL addedBottomLyricsCardLabel = NO;
     // Store a reference to the player used by the Spotify app to be able to get playback / control volume etc
     [LCSTWInstance setPlayer:[self player]];
 
-    presenter = [[ScrollingLyricsViewControllerPresenter alloc] initWithViewController: self];
+    presenter = [[ScrollingLyricsViewControllerPresenter alloc] init];
 }
 
 %end

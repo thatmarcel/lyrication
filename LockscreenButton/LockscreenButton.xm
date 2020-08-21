@@ -69,26 +69,13 @@ UIViewController *lockscreenViewController;
     [lyricsButton.leftAnchor constraintEqualToAnchor: self.rightAnchor constant: 16].active = YES;
     [lyricsButton.rightAnchor constraintEqualToAnchor: self.superview.rightAnchor constant: -16].active = YES;
 
-    presenter = [[ScrollingLyricsViewControllerPresenter alloc] initWithViewController: lockscreenViewController];
+    presenter = [[ScrollingLyricsViewControllerPresenter alloc] init];
 
     [lyricsButton
         addTarget: presenter
         action: @selector(present)
         forControlEvents: UIControlEventTouchUpInside
     ];
-}
-
-%end
-
-%hook SBCoverSheetPrimarySlidingViewController
-
-- (void) viewDidLoad {
-    %orig;
-    lockscreenViewController = self;
-
-    if (presenter) {
-        [presenter setViewController: self];
-    }
 }
 
 %end

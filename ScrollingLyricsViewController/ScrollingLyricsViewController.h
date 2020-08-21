@@ -2,8 +2,11 @@
 #include <MediaRemote/MediaRemote.h>
 #import "UIView+fillSuperview.h"
 #import "LyricsTableViewCell.h"
+#import "ScrollingLyricsViewControllerPresenter.h"
 
 @interface ScrollingLyricsViewController: UIViewController
+
+    @property (retain) ScrollingLyricsViewControllerPresenter *presenter;
 
     @property (retain) UIImageView *artworkImageView;
     @property (retain) UIVisualEffectView *visualEffectView;
