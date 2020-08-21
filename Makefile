@@ -7,5 +7,9 @@ include $(THEOS)/makefiles/common.mk
 SUBPROJECTS += FetchingAgent
 SUBPROJECTS += SpotifyPlayerScreen
 SUBPROJECTS += ControlCenterModule
+SUBPROJECTS += LockscreenButton
 
 include $(THEOS_MAKE_PATH)/aggregate.mk
+
+after-install::
+	install.exec "sbreload"
