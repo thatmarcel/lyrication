@@ -14,22 +14,36 @@ UIViewController *lockscreenViewController;
 %hook MediaControlsVolumeContainerView
 
 - (id) initWithFrame:(CGRect)frame {
+    if (!self.superview.superview.superview || ![self.superview.superview.superview isKindOfClass: %c(CSMediaControlsView)]) {
+        self = %orig;
+        return self;
+    }
     self = %orig(CGRectMake(frame.origin.x, frame.origin.y, frame.size.width - 70 - 32, frame.size.height));
     return self;
 }
 
 - (void) setFrame:(CGRect)frame {
+    if (!self.superview.superview.superview || ![self.superview.superview.superview isKindOfClass: %c(CSMediaControlsView)]) {
+        %orig;
+        return;
+    }
     %orig(CGRectMake(frame.origin.x, frame.origin.y, frame.size.width - 70 - 32, frame.size.height));
 }
 
 - (void) setBounds:(CGRect)bounds {
+    if (!self.superview.superview.superview || ![self.superview.superview.superview isKindOfClass: %c(CSMediaControlsView)]) {
+        %orig;
+        return;
+    }
     %orig(CGRectMake(bounds.origin.x, bounds.origin.y, bounds.size.width - 70 - 32, bounds.size.height));
 }
+
+// superview.superview.superview == CSMediaControlsView
 
 - (void) setOnScreen:(BOOL)isOnScreen {
     %orig;
 
-    if (lyricsButton || !self || !self.superview) {
+    if (lyricsButton || !self || !self.superview || !self.superview.superview.superview || ![self.superview.superview.superview isKindOfClass: %c(CSMediaControlsView)]) {
         return;
     }
 
