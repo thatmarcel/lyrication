@@ -11,7 +11,7 @@
 
     - (void) present {
         ScrollingLyricsViewController *vc = [ScrollingLyricsViewController new];
-        vc.modalPresentationStyle = UIModalPresentationOverFullScreen;
+        // vc.modalPresentationStyle = UIModalPresentationPageSheet;
         [[self viewController] presentViewController: vc animated: true completion: nil];
     }
 @end
