@@ -11,6 +11,9 @@
     - (UITableViewCell *) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
         LXLyricsTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier: @"LXLyricsTableViewCell"];
 
+        cell.standardLineColor = self.standardLineColor;
+        cell.highlightedLineColor = self.highlightedLineColor;
+
         [cell setup];
 
         cell.index = indexPath.row;

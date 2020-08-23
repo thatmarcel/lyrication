@@ -11,6 +11,10 @@
     @synthesize lastSong;
     @synthesize playbackProgress;
     @synthesize lastIndex;
+    @synthesize shouldHideNameAndArtist;
+    @synthesize highlightedLineColor;
+    @synthesize standardLineColor;
+    @synthesize shouldHideBackground;
 
     - (void) setupView {
         self.view.backgroundColor = [UIColor whiteColor];
@@ -21,12 +25,16 @@
         [self.view insertSubview: self.artworkImageView atIndex: 0];
         [self.artworkImageView lxFillSuperview];
 
-        UIVisualEffect *effect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleExtraLight];
+        if (self.shouldHideBackground) {
+            self.artworkImageView.hidden = true;
+        } else {
+            UIVisualEffect *effect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleExtraLight];
 
-        self.visualEffectView = [[UIVisualEffectView alloc] initWithEffect: effect];
-        self.visualEffectView.translatesAutoresizingMaskIntoConstraints = false;
-        [self.artworkImageView addSubview: self.visualEffectView];
-        [self.visualEffectView lxFillSuperview];
+            self.visualEffectView = [[UIVisualEffectView alloc] initWithEffect: effect];
+            self.visualEffectView.translatesAutoresizingMaskIntoConstraints = false;
+            [self.artworkImageView addSubview: self.visualEffectView];
+            [self.visualEffectView lxFillSuperview];
+        }
 
         self.songNameLabel = [[UILabel alloc] init];
         self.songNameLabel.translatesAutoresizingMaskIntoConstraints = false;
@@ -51,7 +59,6 @@
         self.tableView = [[UITableView alloc] init];
         self.tableView.translatesAutoresizingMaskIntoConstraints = false;
         [self.view addSubview: self.tableView];
-        [self.tableView.topAnchor constraintEqualToAnchor: self.songArtistLabel.bottomAnchor constant: 8].active = YES;
         [self.tableView.bottomAnchor constraintEqualToAnchor: self.view.bottomAnchor constant: 0].active = YES;
         [self.tableView.leftAnchor constraintEqualToAnchor: self.view.leftAnchor constant: 32].active = YES;
         [self.tableView.rightAnchor constraintEqualToAnchor: self.view.rightAnchor constant: 0].active = YES;
@@ -62,6 +69,22 @@
         [self.tableView setContentInset: UIEdgeInsetsMake(0, 0, 32, 0)];
         self.tableView.rowHeight = UITableViewAutomaticDimension;
         self.tableView.estimatedRowHeight = 90;
+
+        if (shouldHideNameAndArtist) {
+            self.songNameLabel.hidden = true;
+            self.songArtistLabel.hidden = true;
+            [self.tableView.topAnchor constraintEqualToAnchor: self.view.bottomAnchor constant: 32].active = YES;
+        } else {
+            [self.tableView.topAnchor constraintEqualToAnchor: self.songArtistLabel.bottomAnchor constant: 8].active = YES;
+        }
+
+        if (!self.highlightedLineColor) {
+            self.highlightedLineColor = [UIColor blackColor];
+        }
+
+        if (!self.standardLineColor) {
+            self.standardLineColor = [UIColor colorWithRed: 0.2 green: 0.2 blue: 0.2 alpha: 0.7];
+        }
     }
 
     - (void) start {

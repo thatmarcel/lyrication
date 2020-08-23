@@ -5,12 +5,14 @@
     @synthesize lineLabelTopConstraint;
     @synthesize lineLabelLeftConstraint;
     @synthesize lineHighlighted;
+    @synthesize highlightedLineColor;
+    @synthesize standardLineColor;
 
     - (void) setup {
         if (self.lineLabel) {
             self.lineLabel.transform = CGAffineTransformMakeScale(0.8, 0.8);
             self.lineLabelLeftConstraint.constant = -((self.bounds.size.width - 32) * 0.1);
-            [self.lineLabel setTextColor: [UIColor colorWithRed: 0.2 green: 0.2 blue: 0.2 alpha: 0.7]];
+            [self.lineLabel setTextColor: self.standardLineColor];
 
             [self layoutIfNeeded];
             return;
@@ -25,7 +27,7 @@
         [self addSubview: self.lineLabel];
         self.lineLabel.numberOfLines = 0;
         [self.lineLabel setFont: [UIFont systemFontOfSize: 50 weight: UIFontWeightHeavy]];
-        [self.lineLabel setTextColor: [UIColor colorWithRed: 0.2 green: 0.2 blue: 0.2 alpha: 0.7]];
+        [self.lineLabel setTextColor: self.standardLineColor];
 
         self.lineLabelTopConstraint = [self.lineLabel.topAnchor constraintEqualToAnchor: self.topAnchor constant: 16];
         self.lineLabelTopConstraint.active = YES;
@@ -49,7 +51,7 @@
             animations:^{
                 self.lineLabel.transform = CGAffineTransformMakeScale(1.0, 1.0);
                 self.lineLabelLeftConstraint.constant = 0;
-                [self.lineLabel setTextColor: [UIColor colorWithRed: 0.0 green: 0.0 blue: 0.0 alpha: 1.0]];
+                [self.lineLabel setTextColor: self.highlightedLineColor];
 
                 [self layoutIfNeeded];
             }
@@ -70,7 +72,7 @@
             animations:^{
                 self.lineLabel.transform = CGAffineTransformMakeScale(0.8, 0.8);
                 self.lineLabelLeftConstraint.constant = -((self.bounds.size.width - 32) * 0.1);
-                [self.lineLabel setTextColor: [UIColor colorWithRed: 0.2 green: 0.2 blue: 0.2 alpha: 0.7]];
+                [self.lineLabel setTextColor: self.standardLineColor];
 
                 [self layoutIfNeeded];
             }

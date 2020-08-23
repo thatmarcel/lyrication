@@ -6,6 +6,15 @@
 
 @interface LXScrollingLyricsViewController: UIViewController
 
+    // Hides the background image & blur effect views
+    @property BOOL shouldHideBackground;
+    // Hides the name and artist bar and gives the tableview full height
+    @property BOOL shouldHideNameAndArtist;
+    // The color for the highlighted lyrics line
+    @property UIColor *highlightedLineColor;
+    // The color for the other lyrics lines
+    @property UIColor *standardLineColor;
+
     // The presenter of the view controller, used to remove the window on viewDidDisappear,
     // if NULL / nil, the view controller won't crash, viewDidDisappear will just do nothing
     @property (retain) LXScrollingLyricsViewControllerPresenter *presenter;
