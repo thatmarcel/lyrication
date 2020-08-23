@@ -181,10 +181,14 @@
 
         self.lastIndex = smallestdistanceindex;
 
-        [self.tableView
-            scrollToRowAtIndexPath: [NSIndexPath indexPathForRow: smallestdistanceindex inSection: 0]
-            atScrollPosition: UITableViewScrollPositionTop
-            animated: true];
+        [UIView animateWithDuration: 0.4 delay: 0.0 options: UIViewAnimationOptionCurveEaseInOut
+            animations:^{
+                [self.tableView
+                    scrollToRowAtIndexPath: [NSIndexPath indexPathForRow: smallestdistanceindex inSection: 0]
+                    atScrollPosition: UITableViewScrollPositionTop
+                    animated: true];
+            }
+            completion:^(BOOL finished){ }];
 
         for (LXLyricsTableViewCell* cell in [self.tableView visibleCells]) {
             if (cell.index == smallestdistanceindex) {

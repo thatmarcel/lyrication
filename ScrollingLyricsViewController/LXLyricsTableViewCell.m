@@ -47,7 +47,7 @@
         }
 
         self.lineHighlighted = true;
-        [UIView animateWithDuration: 0.2
+        [UIView animateWithDuration: 0.4 delay: 0.0 options: UIViewAnimationOptionCurveEaseInOut
             animations:^{
                 self.lineLabel.transform = CGAffineTransformMakeScale(1.0, 1.0);
                 self.lineLabelLeftConstraint.constant = 0;
@@ -68,7 +68,7 @@
 
         self.lineHighlighted = false;
 
-        [UIView animateWithDuration: 0.2
+        [UIView animateWithDuration: 0.4 delay: 0.0 options: UIViewAnimationOptionCurveEaseInOut
             animations:^{
                 self.lineLabel.transform = CGAffineTransformMakeScale(0.8, 0.8);
                 self.lineLabelLeftConstraint.constant = -((self.bounds.size.width - 32) * 0.1);
