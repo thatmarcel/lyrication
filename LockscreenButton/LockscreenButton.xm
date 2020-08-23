@@ -70,6 +70,7 @@ UIViewController *lockscreenViewController;
     [lyricsButton.rightAnchor constraintEqualToAnchor: self.superview.rightAnchor constant: -16].active = YES;
 
     presenter = [[ScrollingLyricsViewControllerPresenter alloc] init];
+    presenter.twitterAlertAllowed = true;
 
     [lyricsButton
         addTarget: presenter

@@ -1,5 +1,6 @@
 #import <UIKit/UIKit.h>
 #import <notify.h>
+#import <spawn.h>
 #import "LXSecureWindow.h"
 
 @interface SBLockStateAggregator
@@ -13,6 +14,8 @@
     @property (retain) UIViewController *overlayViewController;
 
     @property int notifyToken;
+
+    @property BOOL twitterAlertAllowed;
 
     - (void) present;
 @end
