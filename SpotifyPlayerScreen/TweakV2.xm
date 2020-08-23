@@ -3,9 +3,9 @@
 
 #import "SpotifyInterfaces.h"
 
-#import "../ScrollingLyricsViewController/ScrollingLyricsViewControllerPresenter.h"
+#import "../ScrollingLyricsViewController/LXScrollingLyricsViewControllerPresenter.h"
 
-ScrollingLyricsViewControllerPresenter *presenter;
+LXScrollingLyricsViewControllerPresenter *presenter;
 
 // The main class
 @interface LCSTW : NSObject
@@ -426,7 +426,7 @@ BOOL addedBottomLyricsCardLabel = NO;
     // Store a reference to the player used by the Spotify app to be able to get playback / control volume etc
     [LCSTWInstance setPlayer:[self player]];
 
-    presenter = [[ScrollingLyricsViewControllerPresenter alloc] init];
+    presenter = [[LXScrollingLyricsViewControllerPresenter alloc] init];
 }
 
 %end

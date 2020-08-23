@@ -1,6 +1,6 @@
-#import "ScrollingLyricsViewController+TableViewDataSource.h"
+#import "LXScrollingLyricsViewController+TableViewDataSource.h"
 
-@implementation ScrollingLyricsViewController (TableViewDataSource)
+@implementation LXScrollingLyricsViewController (TableViewDataSource)
     - (NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
         if ([self.lyrics count] < 1) {
             return 0;
@@ -9,7 +9,7 @@
     }
 
     - (UITableViewCell *) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-        LyricsTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier: @"LyricsTableViewCell"];
+        LXLyricsTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier: @"LXLyricsTableViewCell"];
 
         [cell setup];
 

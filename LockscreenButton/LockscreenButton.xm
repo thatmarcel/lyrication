@@ -1,4 +1,4 @@
-#import "../ScrollingLyricsViewController/ScrollingLyricsViewControllerPresenter.h"
+#import "../ScrollingLyricsViewController/LXScrollingLyricsViewControllerPresenter.h"
 
 @interface SBCoverSheetPrimarySlidingViewController: UIViewController
 @end
@@ -8,7 +8,7 @@
 @end
 
 UIButton *lyricsButton;
-ScrollingLyricsViewControllerPresenter *presenter;
+LXScrollingLyricsViewControllerPresenter *presenter;
 UIViewController *lockscreenViewController;
 
 %hook MediaControlsVolumeContainerView
@@ -69,7 +69,7 @@ UIViewController *lockscreenViewController;
     [lyricsButton.leftAnchor constraintEqualToAnchor: self.rightAnchor constant: 16].active = YES;
     [lyricsButton.rightAnchor constraintEqualToAnchor: self.superview.rightAnchor constant: -16].active = YES;
 
-    presenter = [[ScrollingLyricsViewControllerPresenter alloc] init];
+    presenter = [[LXScrollingLyricsViewControllerPresenter alloc] init];
     presenter.twitterAlertAllowed = true;
 
     [lyricsButton

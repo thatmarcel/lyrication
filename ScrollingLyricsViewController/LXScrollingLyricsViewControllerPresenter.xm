@@ -1,7 +1,7 @@
-#import "ScrollingLyricsViewController.h"
-#import "ScrollingLyricsViewControllerPresenter.h"
+#import "LXScrollingLyricsViewController.h"
+#import "LXScrollingLyricsViewControllerPresenter.h"
 
-@implementation ScrollingLyricsViewControllerPresenter
+@implementation LXScrollingLyricsViewControllerPresenter
     @synthesize overlayWindow;
     @synthesize overlayViewController;
     @synthesize notifyToken;
@@ -25,7 +25,7 @@
     - (void) present {
         BOOL shouldShowAlert = [[%c(SBLockStateAggregator) sharedInstance] lockState] <= 1 && self.twitterAlertAllowed && ![[NSUserDefaults standardUserDefaults] boolForKey: @"com.thatmarcel.tweaks.lyrication.defaultprefs.showntwtalertonce"];
 
-        ScrollingLyricsViewController *vc = [ScrollingLyricsViewController new];
+        LXScrollingLyricsViewController *vc = [LXScrollingLyricsViewController new];
 
         self.overlayViewController = [[UIViewController alloc] init];
 

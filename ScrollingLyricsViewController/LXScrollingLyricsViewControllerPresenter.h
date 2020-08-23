@@ -8,7 +8,7 @@
     - (unsigned long long) lockState;
 @end
 
-@interface ScrollingLyricsViewControllerPresenter: NSObject
+@interface LXScrollingLyricsViewControllerPresenter: NSObject
 
     @property (retain) UIWindow *overlayWindow;
     @property (retain) UIViewController *overlayViewController;

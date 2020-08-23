@@ -1,7 +1,7 @@
-#import "ScrollingLyricsViewController.h"
-#import "ScrollingLyricsViewController+TableViewDataSource.h"
+#import "LXScrollingLyricsViewController.h"
+#import "LXScrollingLyricsViewController+TableViewDataSource.h"
 
-@implementation ScrollingLyricsViewController
+@implementation LXScrollingLyricsViewController
     @synthesize artworkImageView;
     @synthesize visualEffectView;
     @synthesize songNameLabel;
@@ -19,14 +19,14 @@
         self.artworkImageView.contentMode = UIViewContentModeScaleAspectFill;
         self.artworkImageView.translatesAutoresizingMaskIntoConstraints = false;
         [self.view insertSubview: self.artworkImageView atIndex: 0];
-        [self.artworkImageView fillSuperview];
+        [self.artworkImageView lxFillSuperview];
 
         UIVisualEffect *effect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleExtraLight];
 
         self.visualEffectView = [[UIVisualEffectView alloc] initWithEffect: effect];
         self.visualEffectView.translatesAutoresizingMaskIntoConstraints = false;
         [self.artworkImageView addSubview: self.visualEffectView];
-        [self.visualEffectView fillSuperview];
+        [self.visualEffectView lxFillSuperview];
 
         self.songNameLabel = [[UILabel alloc] init];
         self.songNameLabel.translatesAutoresizingMaskIntoConstraints = false;
@@ -58,7 +58,7 @@
         self.tableView.dataSource = self;
         self.tableView.backgroundColor = [UIColor clearColor];
         self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        [self.tableView registerClass: LyricsTableViewCell.class forCellReuseIdentifier: @"LyricsTableViewCell"];
+        [self.tableView registerClass: LXLyricsTableViewCell.class forCellReuseIdentifier: @"LXLyricsTableViewCell"];
         [self.tableView setContentInset: UIEdgeInsetsMake(0, 0, 32, 0)];
         self.tableView.rowHeight = UITableViewAutomaticDimension;
         self.tableView.estimatedRowHeight = 90;
@@ -163,7 +163,7 @@
             atScrollPosition: UITableViewScrollPositionTop
             animated: true];
 
-        for (LyricsTableViewCell* cell in [self.tableView visibleCells]) {
+        for (LXLyricsTableViewCell* cell in [self.tableView visibleCells]) {
             if (cell.index == smallestdistanceindex) {
                 [cell highlight];
             } else /* if (cell.index - 1 == smallestdistanceindex) */ {

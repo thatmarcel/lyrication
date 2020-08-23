@@ -1,7 +1,7 @@
-#import "UIView+fillSuperview.h"
+#import "UIView+lxFillSuperview.h"
 
-@implementation UIView (FillSuperview)
-    - (void) fillSuperview {
+@implementation UIView (lxFillSuperview)
+    - (void) lxFillSuperview {
         [self.topAnchor constraintEqualToAnchor: self.superview.topAnchor constant: 0].active = YES;
         [self.bottomAnchor constraintEqualToAnchor: self.superview.bottomAnchor constant: 0].active = YES;
         [self.leftAnchor constraintEqualToAnchor: self.superview.leftAnchor constant: 0].active = YES;

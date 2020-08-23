@@ -1,6 +1,6 @@
-#import "LyricsTableViewCell.h"
+#import "LXLyricsTableViewCell.h"
 
-@implementation LyricsTableViewCell: UITableViewCell
+@implementation LXLyricsTableViewCell: UITableViewCell
     @synthesize lineLabel;
     @synthesize lineLabelTopConstraint;
     @synthesize lineLabelLeftConstraint;

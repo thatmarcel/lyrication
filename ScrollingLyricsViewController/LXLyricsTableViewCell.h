@@ -1,6 +1,6 @@
 #import <UIKit/UIKit.h>
 
-@interface LyricsTableViewCell: UITableViewCell
+@interface LXLyricsTableViewCell: UITableViewCell
 
     @property (retain) UILabel *lineLabel;
 
