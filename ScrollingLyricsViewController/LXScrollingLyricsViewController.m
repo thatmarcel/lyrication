@@ -41,7 +41,11 @@
         self.songNameLabel = [[UILabel alloc] init];
         self.songNameLabel.translatesAutoresizingMaskIntoConstraints = false;
         self.songNameLabel.numberOfLines = 1;
-        [self.songNameLabel setFont: [UIFont systemFontOfSize: 56 weight: UIFontWeightBlack]];
+        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+            [self.songNameLabel setFont: [UIFont systemFontOfSize: 56 weight: UIFontWeightBlack]];
+        } else {
+            [self.songNameLabel setFont: [UIFont systemFontOfSize: 42 weight: UIFontWeightBlack]];
+        }
         [self.songNameLabel setTextColor: [UIColor blackColor]];
         [self.view addSubview: self.songNameLabel];
         [self.songNameLabel.topAnchor constraintEqualToAnchor: self.view.topAnchor constant: 32].active = YES;
