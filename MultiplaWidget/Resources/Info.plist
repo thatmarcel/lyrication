@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleExecutable</key>
-	<string>LyricationMultiplaWidget</string>
+	<string>LyricationMultiplaModuleBundle</string>
 	<key>NSPrincipalClass</key>
 	<string>LyricationMultiplaWidget</string>
 	<key>name</key>

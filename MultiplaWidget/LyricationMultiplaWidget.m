@@ -22,7 +22,7 @@
         self.lineLabel.translatesAutoresizingMaskIntoConstraints = NO;
         self.lineLabel.textAlignment = NSTextAlignmentCenter;
 
-        [self.lineLabel setFont: [UIFont boldSystemFontOfSize: 28]];
+        [self.lineLabel setFont: [UIFont boldSystemFontOfSize: 18]];
         [self.lineLabel setTextColor: [UIColor whiteColor]];
 
         [self addSubview: self.lineLabel];
