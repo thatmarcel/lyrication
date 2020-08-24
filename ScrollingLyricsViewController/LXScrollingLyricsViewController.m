@@ -17,6 +17,7 @@
     @synthesize shouldHideBackground;
     @synthesize metadataTimer;
     @synthesize lyricsTimer;
+    @synthesize staticLyricsTextView;
 
     - (BOOL) _canShowWhileLocked {
         return true;
@@ -82,13 +83,36 @@
         [self.tableView setContentInset: UIEdgeInsetsMake(0, 0, 32, 0)];
         self.tableView.rowHeight = UITableViewAutomaticDimension;
         self.tableView.estimatedRowHeight = 90;
+        self.tableView.showsHorizontalScrollIndicator = false;
+        self.tableView.showsVerticalScrollIndicator = false;
+
+        self.staticLyricsTextView = [[UITextView alloc] init];
+        self.staticLyricsTextView.translatesAutoresizingMaskIntoConstraints = false;
+        [self.view addSubview: self.staticLyricsTextView];
+        [self.staticLyricsTextView.bottomAnchor constraintEqualToAnchor: self.view.bottomAnchor constant: 0].active = YES;
+        [self.staticLyricsTextView.leftAnchor constraintEqualToAnchor: self.view.leftAnchor constant: 0].active = YES;
+        [self.staticLyricsTextView.rightAnchor constraintEqualToAnchor: self.view.rightAnchor constant: 0].active = YES;
+        self.staticLyricsTextView.text = @"";
+        self.staticLyricsTextView.editable = false;
+        self.staticLyricsTextView.selectable = false;
+        self.staticLyricsTextView.backgroundColor = [UIColor clearColor];
+        [self.staticLyricsTextView setFont: [UIFont systemFontOfSize: 20]];
+        [self.staticLyricsTextView setTextColor: [[UIColor blackColor] colorWithAlphaComponent: 0.8]];
+        [self.staticLyricsTextView setContentInset: UIEdgeInsetsMake(0, 32, 32, 32)];
+        self.staticLyricsTextView.showsHorizontalScrollIndicator = false;
+        self.staticLyricsTextView.showsVerticalScrollIndicator = false;
+
+        self.tableView.hidden = true;
+        self.staticLyricsTextView.hidden = true;
 
         if (shouldHideNameAndArtist) {
             self.songNameLabel.hidden = true;
             self.songArtistLabel.hidden = true;
             [self.tableView.topAnchor constraintEqualToAnchor: self.view.bottomAnchor constant: 32].active = YES;
+            [self.staticLyricsTextView.topAnchor constraintEqualToAnchor: self.view.bottomAnchor constant: 32].active = YES;
         } else {
             [self.tableView.topAnchor constraintEqualToAnchor: self.songArtistLabel.bottomAnchor constant: 8].active = YES;
+            [self.staticLyricsTextView.topAnchor constraintEqualToAnchor: self.songArtistLabel.bottomAnchor constant: 8].active = YES;
         }
 
         if (!self.highlightedLineColor) {
@@ -98,6 +122,44 @@
         if (!self.standardLineColor) {
             self.standardLineColor = [UIColor colorWithRed: 0.2 green: 0.2 blue: 0.2 alpha: 0.7];
         }
+    }
+
+    - (void) fetchStaticLyricsForSong:(NSString*)song {
+        self.staticLyricsTextView.text = @"Loading...";
+
+        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+	    dispatch_async(queue, ^{
+		    NSURLSessionConfiguration *defaultSessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
+    	    NSURLSession *defaultSession = [NSURLSession sessionWithConfiguration:defaultSessionConfiguration];
+		    NSString *query = [song stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
+		    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"https://api.textyl.co/api/staticlyrics?q=%@", query]];
+		    NSURLSessionDataTask *dataTask = [defaultSession dataTaskWithURL: url completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+			    dispatch_async(dispatch_get_main_queue(), ^{
+                    if (![[self lastSong] isEqual:song]) {
+					    return;
+				    }
+
+				    NSInteger statusCode = 0;
+
+				    if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
+    				    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+    				    statusCode = httpResponse.statusCode;
+				    }
+
+				    if (statusCode != 200 || data == nil) {
+					    [self showNoLyricsAvailable];
+					    return;
+				    }
+
+                    NSString *staticLyrics = [[NSString alloc] initWithData: data encoding: NSUTF8StringEncoding];
+
+                    self.staticLyricsTextView.text = staticLyrics;
+                    self.staticLyricsTextView.scrollEnabled = false;
+                    self.staticLyricsTextView.scrollEnabled = true;
+                });
+            }];
+            [dataTask resume];
+        });
     }
 
     - (void) start {
@@ -232,6 +294,11 @@
         self.lyrics = NULL;
         // [self broadcastText: @"Loading..."];
 
+        self.tableView.hidden = false;
+        self.staticLyricsTextView.hidden = true;
+
+        [self fetchStaticLyricsForSong: song];
+
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
 	    dispatch_async(queue, ^{
 		    NSURLSessionConfiguration *defaultSessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
@@ -273,6 +340,9 @@
 		                [items addObject:newDict];
 	                }
 
+                    self.tableView.hidden = false;
+                    self.staticLyricsTextView.hidden = true;
+
 	                [self setLyrics: items];
                     [self.tableView reloadData];
                     [self updateLyricsForProgress: self.playbackProgress];
@@ -285,12 +355,15 @@
 
     - (void) showNoLyricsAvailable {
         NSMutableArray *items = [NSMutableArray array];
-        NSDictionary *dict = @{ @"lyrics": @"No lyrics available", @"seconds": [NSNumber numberWithDouble: 1.0] };
+        NSDictionary *dict = @{ @"lyrics": @"Loading...", @"seconds": [NSNumber numberWithDouble: 1.0] };
         [items addObject: dict];
 
         self.lyrics = items;
 
         [self.tableView reloadData];
+
+        self.tableView.hidden = true;
+        self.staticLyricsTextView.hidden = false;
     }
 
     // Reload metadata every 5 seconds to show artwork, if the playing app took longer to load it

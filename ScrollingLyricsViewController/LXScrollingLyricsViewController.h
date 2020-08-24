@@ -28,6 +28,8 @@
     @property (retain) UILabel *songArtistLabel;
     @property (retain) UITableView *tableView;
 
+    @property (retain) UITextView *staticLyricsTextView;
+
     // The lyrics of the currently playing song
     @property (retain) NSArray *lyrics;
     // The song that was playing on the last execution of the timer
@@ -60,6 +62,8 @@
     - (void) showNoLyricsAvailable;
     // Reload metadata every 5 seconds to show artwork, if the playing app took longer to load it
     - (void) reloadMetadata;
+    // Fetch unsynchronized lyrics
+    - (void) fetchStaticLyricsForSong:(NSString*)song;
 
     - (BOOL) _canShowWhileLocked;
 @end
