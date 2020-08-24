@@ -52,6 +52,9 @@
         [self.songNameLabel.leftAnchor constraintEqualToAnchor: self.view.leftAnchor constant: 32].active = YES;
         [self.songNameLabel.rightAnchor constraintEqualToAnchor: self.view.rightAnchor constant: -32].active = YES;
 
+        self.songNameLabel.minimumScaleFactor = 0.8;
+        self.songNameLabel.adjustsFontSizeToFitWidth = true;
+
         self.songArtistLabel = [[UILabel alloc] init];
         self.songArtistLabel.translatesAutoresizingMaskIntoConstraints = false;
         self.songArtistLabel.numberOfLines = 1;

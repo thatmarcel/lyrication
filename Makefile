@@ -8,6 +8,7 @@ SUBPROJECTS += FetchingAgent
 SUBPROJECTS += SpotifyPlayerScreen
 SUBPROJECTS += ControlCenterModule
 SUBPROJECTS += LockscreenButton
+SUBPROJECTS += MultiplaWidget
 
 include $(THEOS_MAKE_PATH)/aggregate.mk
 
