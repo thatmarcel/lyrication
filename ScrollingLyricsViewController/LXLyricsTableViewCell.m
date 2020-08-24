@@ -26,7 +26,11 @@
         self.lineLabel.translatesAutoresizingMaskIntoConstraints = false;
         [self addSubview: self.lineLabel];
         self.lineLabel.numberOfLines = 0;
-        [self.lineLabel setFont: [UIFont systemFontOfSize: 50 weight: UIFontWeightHeavy]];
+        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+            [self.lineLabel setFont: [UIFont systemFontOfSize: 50 weight: UIFontWeightHeavy]];
+        } else {
+            [self.lineLabel setFont: [UIFont systemFontOfSize: 40 weight: UIFontWeightHeavy]];
+        }
         [self.lineLabel setTextColor: self.standardLineColor];
 
         self.lineLabelTopConstraint = [self.lineLabel.topAnchor constraintEqualToAnchor: self.topAnchor constant: 16];
