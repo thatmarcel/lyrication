@@ -4,17 +4,22 @@
     @synthesize lyrics;
     @synthesize lastSong;
     @synthesize playbackProgress;
+    @synthesize lyricsTimer;
 
     // Store one instance of the main class
     static LyricsFetcher *LyricsFetcherInstance;
 
     - (void) start {
         [self fire];
+        self.lyricsTimer = [NSTimer scheduledTimerWithTimeInterval: 0.2
+                 target: self
+                 selector: @selector(fire)
+                 userInfo: nil
+                 repeats: true];
     }
 
     - (void) fire {
         [self fetchCurrentPlayback];
-        [self performSelector:@selector(fire) withObject:NULL afterDelay:0.5];
 
         if (!lyrics || !playbackProgress) {
             return;

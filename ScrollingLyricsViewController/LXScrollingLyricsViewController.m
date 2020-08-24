@@ -15,6 +15,8 @@
     @synthesize highlightedLineColor;
     @synthesize standardLineColor;
     @synthesize shouldHideBackground;
+    @synthesize metadataTimer;
+    @synthesize lyricsTimer;
 
     - (void) setupView {
         self.view.backgroundColor = [UIColor whiteColor];
@@ -44,7 +46,7 @@
         [self.view addSubview: self.songNameLabel];
         [self.songNameLabel.topAnchor constraintEqualToAnchor: self.view.topAnchor constant: 32].active = YES;
         [self.songNameLabel.leftAnchor constraintEqualToAnchor: self.view.leftAnchor constant: 32].active = YES;
-        [self.songNameLabel.rightAnchor constraintEqualToAnchor: self.view.rightAnchor constant: 32].active = YES;
+        [self.songNameLabel.rightAnchor constraintEqualToAnchor: self.view.rightAnchor constant: -32].active = YES;
 
         self.songArtistLabel = [[UILabel alloc] init];
         self.songArtistLabel.translatesAutoresizingMaskIntoConstraints = false;
@@ -54,7 +56,7 @@
         [self.view addSubview: self.songArtistLabel];
         [self.songArtistLabel.topAnchor constraintEqualToAnchor: self.songNameLabel.bottomAnchor constant: 2].active = YES;
         [self.songArtistLabel.leftAnchor constraintEqualToAnchor: self.view.leftAnchor constant: 32].active = YES;
-        [self.songArtistLabel.rightAnchor constraintEqualToAnchor: self.view.rightAnchor constant: 32].active = YES;
+        [self.songArtistLabel.rightAnchor constraintEqualToAnchor: self.view.rightAnchor constant: -32].active = YES;
 
         self.tableView = [[UITableView alloc] init];
         self.tableView.translatesAutoresizingMaskIntoConstraints = false;
@@ -89,12 +91,22 @@
 
     - (void) start {
         [self fire];
+        self.lyricsTimer = [NSTimer scheduledTimerWithTimeInterval: 0.2
+                 target: self
+                 selector: @selector(fire)
+                 userInfo: nil
+                 repeats: true];
+
         [self reloadMetadata];
+        self.metadataTimer = [NSTimer scheduledTimerWithTimeInterval: 5.0
+                 target: self
+                 selector: @selector(reloadMetadata)
+                 userInfo: nil
+                 repeats: true];
     }
 
     - (void) fire {
         [self fetchCurrentPlayback];
-        [self performSelector:@selector(fire) withObject:NULL afterDelay: 0.2];
 
         if (!lyrics || !playbackProgress || [@"" isEqual: self.lastSong]) {
             return;
@@ -181,14 +193,7 @@
 
         self.lastIndex = smallestdistanceindex;
 
-        [UIView animateWithDuration: 0.4 delay: 0.0 options: UIViewAnimationOptionCurveEaseInOut
-            animations:^{
-                [self.tableView
-                    scrollToRowAtIndexPath: [NSIndexPath indexPathForRow: smallestdistanceindex inSection: 0]
-                    atScrollPosition: UITableViewScrollPositionTop
-                    animated: true];
-            }
-            completion:^(BOOL finished){ }];
+        [self.tableView beginUpdates];
 
         for (LXLyricsTableViewCell* cell in [self.tableView visibleCells]) {
             if (cell.index == smallestdistanceindex) {
@@ -197,6 +202,19 @@
                 [cell unhighlight];
             }
         }
+
+        [self.tableView endUpdates];
+
+        [UIView animateWithDuration: 0.4 delay: 0.0 options: UIViewAnimationOptionCurveEaseInOut
+            animations:^{
+                [self.tableView
+                    scrollToRowAtIndexPath: [NSIndexPath indexPathForRow: smallestdistanceindex inSection: 0]
+                    atScrollPosition: UITableViewScrollPositionTop
+                    animated: true];
+            }
+            completion:^(BOOL finished){
+                // [self.tableView endUpdates];
+            }];
     }
 
     - (void) fetchLyricsForSong:(NSString*)song {
@@ -266,8 +284,6 @@
 
     // Reload metadata every 5 seconds to show artwork, if the playing app took longer to load it
     - (void) reloadMetadata {
-        [self performSelector: @selector(reloadMetadata) withObject: NULL afterDelay: 5.0];
-
         MRMediaRemoteGetNowPlayingInfo(dispatch_get_main_queue(), ^(CFDictionaryRef information) {
 			NSDictionary *info = (__bridge NSDictionary*) information;
 
@@ -294,6 +310,11 @@
 
     - (void) viewDidDisappear:(BOOL)animated {
         [super viewDidDisappear: animated];
+
+        [self.lyricsTimer invalidate];
+        [self.metadataTimer invalidate];
+        self.lyricsTimer = nil;
+        self.metadataTimer = nil;
 
         if (self.presenter && self.presenter.overlayWindow) {
             [self.presenter.overlayViewController dismissViewControllerAnimated: false completion: nil];

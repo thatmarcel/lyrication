@@ -38,6 +38,9 @@
     // The index of the last line that was shown, checked, so that animations are only done when a new line appears
     @property int lastIndex;
 
+    @property (retain) NSTimer *metadataTimer;
+    @property (retain) NSTimer *lyricsTimer;
+
     // Configurates the view, called by viewDidLoad
     - (void) setupView;
     // Updates the artwork, song name and artist

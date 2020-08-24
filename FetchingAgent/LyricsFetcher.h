@@ -10,6 +10,8 @@
     // The current progress of the current music playback in seconds (e.g. 204.34 seconds)
     @property double playbackProgress;
 
+    @property (retain) NSTimer *lyricsTimer;
+
     - (void) start;
     - (void) fire;
     - (void) fetchCurrentPlayback;

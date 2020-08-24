@@ -40,6 +40,8 @@ LXScrollingLyricsViewControllerPresenter *presenter;
     // The container view of the bottom lyrics card
     @property (retain) SPTLyricsV2LyricsView *bottomLyricsCardView;
 
+    @property (retain) NSTimer *lyricsTimer;
+
     // Starts the timer
     - (void) start;
     // Called every x seconds by the timer
@@ -70,6 +72,7 @@ LXScrollingLyricsViewControllerPresenter *presenter;
     @synthesize bottomLyricsCardLabel2CenterYConstraint;
     @synthesize bottomLyricsCardView;
     @synthesize bottomLyricsCardLabel1BottomConstraint;
+    @synthesize lyricsTimer;
 
     // Store one instance of the main class
     static LCSTW *LCSTWInstance;
@@ -77,7 +80,11 @@ LXScrollingLyricsViewControllerPresenter *presenter;
     // Starts the timer
     - (void) start {
         [self fire];
-        [self performSelector:@selector(start) withObject:NULL afterDelay:0.5];
+        self.lyricsTimer = [NSTimer scheduledTimerWithTimeInterval: 0.5
+                 target: self
+                 selector: @selector(fire)
+                 userInfo: nil
+                 repeats: true];
     }
 
     // Called every x seconds by the timer
