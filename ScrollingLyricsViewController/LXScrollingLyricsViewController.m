@@ -19,6 +19,10 @@
     @synthesize lyricsTimer;
     @synthesize staticLyricsTextView;
 
+    - (PanModalHeight) longFormHeight {
+        return PanModalHeightMake(PanModalHeightTypeMaxTopInset, 44);
+    }
+
     - (BOOL) _canShowWhileLocked {
         return true;
     }
@@ -49,7 +53,7 @@
         if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
             [self.songNameLabel setFont: [UIFont systemFontOfSize: 56 weight: UIFontWeightBlack]];
         } else {
-            [self.songNameLabel setFont: [UIFont systemFontOfSize: 42 weight: UIFontWeightBlack]];
+            [self.songNameLabel setFont: [UIFont systemFontOfSize: 40 weight: UIFontWeightBlack]];
         }
         [self.songNameLabel setTextColor: [UIColor blackColor]];
         [self.view addSubview: self.songNameLabel];

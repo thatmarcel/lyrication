@@ -2,6 +2,7 @@
 #import <notify.h>
 #import <spawn.h>
 #import "LXSecureWindow.h"
+#import "HWPanModal/HWPanModal.h"
 
 @interface SBLockStateAggregator
     + (id) sharedInstance;

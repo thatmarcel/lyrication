@@ -7,9 +7,17 @@
     @property (retain) UIViewController* _viewDelegate;
 @end
 
+@interface MediaControlsHeaderView: UIView
+@end
+
 UIButton *lyricsButton;
 LXScrollingLyricsViewControllerPresenter *presenter;
 UIViewController *lockscreenViewController;
+
+%ctor {
+    presenter = [[LXScrollingLyricsViewControllerPresenter alloc] init];
+    presenter.twitterAlertAllowed = true;
+}
 
 %hook MediaControlsVolumeContainerView
 
@@ -69,14 +77,25 @@ UIViewController *lockscreenViewController;
     [lyricsButton.leftAnchor constraintEqualToAnchor: self.rightAnchor constant: 16].active = YES;
     [lyricsButton.rightAnchor constraintEqualToAnchor: self.superview.rightAnchor constant: -16].active = YES;
 
-    presenter = [[LXScrollingLyricsViewControllerPresenter alloc] init];
-    presenter.twitterAlertAllowed = true;
-
     [lyricsButton
         addTarget: presenter
         action: @selector(present)
         forControlEvents: UIControlEventTouchUpInside
     ];
+}
+
+%end
+
+%hook MediaControlsHeaderView
+
+- (void) setArtworkView:(UIImageView *)imageView {
+    %orig;
+
+    UILongPressGestureRecognizer* longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget: presenter action: @selector(present)];
+    [longPressGesture setMinimumPressDuration: 1.5];
+    [imageView addGestureRecognizer: longPressGesture];
+
+    imageView.userInteractionEnabled = true;
 }
 
 %end

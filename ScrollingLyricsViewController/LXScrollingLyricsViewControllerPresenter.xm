@@ -78,7 +78,7 @@
             return;
         }
 
-        [[self overlayViewController] presentViewController: vc animated: true completion: nil];
+        [[self overlayViewController] presentPanModal: vc];
 
         return;
     }

@@ -3,8 +3,9 @@
 #import "UIView+lxFillSuperview.h"
 #import "LXLyricsTableViewCell.h"
 #import "LXScrollingLyricsViewControllerPresenter.h"
+#import "HWPanModal/HWPanModal.h"
 
-@interface LXScrollingLyricsViewController: UIViewController
+@interface LXScrollingLyricsViewController: UIViewController <HWPanModalPresentable>
 
     // Hides the background image & blur effect views
     @property BOOL shouldHideBackground;
