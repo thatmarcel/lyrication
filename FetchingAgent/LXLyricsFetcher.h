@@ -1,7 +1,7 @@
 #include <MediaRemote/MediaRemote.h>
 #import "../NSDistributedNotificationCenter.h"
 
-@interface LyricsFetcher : NSObject
+@interface LXLyricsFetcher : NSObject
 
     // The lyrics of the currently playing song or NULL if nothing is playing
     @property (retain) NSArray *lyrics;

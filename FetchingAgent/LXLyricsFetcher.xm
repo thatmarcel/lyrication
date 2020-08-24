@@ -1,13 +1,13 @@
-#import "LyricsFetcher.h"
+#import "LXLyricsFetcher.h"
 
-@implementation LyricsFetcher
+@implementation LXLyricsFetcher
     @synthesize lyrics;
     @synthesize lastSong;
     @synthesize playbackProgress;
     @synthesize lyricsTimer;
 
     // Store one instance of the main class
-    static LyricsFetcher *LyricsFetcherInstance;
+    static LXLyricsFetcher *LXLyricsFetcherInstance;
 
     - (void) start {
         [self fire];
@@ -168,6 +168,6 @@
 @end
 
 %ctor {
-    LyricsFetcherInstance = [[LyricsFetcher alloc] init];
-    [LyricsFetcherInstance start];
+    LXLyricsFetcherInstance = [[LXLyricsFetcher alloc] init];
+    [LXLyricsFetcherInstance start];
 }
