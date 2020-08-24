@@ -60,4 +60,6 @@
     - (void) showNoLyricsAvailable;
     // Reload metadata every 5 seconds to show artwork, if the playing app took longer to load it
     - (void) reloadMetadata;
+
+    - (BOOL) _canShowWhileLocked;
 @end

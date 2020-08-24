@@ -18,6 +18,10 @@
     @synthesize metadataTimer;
     @synthesize lyricsTimer;
 
+    - (BOOL) _canShowWhileLocked {
+        return true;
+    }
+
     - (void) setupView {
         self.view.backgroundColor = [UIColor whiteColor];
 
