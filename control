@@ -1,7 +1,7 @@
 Package: com.thatmarcel.tweaks.lyrication
 Name: Lyrication
 Depends: mobilesubstrate, com.opa334.ccsupport
-Version: 2.1.1
+Version: 2.1.2
 Architecture: iphoneos-arm
 Description: Live Lyrics for music
 Maintainer: Marcel Braun

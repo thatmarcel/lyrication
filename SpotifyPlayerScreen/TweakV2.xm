@@ -47,7 +47,7 @@ LXScrollingLyricsViewControllerPresenter *presenter;
     // Called every x seconds by the timer
     - (void) fire;
     // Fetch the lyrics for the currently playing song
-    - (void) fetchLyricsForSong:(NSString*)song;
+    - (void) fetchLyricsForSong:(NSString*)song byArtist:(NSString*)artist;
     // Show a message that no lyrics are available for the currently playing song
     - (void) showNoLyricsAvailable;
     // Update the displayed lyrics (assumes lyrics != NULL)
@@ -120,7 +120,7 @@ LXScrollingLyricsViewControllerPresenter *presenter;
 
         [self setLyrics:NULL];
         [self setText:@"Loading..."];
-        [self fetchLyricsForSong:song];
+        [self fetchLyricsForSong: trackTitle byArtist: artistName];
     }
 
     - (void) updateLyricsForProgress:(double)progress {
@@ -258,16 +258,17 @@ LXScrollingLyricsViewControllerPresenter *presenter;
         [self setText:@"No lyrics available"];
     }
 
-    - (void) fetchLyricsForSong:(NSString*)song {
+    - (void) fetchLyricsForSong:(NSString*)song byArtist:(NSString*)artist {
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
 	    dispatch_async(queue, ^{
 		    NSURLSessionConfiguration *defaultSessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
     	    NSURLSession *defaultSession = [NSURLSession sessionWithConfiguration:defaultSessionConfiguration];
-		    NSString *query = [song stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
-		    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"https://api.textyl.co/api/lyrics?q=%@", query]];
+            NSString *escapedSong = [song stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
+            NSString *escapedArtist = [artist stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
+		    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"https://prv.textyl.co/api/lyrics?name=%@&artist=%@", escapedSong, escapedArtist]];
 		    NSURLSessionDataTask *dataTask = [defaultSession dataTaskWithURL: url completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
 			    dispatch_async(dispatch_get_main_queue(), ^{
-				    if (![[self lastSong] isEqual:song]) {
+				    if (![[self lastSong] isEqual: [NSString stringWithFormat: @"%@%@%@",  song, @" ", artist]]) {
 					    return;
 				    }
 

@@ -15,7 +15,7 @@
     - (void) start;
     - (void) fire;
     - (void) fetchCurrentPlayback;
-    - (void) fetchLyricsForSong:(NSString*)song;
+    - (void) fetchLyricsForSong:(NSString*)song byArtist:(NSString*)artist;
     - (void) updateLyricsForProgress:(double)progress;
     - (void) showNoLyricsAvailable;
     - (void) broadcastText:(NSString*)text;

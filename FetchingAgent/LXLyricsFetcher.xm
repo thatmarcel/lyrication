@@ -62,11 +62,11 @@
 
             self.lastSong = queryString;
 
-            [self fetchLyricsForSong: queryString];
+            [self fetchLyricsForSong: infoTitle byArtist: infoArtist];
         });
     }
 
-    - (void) fetchLyricsForSong:(NSString*)song {
+    - (void) fetchLyricsForSong:(NSString*)song byArtist:(NSString*)artist {
         self.lyrics = NULL;
         [self broadcastText: @"Loading..."];
 
@@ -74,11 +74,12 @@
 	    dispatch_async(queue, ^{
 		    NSURLSessionConfiguration *defaultSessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
     	    NSURLSession *defaultSession = [NSURLSession sessionWithConfiguration:defaultSessionConfiguration];
-		    NSString *query = [song stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
-		    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"https://api.textyl.co/api/lyrics?q=%@", query]];
+		    NSString *escapedSong = [song stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
+            NSString *escapedArtist = [artist stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
+		    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"https://prv.textyl.co/api/lyrics?name=%@&artist=%@", escapedSong, escapedArtist]];
 		    NSURLSessionDataTask *dataTask = [defaultSession dataTaskWithURL: url completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
 			    dispatch_async(dispatch_get_main_queue(), ^{
-				    if (![[self lastSong] isEqual:song]) {
+				    if (![[self lastSong] isEqual: [NSString stringWithFormat: @"%@%@%@",  song, @" ", artist]]) {
 					    return;
 				    }
 

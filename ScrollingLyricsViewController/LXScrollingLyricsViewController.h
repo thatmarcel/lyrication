@@ -55,7 +55,7 @@
     // Gets the current playback and passes it to the method below
     - (void) fetchCurrentPlayback;
     // Fetches the lyrics from the server
-    - (void) fetchLyricsForSong:(NSString*)song;
+    - (void) fetchLyricsForSong:(NSString*)song byArtist:(NSString*)artist;
     // Updates the current lyrics line and does the animation / scrolling
     - (void) updateLyricsForProgress:(double)progress;
     // Just makes "No lyrics available" the only lyrics line
