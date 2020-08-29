@@ -132,7 +132,7 @@
 		    NSURLSessionConfiguration *defaultSessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
     	    NSURLSession *defaultSession = [NSURLSession sessionWithConfiguration:defaultSessionConfiguration];
 		    NSString *query = [song stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
-		    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"https://prv.textyl.co/api/staticlyrics?q=%@", query]];
+		    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"https://api.textyl.co/api/staticlyrics?q=%@", query]];
 		    NSURLSessionDataTask *dataTask = [defaultSession dataTaskWithURL: url completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
 			    dispatch_async(dispatch_get_main_queue(), ^{
                     if (![[self lastSong] isEqual:song]) {
