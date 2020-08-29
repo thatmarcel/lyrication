@@ -297,7 +297,7 @@
         self.tableView.hidden = false;
         self.staticLyricsTextView.hidden = true;
 
-        [self fetchStaticLyricsForSong: song];
+        [self fetchStaticLyricsForSong: [NSString stringWithFormat: @"%@%@%@",  song, @" ", artist]];
 
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
 	    dispatch_async(queue, ^{
