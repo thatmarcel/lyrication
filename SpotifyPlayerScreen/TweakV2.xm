@@ -116,6 +116,9 @@ LXScrollingLyricsViewControllerPresenter *presenter;
             }
             [self updateLyricsForProgress:progress + 0.3];
             return;
+        } else if ([song isEqual:savedLastSong]) {
+            [self showNoLyricsAvailable];
+            return;
         }
 
         [self setLyrics:NULL];
