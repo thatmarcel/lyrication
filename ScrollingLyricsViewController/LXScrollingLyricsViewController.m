@@ -1,5 +1,6 @@
 #import "LXScrollingLyricsViewController.h"
 #import "LXScrollingLyricsViewController+TableViewDataSource.h"
+#import "LXScrollingLyricsViewController+TableViewDelegate.h"
 
 @implementation LXScrollingLyricsViewController
     @synthesize artworkImageView;
@@ -18,6 +19,7 @@
     @synthesize metadataTimer;
     @synthesize lyricsTimer;
     @synthesize staticLyricsTextView;
+    @synthesize updatesPaused;
 
     - (BOOL) _canShowWhileLocked {
         return true;
@@ -77,6 +79,7 @@
         [self.tableView.leftAnchor constraintEqualToAnchor: self.view.leftAnchor constant: 32].active = YES;
         [self.tableView.rightAnchor constraintEqualToAnchor: self.view.rightAnchor constant: 0].active = YES;
         self.tableView.dataSource = self;
+        self.tableView.delegate = self;
         self.tableView.backgroundColor = [UIColor clearColor];
         self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         [self.tableView registerClass: LXLyricsTableViewCell.class forCellReuseIdentifier: @"LXLyricsTableViewCell"];
@@ -179,6 +182,10 @@
     }
 
     - (void) fire {
+        if (self.updatesPaused) {
+            return;
+        }
+
         [self fetchCurrentPlayback];
 
         if (!lyrics || !playbackProgress || [@"" isEqual: self.lastSong]) {

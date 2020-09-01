@@ -43,6 +43,10 @@
     @property (retain) NSTimer *metadataTimer;
     @property (retain) NSTimer *lyricsTimer;
 
+    // If set to true, lyrics won't update
+    // Used to make skipping to a line more smooth
+    @property BOOL updatesPaused;
+
     // Configurates the view, called by viewDidLoad
     - (void) setupView;
     // Updates the artwork, song name and artist

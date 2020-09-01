@@ -9,6 +9,8 @@
     @synthesize standardLineColor;
 
     - (void) setup {
+        self.lineHighlighted = false;
+        
         if (self.lineLabel) {
             self.lineLabel.transform = CGAffineTransformMakeScale(0.8, 0.8);
             self.lineLabelLeftConstraint.constant = -((self.bounds.size.width - 32) * 0.1);
@@ -41,8 +43,6 @@
         [self.lineLabel.rightAnchor constraintEqualToAnchor: self.rightAnchor constant: -32].active = YES;
 
         [self layoutIfNeeded];
-
-        self.lineHighlighted = false;
     }
 
     - (void) highlight {
