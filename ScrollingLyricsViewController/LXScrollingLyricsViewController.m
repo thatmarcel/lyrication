@@ -68,7 +68,7 @@
         [self.songArtistLabel setFont: [UIFont systemFontOfSize: 26 weight: UIFontWeightHeavy]];
         [self.songArtistLabel setTextColor: [[UIColor blackColor] colorWithAlphaComponent: 0.8]];
         [self.view addSubview: self.songArtistLabel];
-        [self.songArtistLabel.topAnchor constraintEqualToAnchor: self.songNameLabel.bottomAnchor constant: 2].active = YES;
+        [self.songArtistLabel.topAnchor constraintEqualToAnchor: self.songNameLabel.bottomAnchor constant: 0].active = YES;
         [self.songArtistLabel.leftAnchor constraintEqualToAnchor: self.view.leftAnchor constant: 32].active = YES;
         [self.songArtistLabel.rightAnchor constraintEqualToAnchor: self.view.rightAnchor constant: -32].active = YES;
 
