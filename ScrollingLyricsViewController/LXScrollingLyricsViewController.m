@@ -391,6 +391,8 @@
 
         [self setupView];
         [self start];
+
+        [UIApplication sharedApplication].idleTimerDisabled = true;
     }
 
     - (void) viewDidDisappear:(BOOL)animated {
@@ -407,6 +409,8 @@
             self.presenter.overlayWindow = nil;
             self.presenter.overlayViewController = nil;
         }
+
+        [UIApplication sharedApplication].idleTimerDisabled = false;
     }
 
 @end
