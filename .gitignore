@@ -1,4 +1,5 @@
 .theos/
+.theos.old/
 packages/
 .DS_STORE
 **/.DS_STORE

@@ -40,7 +40,7 @@
                 timeInterval = 0;
             }
             // Set current playback progress (e.g. 204.34 seconds)
-            self.playbackProgress = timeInterval + 1.0;
+            self.playbackProgress = timeInterval;
 
             NSNumber *_rate = (NSNumber*) info[@"kMRMediaRemoteNowPlayingInfoPlaybackRate"];
 			double rate = [_rate doubleValue];

@@ -23,6 +23,7 @@
     }
 
     - (void) present {
+        NSLog(@"Lyrication presenting");
         BOOL shouldShowAlert = [[%c(SBLockStateAggregator) sharedInstance] lockState] <= 1 && self.twitterAlertAllowed && ![[NSUserDefaults standardUserDefaults] boolForKey: @"com.thatmarcel.tweaks.lyrication.defaultprefs.showntwtalertonce"];
 
         LXScrollingLyricsViewController *vc = [LXScrollingLyricsViewController new];
@@ -31,6 +32,15 @@
 
         if ([[%c(SBLockStateAggregator) sharedInstance] lockState] > 1) { // Locked
             self.overlayWindow = [[%c(LXSecureWindow) alloc] initWithScreen: UIScreen.mainScreen debugName: @"Lyrication" rootViewController: self.overlayViewController];
+        } else if (@available(iOS 13, *)) {
+            for (UIScene *scene in [[UIApplication sharedApplication] connectedScenes]) {
+                if ([scene isKindOfClass: [UIWindowScene class]]) {
+                    UIWindowScene *windowScene = (UIWindowScene*) scene;
+                    self.overlayWindow = [[UIWindow alloc] initWithWindowScene: windowScene];
+                    self.overlayWindow.rootViewController = self.overlayViewController;
+                    break;
+                }
+            }
         } else {
             self.overlayWindow = [[UIWindow alloc] init];
             self.overlayWindow.rootViewController = self.overlayViewController;

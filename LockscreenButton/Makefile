@@ -1,3 +1,7 @@
+SDKVERSION = 13.5
+SYSROOT = /opt/theos/sdks/iPhoneOS13.5.sdk
+ARCHS = arm64 arm64e
+
 include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = LyricationLockscreenButton
