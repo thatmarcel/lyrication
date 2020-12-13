@@ -1,0 +1,10 @@
+{
+    entry = {
+	    bundle = LyricationPrefs;
+	    cell = PSLinkCell;
+	    detail = LyricationPrefsController;
+	    isController = 1;
+	    label = Lyrication;
+		icon = icon.png;
+    };
+}

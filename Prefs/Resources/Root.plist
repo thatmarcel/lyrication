@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>items</key>
+	<array>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>Changes require a respring</string>
+		</dict>
+
+        <dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>label</key>
+			<string>Show on lockscreen</string>
+			<key>default</key>
+			<true />
+			<key>defaults</key>
+			<string>com.thatmarcel.tweaks.lyrication.hbprefs</string>
+			<key>key</key>
+			<string>showonlockscreen</string>
+		</dict>
+
+        <dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>Changes may require a restart of Spotify</string>
+		</dict>
+
+        <dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>label</key>
+			<string>Show inside Spotify</string>
+			<key>default</key>
+			<true />
+			<key>defaults</key>
+			<string>com.thatmarcel.tweaks.lyrication.hbprefs</string>
+			<key>key</key>
+			<string>showinsidespotify</string>
+		</dict>
+
+        <dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>label</key>
+			<string>Show expand button in Spotify</string>
+			<key>default</key>
+			<true />
+			<key>defaults</key>
+			<string>com.thatmarcel.tweaks.lyrication.hbprefs</string>
+			<key>key</key>
+			<string>showexpandbuttoninspotify</string>
+		</dict>
+
+        <dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+		</dict>
+
+        <dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>label</key>
+			<string>Enable text blur in expanded view</string>
+			<key>default</key>
+			<true />
+			<key>defaults</key>
+			<string>com.thatmarcel.tweaks.lyrication.hbprefs</string>
+			<key>key</key>
+			<string>expandedviewlineblurenabled</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Developer</string>
+		</dict>
+
+		<dict>
+    		<key>cellClass</key>
+    		<string>HBTwitterCell</string>
+    		<key>label</key>
+    		<string>Marcel Braun</string>
+    		<key>user</key>
+    		<string>thatmarcelbraun</string>
+		</dict>
+	</array>
+	<key>title</key>
+	<string>Lyrication</string>
+</dict>
+</plist>

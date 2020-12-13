@@ -14,11 +14,17 @@
         cell.standardLineColor = self.standardLineColor;
         cell.highlightedLineColor = self.highlightedLineColor;
 
+        cell.distanceFromHighlighted = indexPath.row - self.lastIndex;
+        if (cell.distanceFromHighlighted < 0) {
+            cell.distanceFromHighlighted = 1;
+        }
+
         [cell setup];
 
         cell.index = indexPath.row;
 
         NSDictionary *item = self.lyrics[indexPath.row];
+
 		cell.lineLabel.text = [item objectForKey:@"lyrics"];
 
         if (self.lastIndex && self.lastIndex == indexPath.row) {

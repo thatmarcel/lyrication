@@ -7,6 +7,7 @@
     @synthesize lineHighlighted;
     @synthesize highlightedLineColor;
     @synthesize standardLineColor;
+    @synthesize distanceFromHighlighted;
 
     - (void) setup {
         self.lineHighlighted = false;
@@ -14,7 +15,8 @@
         if (self.lineLabel) {
             self.lineLabel.transform = CGAffineTransformMakeScale(0.8, 0.8);
             self.lineLabelLeftConstraint.constant = -((self.bounds.size.width - 32) * 0.1);
-            [self.lineLabel setTextColor: self.standardLineColor];
+
+            [self.lineLabel updateBlurWithRadius: [self blurRadius]];
 
             [self layoutIfNeeded];
             return;
@@ -24,7 +26,7 @@
 
         self.backgroundColor = [UIColor clearColor];
 
-        self.lineLabel = [[UILabel alloc] init];
+        self.lineLabel = [[LXBlurredLabel alloc] init];
         self.lineLabel.translatesAutoresizingMaskIntoConstraints = false;
         [self addSubview: self.lineLabel];
         self.lineLabel.numberOfLines = 0;
@@ -33,7 +35,6 @@
         } else {
             [self.lineLabel setFont: [UIFont systemFontOfSize: 40 weight: UIFontWeightHeavy]];
         }
-        [self.lineLabel setTextColor: self.standardLineColor];
 
         self.lineLabelTopConstraint = [self.lineLabel.topAnchor constraintEqualToAnchor: self.topAnchor constant: 16];
         self.lineLabelTopConstraint.active = YES;
@@ -42,7 +43,19 @@
         self.lineLabelLeftConstraint.active = YES;
         [self.lineLabel.rightAnchor constraintEqualToAnchor: self.rightAnchor constant: -32].active = YES;
 
+        self.lineLabel.blurredColor = self.standardLineColor;
+        self.lineLabel.normalColor = self.highlightedLineColor;
+        
+        [self.lineLabel updateBlurWithRadius: [self blurRadius]];
+        
         [self layoutIfNeeded];
+    }
+
+    - (CGFloat) blurRadius {
+        CGFloat distance = distanceFromHighlighted > 3 ? 3 : distanceFromHighlighted;
+        CGFloat radius = distance == 0 ? 0 : distance * 2;
+
+        return radius;
     }
 
     - (void) highlight {
@@ -55,7 +68,8 @@
             animations:^{
                 self.lineLabel.transform = CGAffineTransformMakeScale(1.0, 1.0);
                 self.lineLabelLeftConstraint.constant = 0;
-                [self.lineLabel setTextColor: self.highlightedLineColor];
+
+                [self.lineLabel disableBlur];
 
                 [self layoutIfNeeded];
             }
@@ -64,6 +78,7 @@
 
     - (void) unhighlight {
         if (!self.lineHighlighted) {
+            [self.lineLabel updateBlurWithRadius: [self blurRadius]];
             // Needed for rotation changes
             self.lineLabelLeftConstraint.constant = -((self.bounds.size.width - 32) * 0.1);
             [self layoutIfNeeded];
@@ -76,7 +91,8 @@
             animations:^{
                 self.lineLabel.transform = CGAffineTransformMakeScale(0.8, 0.8);
                 self.lineLabelLeftConstraint.constant = -((self.bounds.size.width - 32) * 0.1);
-                [self.lineLabel setTextColor: self.standardLineColor];
+
+                [self.lineLabel updateBlurWithRadius: [self blurRadius]];
 
                 [self layoutIfNeeded];
             }

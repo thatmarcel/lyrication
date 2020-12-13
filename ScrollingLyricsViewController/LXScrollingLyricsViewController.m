@@ -37,7 +37,7 @@
         if (self.shouldHideBackground) {
             self.artworkImageView.hidden = true;
         } else {
-            UIVisualEffect *effect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleExtraLight];
+            UIVisualEffect *effect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleSystemChromeMaterial];
 
             self.visualEffectView = [[UIVisualEffectView alloc] initWithEffect: effect];
             self.visualEffectView.translatesAutoresizingMaskIntoConstraints = false;
@@ -53,7 +53,11 @@
         } else {
             [self.songNameLabel setFont: [UIFont systemFontOfSize: 42 weight: UIFontWeightBlack]];
         }
-        [self.songNameLabel setTextColor: [UIColor blackColor]];
+        if (@available(iOS 13, *)) {
+            [self.songNameLabel setTextColor: [UIColor labelColor]];
+        } else {
+            [self.songNameLabel setTextColor: [UIColor blackColor]];
+        }
         [self.view addSubview: self.songNameLabel];
         [self.songNameLabel.topAnchor constraintEqualToAnchor: self.view.topAnchor constant: 32].active = YES;
         [self.songNameLabel.leftAnchor constraintEqualToAnchor: self.view.leftAnchor constant: 32].active = YES;
@@ -67,6 +71,11 @@
         self.songArtistLabel.numberOfLines = 1;
         [self.songArtistLabel setFont: [UIFont systemFontOfSize: 26 weight: UIFontWeightHeavy]];
         [self.songArtistLabel setTextColor: [[UIColor blackColor] colorWithAlphaComponent: 0.8]];
+        if (@available(iOS 13, *)) {
+            [self.songArtistLabel setTextColor: [[UIColor labelColor] colorWithAlphaComponent: 0.8]];
+        } else {
+            [self.songArtistLabel setTextColor: [[UIColor blackColor] colorWithAlphaComponent: 0.8]];
+        }
         [self.view addSubview: self.songArtistLabel];
         [self.songArtistLabel.topAnchor constraintEqualToAnchor: self.songNameLabel.bottomAnchor constant: 0].active = YES;
         [self.songArtistLabel.leftAnchor constraintEqualToAnchor: self.view.leftAnchor constant: 32].active = YES;
@@ -100,7 +109,11 @@
         self.staticLyricsTextView.selectable = false;
         self.staticLyricsTextView.backgroundColor = [UIColor clearColor];
         [self.staticLyricsTextView setFont: [UIFont systemFontOfSize: 20]];
-        [self.staticLyricsTextView setTextColor: [[UIColor blackColor] colorWithAlphaComponent: 0.8]];
+        if (@available(iOS 13, *)) {
+            [self.staticLyricsTextView setTextColor: [[UIColor labelColor] colorWithAlphaComponent: 0.8]];
+        } else {
+            [self.staticLyricsTextView setTextColor: [[UIColor blackColor] colorWithAlphaComponent: 0.8]];
+        }
         [self.staticLyricsTextView setContentInset: UIEdgeInsetsMake(0, 32, 32, 32)];
         self.staticLyricsTextView.showsHorizontalScrollIndicator = false;
         self.staticLyricsTextView.showsVerticalScrollIndicator = false;
@@ -119,11 +132,19 @@
         }
 
         if (!self.highlightedLineColor) {
-            self.highlightedLineColor = [UIColor blackColor];
+            if (@available(iOS 13, *)) {
+                self.highlightedLineColor = [UIColor labelColor];
+            } else {
+                self.highlightedLineColor = [UIColor blackColor];
+            }
         }
 
         if (!self.standardLineColor) {
-            self.standardLineColor = [UIColor colorWithRed: 0.2 green: 0.2 blue: 0.2 alpha: 0.7];
+            if (@available(iOS 13, *)) {
+                self.standardLineColor = [[UIColor labelColor] colorWithAlphaComponent: 0.5];
+            } else {
+                self.standardLineColor = [UIColor colorWithRed: 0.2 green: 0.2 blue: 0.2 alpha: 0.7];
+            }
         }
     }
 
@@ -276,6 +297,11 @@
         [self.tableView beginUpdates];
 
         for (LXLyricsTableViewCell* cell in [self.tableView visibleCells]) {
+            cell.distanceFromHighlighted = cell.index - smallestdistanceindex;
+            if (cell.distanceFromHighlighted < 0) {
+                cell.distanceFromHighlighted = 1;
+            }
+            
             if (cell.index == smallestdistanceindex) {
                 [cell highlight];
             } else /* if (cell.index - 1 == smallestdistanceindex) */ {

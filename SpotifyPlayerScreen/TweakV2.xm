@@ -1,11 +1,14 @@
 #import <UIKit/UIKit.h>
 #include <CoreFoundation/CoreFoundation.h>
+#import <Cephei/HBPreferences.h>
 
 #import "SpotifyInterfaces.h"
 
 #import "../ScrollingLyricsViewController/LXScrollingLyricsViewControllerPresenter.h"
 
 LXScrollingLyricsViewControllerPresenter *presenter;
+
+HBPreferences *preferences;
 
 // The main class
 @interface LCSTW : NSObject
@@ -370,7 +373,7 @@ BOOL addedBottomLyricsCardLabel = NO;
 - (void) layoutSubviews {
     %orig;
 
-    if (addedBottomLyricsCardLabel) {
+    if (![preferences boolForKey: @"showinsidespotify"] || addedBottomLyricsCardLabel) {
         return;
     }
 
@@ -390,6 +393,10 @@ BOOL addedBottomLyricsCardLabel = NO;
     [LCSTWInstance setBottomLyricsCardLabel4:label4];
 
     [LCSTWInstance setBottomLyricsCardView:self];
+
+    if (![preferences boolForKey: @"showexpandbuttoninspotify"]) {
+        return;
+    }
 
     UIButton *fullLyricsButton = [[UIButton alloc] init];
     fullLyricsButton.translatesAutoresizingMaskIntoConstraints = false;
@@ -423,6 +430,17 @@ BOOL addedBottomLyricsCardLabel = NO;
 %end
 
 %ctor {
+    preferences = [[HBPreferences alloc] initWithIdentifier:@"com.thatmarcel.tweaks.lyrication.hbprefs"];
+    [preferences registerDefaults:@{
+        @"showonlockscreen": @true,
+        @"showinsidespotify": @true,
+        @"showexpandbuttoninspotify": @true,
+        @"expandedviewlineblurenabled": @true
+    }];
+
+    if (![preferences boolForKey: @"showinsidespotify"]) {
+        return;
+    }
     // Initialize the instance of the main class
     LCSTWInstance = [[LCSTW alloc] init];
     [LCSTWInstance setAppIsInBackground:NO];
@@ -434,10 +452,106 @@ BOOL addedBottomLyricsCardLabel = NO;
 - (void) viewDidLoad {
     %orig;
 
+    if (![preferences boolForKey: @"showinsidespotify"]) {
+        return;
+    }
+
     // Store a reference to the player used by the Spotify app to be able to get playback / control volume etc
     [LCSTWInstance setPlayer:[self player]];
 
     presenter = [[LXScrollingLyricsViewControllerPresenter alloc] init];
+}
+
+%end
+
+// Enable lyrics view
+
+%hook SPTLyricsV2LyricsView
+
+- (void) setHidden:(BOOL)hidden {
+	if (![preferences boolForKey: @"showinsidespotify"]) {
+		%orig;
+		return;
+	}
+
+	%orig(NO);
+}
+
+- (void) setAlpha:(double)alpha {
+	if (![preferences boolForKey: @"showinsidespotify"]) {
+		%orig;
+		return;
+	}
+	
+	%orig(1.0);
+}
+
+%end
+
+%hook SPTLyricsV2Service
+
+-(BOOL) lyricsAvailableForTrack:(id)arg1 {
+	if (![preferences boolForKey: @"showinsidespotify"]) {
+		return %orig;
+	}
+	
+	return YES;
+}
+
+%end
+
+%hook SPTLyricsV2TestManagerImplementation
+
+- (BOOL) isFeatureEnabled {
+	if (![preferences boolForKey: @"showinsidespotify"]) {
+		return %orig;
+	}
+	
+	return YES;
+}
+
+%end
+
+%hook SPTLyricsV2TextView
+
+- (void) setHidden:(BOOL)hidden {
+	if (![preferences boolForKey: @"showinsidespotify"]) {
+		%orig;
+		return;
+	}
+	
+	%orig(YES);
+}
+
+- (void) setAlpha:(double)alpha {
+	if (![preferences boolForKey: @"showinsidespotify"]) {
+		%orig;
+		return;
+	}
+	
+	%orig(0.0);
+}
+
+%end
+
+%hook SPTLyricsV2ErrorView
+
+- (void) setHidden:(BOOL)hidden {
+	if (![preferences boolForKey: @"showinsidespotify"]) {
+		%orig;
+		return;
+	}
+	
+	%orig(YES);
+}
+
+- (void) setAlpha:(double)alpha {
+	if (![preferences boolForKey: @"showinsidespotify"]) {
+		%orig;
+		return;
+	}
+	
+	%orig(0.0);
 }
 
 %end

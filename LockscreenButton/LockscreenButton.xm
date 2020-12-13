@@ -1,4 +1,5 @@
 #import "../ScrollingLyricsViewController/LXScrollingLyricsViewControllerPresenter.h"
+#import <Cephei/HBPreferences.h>
 
 @interface SBCoverSheetPrimarySlidingViewController: UIViewController
 @end
@@ -11,10 +12,21 @@ UIButton *lyricsButton;
 LXScrollingLyricsViewControllerPresenter *presenter;
 UIViewController *lockscreenViewController;
 
+HBPreferences *preferences;
+%ctor {
+    preferences = [[HBPreferences alloc] initWithIdentifier:@"com.thatmarcel.tweaks.lyrication.hbprefs"];
+    [preferences registerDefaults:@{
+        @"showonlockscreen": @true,
+        @"showinsidespotify": @true,
+        @"showexpandbuttoninspotify": @true,
+        @"expandedviewlineblurenabled": @true
+    }];
+}
+
 %hook MediaControlsVolumeContainerView
 
 - (id) initWithFrame:(CGRect)frame {
-    if (!self.superview.superview.superview || ![self.superview.superview.superview isKindOfClass: %c(CSMediaControlsView)]) {
+    if (![preferences boolForKey: @"showonlockscreen"] || !self.superview.superview.superview || ![self.superview.superview.superview isKindOfClass: %c(CSMediaControlsView)]) {
         self = %orig;
         return self;
     }
@@ -23,7 +35,7 @@ UIViewController *lockscreenViewController;
 }
 
 - (void) setFrame:(CGRect)frame {
-    if (!self.superview.superview.superview || ![self.superview.superview.superview isKindOfClass: %c(CSMediaControlsView)]) {
+    if (![preferences boolForKey: @"showonlockscreen"] || !self.superview.superview.superview || ![self.superview.superview.superview isKindOfClass: %c(CSMediaControlsView)]) {
         %orig;
         return;
     }
@@ -31,7 +43,7 @@ UIViewController *lockscreenViewController;
 }
 
 - (void) setBounds:(CGRect)bounds {
-    if (!self.superview.superview.superview || ![self.superview.superview.superview isKindOfClass: %c(CSMediaControlsView)]) {
+    if (![preferences boolForKey: @"showonlockscreen"] || !self.superview.superview.superview || ![self.superview.superview.superview isKindOfClass: %c(CSMediaControlsView)]) {
         %orig;
         return;
     }
@@ -43,7 +55,7 @@ UIViewController *lockscreenViewController;
 - (void) setOnScreen:(BOOL)isOnScreen {
     %orig;
 
-    if (lyricsButton || !self || !self.superview || !self.superview.superview.superview || ![self.superview.superview.superview isKindOfClass: %c(CSMediaControlsView)]) {
+    if (![preferences boolForKey: @"showonlockscreen"] || lyricsButton || !self || !self.superview || !self.superview.superview.superview || ![self.superview.superview.superview isKindOfClass: %c(CSMediaControlsView)]) {
         return;
     }
 
