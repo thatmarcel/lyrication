@@ -6,7 +6,7 @@
 
 #import "../ScrollingLyricsViewController/LXScrollingLyricsViewControllerPresenter.h"
 
-LXScrollingLyricsViewControllerPresenter *presenter;
+LXScrollingLyricsViewControllerPresenter *presenter = [[LXScrollingLyricsViewControllerPresenter alloc] init];;
 
 HBPreferences *preferences;
 
@@ -458,8 +458,6 @@ BOOL addedBottomLyricsCardLabel = NO;
 
     // Store a reference to the player used by the Spotify app to be able to get playback / control volume etc
     [LCSTWInstance setPlayer:[self player]];
-
-    presenter = [[LXScrollingLyricsViewControllerPresenter alloc] init];
 }
 
 %end

@@ -148,18 +148,19 @@
         }
     }
 
-    - (void) fetchStaticLyricsForSong:(NSString*)song {
+    - (void) fetchStaticLyricsForSong:(NSString*)song byArtist:(NSString*)artist {
         self.staticLyricsTextView.text = @"Loading...";
 
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
 	    dispatch_async(queue, ^{
 		    NSURLSessionConfiguration *defaultSessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
     	    NSURLSession *defaultSession = [NSURLSession sessionWithConfiguration:defaultSessionConfiguration];
-		    NSString *query = [song stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
-		    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"https://api.textyl.co/api/staticlyrics?q=%@", query]];
+		    NSString *escapedSong = [song stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
+            NSString *escapedArtist = [artist stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
+		    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"https://prv.textyl.co/api/staticlyrics?name=%@&artist=%@", escapedSong, escapedArtist]];
 		    NSURLSessionDataTask *dataTask = [defaultSession dataTaskWithURL: url completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
 			    dispatch_async(dispatch_get_main_queue(), ^{
-                    if (![[self lastSong] isEqual:song]) {
+                    if (![[self lastSong] isEqual: [NSString stringWithFormat: @"%@%@%@",  song, @" ", artist]]) {
 					    return;
 				    }
 
@@ -330,7 +331,7 @@
         self.tableView.hidden = false;
         self.staticLyricsTextView.hidden = true;
 
-        [self fetchStaticLyricsForSong: [NSString stringWithFormat: @"%@%@%@",  song, @" ", artist]];
+        [self fetchStaticLyricsForSong: song byArtist: artist];
 
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
 	    dispatch_async(queue, ^{

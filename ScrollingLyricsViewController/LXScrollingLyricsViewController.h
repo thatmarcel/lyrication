@@ -67,7 +67,7 @@
     // Reload metadata every 5 seconds to show artwork, if the playing app took longer to load it
     - (void) reloadMetadata;
     // Fetch unsynchronized lyrics
-    - (void) fetchStaticLyricsForSong:(NSString*)song;
+    - (void) fetchStaticLyricsForSong:(NSString*)song byArtist:(NSString*)artist;
 
     - (BOOL) _canShowWhileLocked;
 @end
