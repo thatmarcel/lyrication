@@ -1,5 +1,11 @@
 #import "LXLyricsFetcher.h"
 
+@interface SBLockScreenManager: NSObject {
+    BOOL _isScreenOn;
+}
+    + (id) sharedInstanceIfExists;
+@end
+
 @implementation LXLyricsFetcher
     @synthesize lyrics;
     @synthesize lastSong;
@@ -19,6 +25,14 @@
     }
 
     - (void) fire {
+        SBLockScreenManager *manager = [%c(SBLockScreenManager) sharedInstanceIfExists];
+        if (manager) {
+            BOOL isScreenOn = MSHookIvar<BOOL>(manager, "_isScreenOn");
+            if (!isScreenOn) {
+                return;
+            }
+        }
+
         [self fetchCurrentPlayback];
 
         if (!lyrics || !playbackProgress) {
