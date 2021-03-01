@@ -27,6 +27,48 @@ HBPreferences *preferences;
     }];
 }
 
+// Flow
+
+@interface MMScrollView: UIView
+    - (void) lxLongPressRecognized:(UIGestureRecognizer*)sender;
+@end
+
+BOOL addedFlowGestureRecognizer = false;
+UILongPressGestureRecognizer *flowLongPressGestureRecognizer;
+
+%hook MMScrollView
+    - (void) updateArtworks {
+        %orig;
+
+        if (addedFlowGestureRecognizer) {
+            return;
+        }
+
+        addedFlowGestureRecognizer = true;
+
+        self.userInteractionEnabled = true;
+
+        presenter = [[LXScrollingLyricsViewControllerPresenter alloc] init];
+        presenter.twitterAlertAllowed = true;
+
+        flowLongPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] init];
+        [flowLongPressGestureRecognizer addTarget: self action: @selector(lxLongPressRecognized:)];
+        flowLongPressGestureRecognizer.minimumPressDuration = 0.5;
+        [self addGestureRecognizer: flowLongPressGestureRecognizer];
+
+        addedFlowGestureRecognizer = true;
+    }
+
+    %new
+    - (void) lxLongPressRecognized:(UIGestureRecognizer*)sender {
+        if (sender.state != UIGestureRecognizerStateBegan) {
+            return;
+        }
+
+        [presenter present];
+    }
+%end
+
 // iOS 14
 
 %hook MRUNowPlayingVolumeControlsView
