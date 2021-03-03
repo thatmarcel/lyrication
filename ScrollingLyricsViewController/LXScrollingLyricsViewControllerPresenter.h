@@ -17,5 +17,7 @@
 
     @property BOOL twitterAlertAllowed;
 
+    - (BOOL) isPresenting;
+
     - (void) present;
 @end

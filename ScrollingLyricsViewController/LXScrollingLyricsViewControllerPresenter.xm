@@ -92,4 +92,8 @@
 
         return;
     }
+
+    - (BOOL) isPresenting {
+        return self.overlayViewController != nil;
+    }
 @end

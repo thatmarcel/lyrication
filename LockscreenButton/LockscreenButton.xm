@@ -27,6 +27,39 @@ HBPreferences *preferences;
     }];
 }
 
+// Disable screen locking on lock screen
+// SBIdleTimerProxy
+
+/* %hook SBDashBoardIdleTimerProvider
+    - (BOOL) isIdleTimerEnabled {
+        BOOL shouldDisableTimer = [preferences boolForKey: @"showonlockscreen"] && presenter && [presenter isPresenting];
+        return shouldDisableTimer ? false : %orig;    
+    }
+
+    * - (void) idleTimerDidExpire:(id)timer {
+        return;
+        BOOL shouldIgnoreTimer = [preferences boolForKey: @"showonlockscreen"] && presenter && [presenter isPresenting];
+        
+        if (shouldIgnoreTimer) {
+            return;
+        }
+        
+        %orig;
+    } *
+%end */
+
+%hook SBIdleTimerService
+    - (BOOL) handleIdleTimerDidExpire {
+        BOOL shouldIgnoreIdleTimer = [preferences boolForKey: @"showonlockscreen"] && presenter && [presenter isPresenting];
+        
+        if (shouldIgnoreIdleTimer) {
+            return true;
+        }
+
+        return %orig;
+    }
+%end
+
 // Flow
 
 @interface MMScrollView: UIView
@@ -73,12 +106,39 @@ UILongPressGestureRecognizer *flowLongPressGestureRecognizer;
 
 %hook MRUNowPlayingVolumeControlsView
 
+%new
+- (void) lxColorizeUI:(NSNotification *)notification {
+    NSDictionary *userInfo = [notification userInfo];
+    UIColor *primaryColor = userInfo[@"PrimaryColor"];
+
+    if (lyricsButton) {
+        [lyricsButton setTitleColor: primaryColor forState: UIControlStateNormal];
+    }
+}
+
+%new
+- (void) lxRevertUI:(NSNotification *)notification {
+    if (lyricsButton) {
+        [lyricsButton setTitleColor: [UIColor labelColor] forState: UIControlStateNormal];
+    }
+}
+
 - (id) initWithFrame:(CGRect)frame {
     if (![preferences boolForKey: @"showonlockscreen"] || !self.superview.superview.superview.superview || ![self.superview.superview.superview.superview isKindOfClass: %c(CSMediaControlsView)]) {
         self = %orig;
         return self;
     }
     self = %orig(CGRectMake(frame.origin.x, frame.origin.y, frame.size.width - 70 - 32, frame.size.height));
+
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                            selector:@selector(lxRevertUI:)
+                                            name:@"ColorFlowLockScreenColorReversionNotification"
+                                            object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                            selector:@selector(lxColorizeUI:)
+                                            name:@"ColorFlowLockScreenColorizationNotification"
+                                            object:nil];
+
     return self;
 }
 
@@ -97,8 +157,6 @@ UILongPressGestureRecognizer *flowLongPressGestureRecognizer;
     }
     %orig(CGRectMake(bounds.origin.x, bounds.origin.y, bounds.size.width - 70 - 32, bounds.size.height));
 }
-
-// superview.superview.superview == CSMediaControlsView
 
 - (void) setOnScreen:(BOOL)isOnScreen {
     %orig;
@@ -145,12 +203,39 @@ UILongPressGestureRecognizer *flowLongPressGestureRecognizer;
 
 %hook MediaControlsVolumeContainerView
 
+%new
+- (void) lxColorizeUI:(NSNotification *)notification {
+    NSDictionary *userInfo = [notification userInfo];
+    UIColor *primaryColor = userInfo[@"PrimaryColor"];
+
+    if (lyricsButton) {
+        [lyricsButton setTitleColor: primaryColor forState: UIControlStateNormal];
+    }
+}
+
+%new
+- (void) lxRevertUI:(NSNotification *)notification {
+    if (lyricsButton) {
+        [lyricsButton setTitleColor: [UIColor labelColor] forState: UIControlStateNormal];
+    }
+}
+
 - (id) initWithFrame:(CGRect)frame {
     if (![preferences boolForKey: @"showonlockscreen"] || !self.superview.superview.superview || ![self.superview.superview.superview isKindOfClass: %c(CSMediaControlsView)]) {
         self = %orig;
         return self;
     }
     self = %orig(CGRectMake(frame.origin.x, frame.origin.y, frame.size.width - 70 - 32, frame.size.height));
+
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                            selector:@selector(lxRevertUI:)
+                                            name:@"ColorFlowLockScreenColorReversionNotification"
+                                            object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                            selector:@selector(lxColorizeUI:)
+                                            name:@"ColorFlowLockScreenColorizationNotification"
+                                            object:nil];
+    
     return self;
 }
 
