@@ -45,4 +45,6 @@
 
 @interface SPTLyricsV2LyricsView : UIView
 	- (id) addLabelWithTopAnchor:(NSLayoutYAxisAnchor*)topAnchor bottomAnchor:(NSLayoutYAxisAnchor*)bottomAnchor leftAnchor:(NSLayoutXAxisAnchor*)leftAnchor rightAnchor:(NSLayoutXAxisAnchor*)rightAnchor centerYAnchor:(NSLayoutYAxisAnchor*)centerYAnchor;
+
+	- (void) lxLongPressRecognized:(UIGestureRecognizer*)sender;
 @end

@@ -10,6 +10,8 @@ LXScrollingLyricsViewControllerPresenter *presenter = [[LXScrollingLyricsViewCon
 
 HBPreferences *preferences;
 
+UILongPressGestureRecognizer *expandLongPressGestureRecognizer;
+
 // The main class
 @interface LCSTW : NSObject
     // The Spotify player
@@ -59,6 +61,8 @@ HBPreferences *preferences;
     - (void) setLyricsTextsLine1:(NSString*)line1 line2:(NSString*)line2 line3:(NSString*)line3 line4:(NSString*)line4;
     // Set one line of text (Loading... or No lyrics available)
     - (void) setText:(NSString*)text;
+
+    - (void) hide;
 @end
 
 @implementation LCSTW
@@ -313,6 +317,13 @@ HBPreferences *preferences;
 		    [dataTask resume];
 	    });
     }
+
+    - (void) hide {
+        self.bottomLyricsCardLabel1.hidden = true;
+        self.bottomLyricsCardLabel2.hidden = true;
+        self.bottomLyricsCardLabel3.hidden = true;
+        self.bottomLyricsCardLabel4.hidden = true;
+    }
 @end
 
 %hook UIApplicationDelegate
@@ -395,6 +406,14 @@ BOOL addedBottomLyricsCardLabel = NO;
     [LCSTWInstance setBottomLyricsCardView:self];
 
     if (![preferences boolForKey: @"showexpandbuttoninspotify"]) {
+        if (expandLongPressGestureRecognizer) {
+            return;
+        }
+
+        expandLongPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] init];
+        [expandLongPressGestureRecognizer addTarget: self action: @selector(lxLongPressRecognized:)];
+        expandLongPressGestureRecognizer.minimumPressDuration = 0.5;
+        [self addGestureRecognizer: expandLongPressGestureRecognizer];
         return;
     }
 
@@ -425,6 +444,15 @@ BOOL addedBottomLyricsCardLabel = NO;
         action: @selector(present)
         forControlEvents: UIControlEventTouchUpInside
     ];
+}
+
+%new
+- (void) lxLongPressRecognized:(UIGestureRecognizer*)sender {
+    if (sender.state != UIGestureRecognizerStateBegan) {
+        return;
+    }
+
+    [presenter present];
 }
 
 %end
@@ -552,4 +580,12 @@ BOOL addedBottomLyricsCardLabel = NO;
 	%orig(0.0);
 }
 
+%end
+
+%hook SPTLyricsV2LyricsViewController
+    - (void) setLyricsLineSet:(id)lineSet {
+        if (lineSet && LCSTWInstance) {
+            [LCSTWInstance hide];
+        }
+    }
 %end
