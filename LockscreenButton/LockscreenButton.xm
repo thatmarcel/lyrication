@@ -60,6 +60,45 @@ HBPreferences *preferences;
     }
 %end
 
+// Quart
+
+UILongPressGestureRecognizer *quartApplicationContainerLongPressGestureRecognizer;
+
+@interface QRTMediaModuleViewController: UIViewController
+    - (void) lxApplicationContainerLongPressRecognized:(UIGestureRecognizer*)sender;
+@end
+
+%hook QRTMediaModuleViewController
+    - (void) viewDidLoad {
+        %orig;
+
+        if (quartApplicationContainerLongPressGestureRecognizer) {
+            return;
+        }
+
+        self.view.userInteractionEnabled = true;
+
+        if (!presenter) {
+            presenter = [[LXScrollingLyricsViewControllerPresenter alloc] init];
+            presenter.twitterAlertAllowed = true;
+        }
+
+        quartApplicationContainerLongPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] init];
+        [quartApplicationContainerLongPressGestureRecognizer addTarget: self action: @selector(lxApplicationContainerLongPressRecognized:)];
+        quartApplicationContainerLongPressGestureRecognizer.minimumPressDuration = 0.5;
+        [self.view addGestureRecognizer: quartApplicationContainerLongPressGestureRecognizer];
+    }
+
+    %new
+    - (void) lxApplicationContainerLongPressRecognized:(UIGestureRecognizer*)sender {
+        if (sender.state != UIGestureRecognizerStateBegan) {
+            return;
+        }
+
+        [presenter present];
+    }
+%end
+
 // Juin
 
 UILongPressGestureRecognizer *juinPlayPauseButtonLongPressGestureRecognizer;

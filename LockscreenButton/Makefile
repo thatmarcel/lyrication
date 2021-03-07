@@ -4,7 +4,7 @@ ARCHS = arm64 arm64e
 
 include $(THEOS)/makefiles/common.mk
 
-TWEAK_NAME = LyricationLockscreenButton
+TWEAK_NAME = zzLyricationLockscreenButton
 
 $(TWEAK_NAME)_FILES = $(wildcard *.xm) $(wildcard ../ScrollingLyricsViewController/*.m) $(wildcard ../ScrollingLyricsViewController/*.xm)
 $(TWEAK_NAME)_CFLAGS = -fobjc-arc
