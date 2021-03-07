@@ -12,6 +12,3 @@ SUBPROJECTS += MultiplaWidget
 SUBPROJECTS += Prefs
 
 include $(THEOS_MAKE_PATH)/aggregate.mk
-
-after-install::
-	install.exec "sbreload"

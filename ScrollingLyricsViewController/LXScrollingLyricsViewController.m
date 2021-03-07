@@ -94,7 +94,7 @@
         [self.tableView registerClass: LXLyricsTableViewCell.class forCellReuseIdentifier: @"LXLyricsTableViewCell"];
         [self.tableView setContentInset: UIEdgeInsetsMake(0, 0, 32, 0)];
         self.tableView.rowHeight = UITableViewAutomaticDimension;
-        self.tableView.estimatedRowHeight = 90;
+        self.tableView.estimatedRowHeight = 300;
         self.tableView.showsHorizontalScrollIndicator = false;
         self.tableView.showsVerticalScrollIndicator = false;
 
@@ -412,8 +412,41 @@
 
     - (void) updateMetadataWithInfo:(NSDictionary*)info {
         self.artworkImageView.image = [[UIImage alloc] initWithData: (NSData*) [info objectForKey: @"kMRMediaRemoteNowPlayingInfoArtworkData"]];
-        self.songNameLabel.text = (NSString *) info[@"kMRMediaRemoteNowPlayingInfoTitle"];
+        NSString *name = (NSString *) info[@"kMRMediaRemoteNowPlayingInfoTitle"];
+        if ([[name lowercaseString] containsString: @"nightcore"]) {
+            name = [name stringByReplacingOccurrencesOfString: @"Nightcore" withString: @""];
+            name = [name stringByReplacingOccurrencesOfString: @"nightcore" withString: @""];
+            name = [name stringByReplacingOccurrencesOfString: @"-" withString: @""];
+            name = [name stringByReplacingOccurrencesOfString: @"➥" withString: @""];
+            name = [name stringByReplacingOccurrencesOfString: @"|" withString: @""];
+            name = [name stringByReplacingOccurrencesOfString: @"「" withString: @""];
+            name = [name stringByReplacingOccurrencesOfString: @"」" withString: @""];
+            name = [name stringByReplacingOccurrencesOfString: @"◊" withString: @""];
+            name = [name stringByReplacingOccurrencesOfString: @"♪" withString: @""];
+            name = [name stringByReplacingOccurrencesOfString: @"✪" withString: @""];
+            name = [name stringByReplacingOccurrencesOfString: @"♫" withString: @""];
+            name = [name stringByReplacingOccurrencesOfString: @"↬" withString: @""];
+            name = [name stringByReplacingOccurrencesOfString: @"【" withString: @""];
+            name = [name stringByReplacingOccurrencesOfString: @"】" withString: @""];
+            name = [name stringByReplacingOccurrencesOfString: @"→" withString: @""];
+            name = [name stringByReplacingOccurrencesOfString: @"NMV" withString: @""];
+            name = [name stringByReplacingOccurrencesOfString: @"AMV" withString: @""];
+            name = [name stringByReplacingOccurrencesOfString: @"MMV" withString: @""];
+            name = [name stringByReplacingOccurrencesOfString: @"NV" withString: @""];
+            name = [name stringByReplacingOccurrencesOfString: @"LYRICS" withString: @""];
+            name = [name stringByReplacingOccurrencesOfString: @"Lyrics" withString: @""];
+            name = [name stringByReplacingOccurrencesOfString: @"lyrics" withString: @""];
+            name = [name stringByReplacingOccurrencesOfString: @"CLEAN" withString: @""];
+            name = [name stringByReplacingOccurrencesOfString: @"Clean" withString: @""];
+            name = [name stringByReplacingOccurrencesOfString: @"clean" withString: @""];
+            name = [name componentsSeparatedByString: @"("][0];
+            name = [name componentsSeparatedByString: @"["][0];
+            name = [name stringByReplacingOccurrencesOfString: @"  " withString: @" "];
+            name = [name stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        }
+        self.songNameLabel.text = name;
         self.songArtistLabel.text = (NSString *) info[@"kMRMediaRemoteNowPlayingInfoArtist"];
+        // stringByReplacingOccurrencesOfString
     }
 
     - (void) viewWillAppear:(BOOL)animated {

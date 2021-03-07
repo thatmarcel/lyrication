@@ -12,6 +12,10 @@ HBPreferences *preferences;
 
 UILongPressGestureRecognizer *expandLongPressGestureRecognizer;
 
+UIButton *fullLyricsButton = [[UIButton alloc] init];
+
+BOOL LCSTWHidden = false;
+
 // The main class
 @interface LCSTW : NSObject
     // The Spotify player
@@ -261,6 +265,10 @@ UILongPressGestureRecognizer *expandLongPressGestureRecognizer;
                 [oldLabel removeFromSuperview];
 
                 if (line1 != NULL) { [self.bottomLyricsCardLabel1 setText:line1]; }
+
+                if (LCSTWHidden) {
+                    [self hide];
+                }
             }];
     }
 
@@ -323,6 +331,8 @@ UILongPressGestureRecognizer *expandLongPressGestureRecognizer;
         self.bottomLyricsCardLabel2.hidden = true;
         self.bottomLyricsCardLabel3.hidden = true;
         self.bottomLyricsCardLabel4.hidden = true;
+        fullLyricsButton.hidden = true;
+        LCSTWHidden = true;
     }
 @end
 
@@ -417,7 +427,6 @@ BOOL addedBottomLyricsCardLabel = NO;
         return;
     }
 
-    UIButton *fullLyricsButton = [[UIButton alloc] init];
     fullLyricsButton.translatesAutoresizingMaskIntoConstraints = false;
 
     [fullLyricsButton setTitle: @"Expand" forState: UIControlStateNormal];
@@ -516,12 +525,20 @@ BOOL addedBottomLyricsCardLabel = NO;
 
 %hook SPTLyricsV2Service
 
--(BOOL) lyricsAvailableForTrack:(id)arg1 {
+- (BOOL) lyricsAvailableForTrack:(id)arg1 {
 	if (![preferences boolForKey: @"showinsidespotify"]) {
 		return %orig;
 	}
 	
-	return YES;
+	return true;
+}
+
+- (void) dataLoader:(id)loader didReceiveSuccessfulResponse:(id)response {
+    %orig;
+
+    if (LCSTWInstance) {
+        [LCSTWInstance hide];
+    }
 }
 
 %end
@@ -533,7 +550,7 @@ BOOL addedBottomLyricsCardLabel = NO;
 		return %orig;
 	}
 	
-	return YES;
+	return true;
 }
 
 %end
@@ -546,7 +563,7 @@ BOOL addedBottomLyricsCardLabel = NO;
 		return;
 	}
 	
-	%orig(YES);
+	%orig(true);
 }
 
 - (void) setAlpha:(double)alpha {
@@ -557,6 +574,10 @@ BOOL addedBottomLyricsCardLabel = NO;
 	
 	%orig(0.0);
 }
+
+/* - (NSUInteger) activeLength {
+    return 0;
+} */
 
 %end
 
@@ -568,7 +589,7 @@ BOOL addedBottomLyricsCardLabel = NO;
 		return;
 	}
 	
-	%orig(YES);
+	%orig(true);
 }
 
 - (void) setAlpha:(double)alpha {
@@ -580,12 +601,4 @@ BOOL addedBottomLyricsCardLabel = NO;
 	%orig(0.0);
 }
 
-%end
-
-%hook SPTLyricsV2LyricsViewController
-    - (void) setLyricsLineSet:(id)lineSet {
-        if (lineSet && LCSTWInstance) {
-            [LCSTWInstance hide];
-        }
-    }
 %end

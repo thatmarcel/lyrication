@@ -1,5 +1,5 @@
 Package: com.thatmarcel.tweaks.lyrication.legacy
-Name: Lyrication (iOS 13 and below)
+Name: Lyrication (deprecated)
 Depends: mobilesubstrate, com.opa334.ccsupport, ws.hbang.common (>= 1.11)
 Section: Tweaks
 Architecture: iphoneos-arm
@@ -7,4 +7,4 @@ Description: Live Lyrics for music
 Maintainer: Marcel Braun
 Author: Marcel Braun
 Conflicts: com.thatmarcel.tweaks.lyrication
-Version: 2.2.3-legacy
+Version: 2.2.9-legacy

@@ -1,6 +1,7 @@
 .theos/
 .theos.old/
 .theos.old*/
+release.sh
 packages/
 packages*/
 .DS_STORE

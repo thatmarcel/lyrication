@@ -50,7 +50,7 @@ HBPreferences *preferences;
 
 %hook SBIdleTimerService
     - (BOOL) handleIdleTimerDidExpire {
-        BOOL shouldIgnoreIdleTimer = [preferences boolForKey: @"showonlockscreen"] && presenter && [presenter isPresenting];
+        BOOL shouldIgnoreIdleTimer = presenter && [presenter isPresenting];
         
         if (shouldIgnoreIdleTimer) {
             return true;
@@ -60,36 +60,107 @@ HBPreferences *preferences;
     }
 %end
 
+// Juin
+
+UILongPressGestureRecognizer *juinPlayPauseButtonLongPressGestureRecognizer;
+
+@interface CSCoverSheetView: UIView
+    - (void) lxJuinPlayPauseButtonLongPressRecognized:(UIGestureRecognizer*)sender;
+@end
+
+@interface UIControlTargetAction: NSObject
+@end
+
+%hook CSCoverSheetView
+
+    - (void) didMoveToWindow {
+        %orig;
+
+        UIView *juinView;
+        for (UIView *subview in [self subviews]) {
+            int marqueeLabelsCount = 0;
+            for (UIView *subviewSubview in [subview subviews]) {
+                if ([subviewSubview isKindOfClass: %c(MarqueeLabel)]) {
+                    marqueeLabelsCount += 1;
+                }
+            }
+
+            if (marqueeLabelsCount == 2) {
+                juinView = subview;
+            }
+        }
+
+        if (!juinView || juinPlayPauseButtonLongPressGestureRecognizer) {
+            return;
+        }
+
+        if (!presenter) {
+            presenter = [[LXScrollingLyricsViewControllerPresenter alloc] init];
+            presenter.twitterAlertAllowed = true;
+        }
+
+        for (UIView *subview in [juinView subviews]) {
+            if (![subview isKindOfClass: [UIButton class]]) {
+                continue;
+            }
+
+            UIButton *button = (UIButton*) subview;
+            NSMutableArray *targetActions = MSHookIvar<NSMutableArray*>(button, "_targetActions");
+
+            if (!targetActions) {
+                continue;
+            }
+
+            for (UIControlTargetAction *action in targetActions) {
+                SEL selector = MSHookIvar<SEL>(action, "_action");
+                if (selector && [NSStringFromSelector(selector) isEqual: @"pausePlaySong"]) {
+                    juinPlayPauseButtonLongPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] init];
+                    [juinPlayPauseButtonLongPressGestureRecognizer addTarget: self action: @selector(lxJuinPlayPauseButtonLongPressRecognized:)];
+                    juinPlayPauseButtonLongPressGestureRecognizer.minimumPressDuration = 0.5;
+                    [button addGestureRecognizer: juinPlayPauseButtonLongPressGestureRecognizer];
+                }
+            }
+        }
+    }
+
+    %new
+    - (void) lxJuinPlayPauseButtonLongPressRecognized:(UIGestureRecognizer*)sender {
+        if (sender.state != UIGestureRecognizerStateBegan) {
+            return;
+        }
+
+        [presenter present];
+    }
+
+%end
+
 // Flow
 
 @interface MMScrollView: UIView
     - (void) lxLongPressRecognized:(UIGestureRecognizer*)sender;
 @end
 
-BOOL addedFlowGestureRecognizer = false;
 UILongPressGestureRecognizer *flowLongPressGestureRecognizer;
 
 %hook MMScrollView
     - (void) updateArtworks {
         %orig;
 
-        if (addedFlowGestureRecognizer) {
+        if (flowLongPressGestureRecognizer) {
             return;
         }
 
-        addedFlowGestureRecognizer = true;
-
         self.userInteractionEnabled = true;
 
-        presenter = [[LXScrollingLyricsViewControllerPresenter alloc] init];
-        presenter.twitterAlertAllowed = true;
+        if (!presenter) {
+            presenter = [[LXScrollingLyricsViewControllerPresenter alloc] init];
+            presenter.twitterAlertAllowed = true;
+        }
 
         flowLongPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] init];
         [flowLongPressGestureRecognizer addTarget: self action: @selector(lxLongPressRecognized:)];
         flowLongPressGestureRecognizer.minimumPressDuration = 0.5;
         [self addGestureRecognizer: flowLongPressGestureRecognizer];
-
-        addedFlowGestureRecognizer = true;
     }
 
     %new
@@ -100,6 +171,101 @@ UILongPressGestureRecognizer *flowLongPressGestureRecognizer;
 
         [presenter present];
     }
+%end
+
+// MRUArtworkView
+// MPUArtworkView
+
+@interface MPUArtworkView: UIView
+    @property (retain) UILongPressGestureRecognizer *artworkLongPressGestureRecognizer;
+
+    - (void) lxLongPressRecognized:(UIGestureRecognizer*)sender;
+@end
+
+@interface MRUArtworkView: UIView
+    @property (retain) UILongPressGestureRecognizer *artworkLongPressGestureRecognizer;
+    
+    - (void) lxLongPressRecognized:(UIGestureRecognizer*)sender;
+@end
+
+%hook MRUArtworkView
+    %property (retain) UILongPressGestureRecognizer *artworkLongPressGestureRecognizer;
+
+    - (id) initWithFrame:(CGRect)frame {
+        self = %orig;
+
+        if (self.artworkLongPressGestureRecognizer) {
+            return self;
+        }
+
+        self.userInteractionEnabled = true;
+
+        if (!presenter) {
+            presenter = [[LXScrollingLyricsViewControllerPresenter alloc] init];
+            presenter.twitterAlertAllowed = true;
+        }
+
+        self.artworkLongPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] init];
+        [self.artworkLongPressGestureRecognizer addTarget: self action: @selector(lxLongPressRecognized:)];
+        self.artworkLongPressGestureRecognizer.minimumPressDuration = 0.5;
+        [self addGestureRecognizer: self.artworkLongPressGestureRecognizer];
+
+        return self;
+    }
+
+    %new
+    - (void) lxLongPressRecognized:(UIGestureRecognizer*)sender {
+        if (sender.state != UIGestureRecognizerStateBegan) {
+            return;
+        }
+
+        [presenter present];
+    }
+
+    - (void) setUserInteractionEnabled:(BOOL)enabled {
+        %orig(true);
+    }
+
+%end
+
+%hook MPUArtworkView
+    %property (retain) UILongPressGestureRecognizer *artworkLongPressGestureRecognizer;
+
+    - (id) initWithFrame:(CGRect)frame {
+        self = %orig;
+
+        if (self.artworkLongPressGestureRecognizer) {
+            return self;
+        }
+
+        self.userInteractionEnabled = true;
+
+        if (!presenter) {
+            presenter = [[LXScrollingLyricsViewControllerPresenter alloc] init];
+            presenter.twitterAlertAllowed = true;
+        }
+
+        self.artworkLongPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] init];
+        [self.artworkLongPressGestureRecognizer addTarget: self action: @selector(lxLongPressRecognized:)];
+        self.artworkLongPressGestureRecognizer.minimumPressDuration = 0.5;
+        [self addGestureRecognizer: self.artworkLongPressGestureRecognizer];
+
+        return self;
+    }
+
+    %new
+    - (void) lxLongPressRecognized:(UIGestureRecognizer*)sender {
+        if (sender.state != UIGestureRecognizerStateBegan) {
+            return;
+        }
+
+        [presenter present];
+    }
+
+    - (void) setUserInteractionEnabled:(BOOL)enabled {
+        %orig(true);
+    }
+
 %end
 
 // iOS 14

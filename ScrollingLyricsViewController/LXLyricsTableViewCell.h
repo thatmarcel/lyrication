@@ -1,4 +1,5 @@
 #import <UIKit/UIKit.h>
+#import <Cephei/HBPreferences.h>
 #import "UIView+lxFillSuperview.h"
 #import "LXBlurredLabel.h"
 
@@ -13,6 +14,8 @@
 
     @property (retain) NSLayoutConstraint *lineLabelLeftConstraint;
     @property (retain) NSLayoutConstraint *lineLabelTopConstraint;
+
+    @property double expandedViewFontSizeMultiplier;
     
     @property int index;
     @property BOOL lineHighlighted;

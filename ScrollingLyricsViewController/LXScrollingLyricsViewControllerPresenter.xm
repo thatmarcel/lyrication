@@ -1,6 +1,8 @@
 #import "LXScrollingLyricsViewController.h"
 #import "LXScrollingLyricsViewControllerPresenter.h"
 
+BOOL shouldShowUpgradeAlert = false;
+
 @implementation LXScrollingLyricsViewControllerPresenter
     @synthesize overlayWindow;
     @synthesize overlayViewController;
@@ -81,6 +83,26 @@
                                     pid_t pid;
 	                                const char *args[] = {"uiopen", "twitter://user?screen_name=thatmarcelbraun", NULL};
 	                                posix_spawn(&pid, "/usr/bin/uiopen", NULL, NULL, (char *const *)args, NULL);
+                                }]];
+
+            [[self overlayViewController] presentViewController: alert animated: true completion: nil];
+
+            return;
+        }
+
+        if (shouldShowUpgradeAlert) {
+            UIAlertController * alert = [UIAlertController
+                                 alertControllerWithTitle: @"Compatibility note"
+                                 message: @"Heyy, this message is from Marcel, the developer of this tweak. I just wanted to let you know that the normal version of Lyrication is now compatible with iOS 13 and 14, so please uninstall this legacy version and install the normal Lyrication tweak from repo.basepack.co to receive updates."
+                                 preferredStyle: UIAlertControllerStyleAlert];
+
+            [alert addAction: [UIAlertAction
+                                actionWithTitle: @"Understood"
+                                style: UIAlertActionStyleDefault
+                                handler: ^(UIAlertAction * action) {
+                                [alert dismissViewControllerAnimated: false completion: ^{
+                                        [[self overlayViewController] presentViewController: vc animated: true completion: nil];
+                                    }];
                                 }]];
 
             [[self overlayViewController] presentViewController: alert animated: true completion: nil];
