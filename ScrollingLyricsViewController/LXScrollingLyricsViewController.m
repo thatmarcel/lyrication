@@ -20,12 +20,20 @@
     @synthesize lyricsTimer;
     @synthesize staticLyricsTextView;
     @synthesize updatesPaused;
+    @synthesize closeButton;
 
     - (BOOL) _canShowWhileLocked {
         return true;
     }
 
     - (void) setupView {
+        HBPreferences *preferences = [[HBPreferences alloc] initWithIdentifier: @"com.thatmarcel.tweaks.lyrication.hbprefs"];
+        [preferences registerDefaults: @{
+            @"expandedviewshowclosebutton": @false
+        }];
+
+        BOOL shouldShowCloseButton = [preferences boolForKey: @"expandedviewshowclosebutton"];
+
         self.view.backgroundColor = [UIColor whiteColor];
 
         self.artworkImageView = [[UIImageView alloc] init];
@@ -61,7 +69,7 @@
         [self.view addSubview: self.songNameLabel];
         [self.songNameLabel.topAnchor constraintEqualToAnchor: self.view.topAnchor constant: 32].active = YES;
         [self.songNameLabel.leftAnchor constraintEqualToAnchor: self.view.leftAnchor constant: 32].active = YES;
-        [self.songNameLabel.rightAnchor constraintEqualToAnchor: self.view.rightAnchor constant: -32].active = YES;
+        [self.songNameLabel.rightAnchor constraintEqualToAnchor: self.view.rightAnchor constant: -32 - (shouldShowCloseButton ? 50 : 0)].active = YES;
 
         self.songNameLabel.minimumScaleFactor = 0.8;
         self.songNameLabel.adjustsFontSizeToFitWidth = true;
@@ -79,7 +87,7 @@
         [self.view addSubview: self.songArtistLabel];
         [self.songArtistLabel.topAnchor constraintEqualToAnchor: self.songNameLabel.bottomAnchor constant: 0].active = YES;
         [self.songArtistLabel.leftAnchor constraintEqualToAnchor: self.view.leftAnchor constant: 32].active = YES;
-        [self.songArtistLabel.rightAnchor constraintEqualToAnchor: self.view.rightAnchor constant: -32].active = YES;
+        [self.songArtistLabel.rightAnchor constraintEqualToAnchor: self.view.rightAnchor constant: -32 - (shouldShowCloseButton ? 50 : 0)].active = YES;
 
         self.tableView = [[UITableView alloc] init];
         self.tableView.translatesAutoresizingMaskIntoConstraints = false;
@@ -145,6 +153,29 @@
             } else {
                 self.standardLineColor = [UIColor colorWithRed: 0.2 green: 0.2 blue: 0.2 alpha: 0.7];
             }
+        }
+
+        if (shouldShowCloseButton) {
+            self.closeButton = [[UIButton alloc] init];
+            self.closeButton.translatesAutoresizingMaskIntoConstraints = false;
+            [self.view addSubview: self.closeButton];
+
+            if (@available(iOS 13, *)) {
+                UIImage *closeButtonImage = [[UIImage systemImageNamed: @"xmark" withConfiguration: [UIImageSymbolConfiguration configurationWithScale: UIImageSymbolScaleLarge]] imageWithRenderingMode: UIImageRenderingModeAlwaysTemplate];
+                [self.closeButton setImage: closeButtonImage forState: UIControlStateNormal];
+                [self.closeButton setTintColor: [UIColor labelColor]];
+            } else {
+                [self.closeButton setTitle: @"x" forState: UIControlStateNormal];
+                [self.closeButton setTitleColor: [UIColor blackColor] forState: UIControlStateNormal];
+            }
+
+            [self.closeButton.topAnchor constraintEqualToAnchor: self.view.topAnchor constant: 50].active = YES;
+            [self.closeButton.rightAnchor constraintEqualToAnchor: self.view.rightAnchor constant: -32].active = YES;
+            [self.closeButton
+                addTarget: self
+                action: @selector(dismiss)
+                forControlEvents: UIControlEventTouchUpInside
+            ];
         }
     }
 
@@ -478,6 +509,10 @@
         }
 
         [UIApplication sharedApplication].idleTimerDisabled = false;
+    }
+
+    - (void) dismiss {
+        [self dismissViewControllerAnimated: true completion: nil];
     }
 
 @end

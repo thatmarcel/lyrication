@@ -1,5 +1,6 @@
 #import <UIKit/UIKit.h>
 #include <MediaRemote/MediaRemote.h>
+#import <Cephei/HBPreferences.h>
 #import "UIView+lxFillSuperview.h"
 #import "LXLyricsTableViewCell.h"
 #import "LXScrollingLyricsViewControllerPresenter.h"
@@ -29,6 +30,8 @@
     @property (retain) UITableView *tableView;
 
     @property (retain) UITextView *staticLyricsTextView;
+
+    @property (retain) UIButton *closeButton;
 
     // The lyrics of the currently playing song
     @property (retain) NSArray *lyrics;
@@ -68,6 +71,8 @@
     - (void) reloadMetadata;
     // Fetch unsynchronized lyrics
     - (void) fetchStaticLyricsForSong:(NSString*)song byArtist:(NSString*)artist;
+
+    - (void) dismiss;
 
     - (BOOL) _canShowWhileLocked;
 @end
