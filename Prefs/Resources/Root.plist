@@ -60,13 +60,15 @@
         <dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Expanded view</string>
 		</dict>
 
         <dict>
 			<key>cell</key>
 			<string>PSSwitchCell</string>
 			<key>label</key>
-			<string>Enable text blur in expanded view</string>
+			<string>Enable text blur</string>
 			<key>default</key>
 			<true />
 			<key>defaults</key>
@@ -79,13 +81,65 @@
 			<key>cell</key>
 			<string>PSSwitchCell</string>
 			<key>label</key>
-			<string>Show close button in expanded view</string>
+			<string>Always show close button</string>
 			<key>default</key>
 			<false />
 			<key>defaults</key>
 			<string>com.thatmarcel.tweaks.lyrication.hbprefs</string>
 			<key>key</key>
 			<string>expandedviewshowclosebutton</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>label</key>
+			<string>Use centered text style</string>
+			<key>default</key>
+			<false />
+			<key>defaults</key>
+			<string>com.thatmarcel.tweaks.lyrication.hbprefs</string>
+			<key>key</key>
+			<string>expandedviewcenterstyle</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>label</key>
+			<string>Show song name</string>
+			<key>default</key>
+			<true />
+			<key>defaults</key>
+			<string>com.thatmarcel.tweaks.lyrication.hbprefs</string>
+			<key>key</key>
+			<string>expandedviewshowsongname</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>label</key>
+			<string>Show song artist</string>
+			<key>default</key>
+			<true />
+			<key>defaults</key>
+			<string>com.thatmarcel.tweaks.lyrication.hbprefs</string>
+			<key>key</key>
+			<string>expandedviewshowsongartist</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>label</key>
+			<string>Show fadeout gradient</string>
+			<key>default</key>
+			<true />
+			<key>defaults</key>
+			<string>com.thatmarcel.tweaks.lyrication.hbprefs</string>
+			<key>key</key>
+			<string>expandedviewfadeoutgradient</string>
 		</dict>
 
 		<dict>

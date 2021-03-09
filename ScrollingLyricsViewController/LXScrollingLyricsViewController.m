@@ -21,18 +21,36 @@
     @synthesize staticLyricsTextView;
     @synthesize updatesPaused;
     @synthesize closeButton;
+    @synthesize preferences;
+    @synthesize shouldScrollLineToMiddle;
+    @synthesize lyricsViewsContainerGradientLayer;
+    @synthesize lyricsViewsContainer;
 
     - (BOOL) _canShowWhileLocked {
         return true;
     }
 
     - (void) setupView {
-        HBPreferences *preferences = [[HBPreferences alloc] initWithIdentifier: @"com.thatmarcel.tweaks.lyrication.hbprefs"];
+        self.preferences = [[HBPreferences alloc] initWithIdentifier: @"com.thatmarcel.tweaks.lyrication.hbprefs"];
         [preferences registerDefaults: @{
-            @"expandedviewshowclosebutton": @false
+            @"expandedviewshowclosebutton": @false,
+            @"expandedviewcenterstyle": @false,
+            @"expandedviewshowsongname": @true,
+            @"expandedviewshowsongartist": @true,
+            @"expandedviewfadeoutgradient": @true
         }];
 
         BOOL shouldShowCloseButton = [preferences boolForKey: @"expandedviewshowclosebutton"];
+        self.shouldScrollLineToMiddle = [preferences boolForKey: @"expandedviewcenterstyle"];
+
+        BOOL shouldShowSongName = [preferences boolForKey: @"expandedviewshowsongname"];
+        BOOL shouldShowSongArtist = [preferences boolForKey: @"expandedviewshowsongartist"];
+
+        BOOL shouldShowFadeoutGradient = [preferences boolForKey: @"expandedviewfadeoutgradient"];
+
+        if (@available(iOS 13, *)) { } else {
+            shouldShowCloseButton = true;
+        }
 
         self.view.backgroundColor = [UIColor whiteColor];
 
@@ -71,6 +89,10 @@
         [self.songNameLabel.leftAnchor constraintEqualToAnchor: self.view.leftAnchor constant: 32].active = YES;
         [self.songNameLabel.rightAnchor constraintEqualToAnchor: self.view.rightAnchor constant: -32 - (shouldShowCloseButton ? 50 : 0)].active = YES;
 
+        if (!shouldShowSongName) {
+            [self.songNameLabel.heightAnchor constraintEqualToConstant: 0].active = YES;
+        }
+
         self.songNameLabel.minimumScaleFactor = 0.8;
         self.songNameLabel.adjustsFontSizeToFitWidth = true;
 
@@ -89,18 +111,30 @@
         [self.songArtistLabel.leftAnchor constraintEqualToAnchor: self.view.leftAnchor constant: 32].active = YES;
         [self.songArtistLabel.rightAnchor constraintEqualToAnchor: self.view.rightAnchor constant: -32 - (shouldShowCloseButton ? 50 : 0)].active = YES;
 
+        if (!shouldShowSongArtist) {
+            [self.songArtistLabel.heightAnchor constraintEqualToConstant: 0].active = YES;
+        }
+
+        self.lyricsViewsContainer = [[UIView alloc] init];
+        self.lyricsViewsContainer.translatesAutoresizingMaskIntoConstraints = false;
+        [self.view addSubview: self.lyricsViewsContainer];
+        [self.lyricsViewsContainer.bottomAnchor constraintEqualToAnchor: self.view.bottomAnchor constant: 0].active = YES;
+        [self.lyricsViewsContainer.leftAnchor constraintEqualToAnchor: self.view.leftAnchor constant: 0].active = YES;
+        [self.lyricsViewsContainer.rightAnchor constraintEqualToAnchor: self.view.rightAnchor constant: 0].active = YES;
+
         self.tableView = [[UITableView alloc] init];
         self.tableView.translatesAutoresizingMaskIntoConstraints = false;
-        [self.view addSubview: self.tableView];
-        [self.tableView.bottomAnchor constraintEqualToAnchor: self.view.bottomAnchor constant: 0].active = YES;
-        [self.tableView.leftAnchor constraintEqualToAnchor: self.view.leftAnchor constant: 32].active = YES;
-        [self.tableView.rightAnchor constraintEqualToAnchor: self.view.rightAnchor constant: 0].active = YES;
+        [self.lyricsViewsContainer addSubview: self.tableView];
+        [self.tableView.topAnchor constraintEqualToAnchor: self.lyricsViewsContainer.topAnchor constant: 0].active = YES;
+        [self.tableView.bottomAnchor constraintEqualToAnchor: self.lyricsViewsContainer.bottomAnchor constant: 0].active = YES;
+        [self.tableView.leftAnchor constraintEqualToAnchor: self.lyricsViewsContainer.leftAnchor constant: 32].active = YES;
+        [self.tableView.rightAnchor constraintEqualToAnchor: self.lyricsViewsContainer.rightAnchor constant: 0].active = YES;
         self.tableView.dataSource = self;
         self.tableView.delegate = self;
         self.tableView.backgroundColor = [UIColor clearColor];
         self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         [self.tableView registerClass: LXLyricsTableViewCell.class forCellReuseIdentifier: @"LXLyricsTableViewCell"];
-        [self.tableView setContentInset: UIEdgeInsetsMake(0, 0, 32, 0)];
+        [self.tableView setContentInset: UIEdgeInsetsMake(shouldShowFadeoutGradient ? 8 : 0, 0, 32, 0)];
         self.tableView.rowHeight = UITableViewAutomaticDimension;
         self.tableView.estimatedRowHeight = 300;
         self.tableView.showsHorizontalScrollIndicator = false;
@@ -108,10 +142,11 @@
 
         self.staticLyricsTextView = [[UITextView alloc] init];
         self.staticLyricsTextView.translatesAutoresizingMaskIntoConstraints = false;
-        [self.view addSubview: self.staticLyricsTextView];
-        [self.staticLyricsTextView.bottomAnchor constraintEqualToAnchor: self.view.bottomAnchor constant: 0].active = YES;
-        [self.staticLyricsTextView.leftAnchor constraintEqualToAnchor: self.view.leftAnchor constant: 0].active = YES;
-        [self.staticLyricsTextView.rightAnchor constraintEqualToAnchor: self.view.rightAnchor constant: 0].active = YES;
+        [self.lyricsViewsContainer addSubview: self.staticLyricsTextView];
+        [self.staticLyricsTextView.topAnchor constraintEqualToAnchor: self.lyricsViewsContainer.topAnchor constant: 0].active = YES;
+        [self.staticLyricsTextView.bottomAnchor constraintEqualToAnchor: self.lyricsViewsContainer.bottomAnchor constant: 0].active = YES;
+        [self.staticLyricsTextView.leftAnchor constraintEqualToAnchor: self.lyricsViewsContainer.leftAnchor constant: 0].active = YES;
+        [self.staticLyricsTextView.rightAnchor constraintEqualToAnchor: self.lyricsViewsContainer.rightAnchor constant: 0].active = YES;
         self.staticLyricsTextView.text = @"";
         self.staticLyricsTextView.editable = false;
         self.staticLyricsTextView.selectable = false;
@@ -122,7 +157,7 @@
         } else {
             [self.staticLyricsTextView setTextColor: [[UIColor blackColor] colorWithAlphaComponent: 0.8]];
         }
-        [self.staticLyricsTextView setContentInset: UIEdgeInsetsMake(0, 32, 32, 32)];
+        [self.staticLyricsTextView setContentInset: UIEdgeInsetsMake(shouldShowFadeoutGradient ? 16 : 0, 32, 32, 32)];
         self.staticLyricsTextView.showsHorizontalScrollIndicator = false;
         self.staticLyricsTextView.showsVerticalScrollIndicator = false;
 
@@ -132,11 +167,9 @@
         if (shouldHideNameAndArtist) {
             self.songNameLabel.hidden = true;
             self.songArtistLabel.hidden = true;
-            [self.tableView.topAnchor constraintEqualToAnchor: self.view.bottomAnchor constant: 32].active = YES;
-            [self.staticLyricsTextView.topAnchor constraintEqualToAnchor: self.view.bottomAnchor constant: 32].active = YES;
+            [self.lyricsViewsContainer.topAnchor constraintEqualToAnchor: self.view.bottomAnchor constant: 32].active = YES;
         } else {
-            [self.tableView.topAnchor constraintEqualToAnchor: self.songArtistLabel.bottomAnchor constant: 8].active = YES;
-            [self.staticLyricsTextView.topAnchor constraintEqualToAnchor: self.songArtistLabel.bottomAnchor constant: 8].active = YES;
+            [self.lyricsViewsContainer.topAnchor constraintEqualToAnchor: self.songArtistLabel.bottomAnchor constant: 8].active = YES;
         }
 
         if (!self.highlightedLineColor) {
@@ -176,6 +209,29 @@
                 action: @selector(dismiss)
                 forControlEvents: UIControlEventTouchUpInside
             ];
+        }
+
+        if (shouldShowFadeoutGradient) {
+            self.lyricsViewsContainerGradientLayer = [CAGradientLayer layer];
+            self.lyricsViewsContainerGradientLayer.frame = self.lyricsViewsContainer.bounds;
+            self.lyricsViewsContainerGradientLayer.colors = @[
+                (id) [UIColor clearColor].CGColor,
+                (id) [UIColor blackColor].CGColor,
+                (id) [UIColor blackColor].CGColor,
+                (id) [UIColor clearColor].CGColor
+            ];
+            self.lyricsViewsContainerGradientLayer.locations = @[
+                @0.0, @0.05, @0.9, @1.0
+            ];
+            self.lyricsViewsContainer.layer.mask = self.lyricsViewsContainerGradientLayer;
+        }
+    }
+
+    - (void) viewDidLayoutSubviews {
+        [super viewDidLayoutSubviews];
+
+        if (self.lyricsViewsContainerGradientLayer) {
+            self.lyricsViewsContainerGradientLayer.frame = self.lyricsViewsContainer.bounds;
         }
     }
 
@@ -345,10 +401,17 @@
 
         [UIView animateWithDuration: 0.4 delay: 0.0 options: UIViewAnimationOptionCurveEaseInOut
             animations:^{
-                [self.tableView
-                    scrollToRowAtIndexPath: [NSIndexPath indexPathForRow: smallestdistanceindex inSection: 0]
-                    atScrollPosition: UITableViewScrollPositionTop
-                    animated: true];
+                if (self.shouldScrollLineToMiddle) {
+                    [self.tableView
+                        scrollToRowAtIndexPath: [NSIndexPath indexPathForRow: (smallestdistanceindex + ((smallestdistanceindex < [[self lyrics] count] - 1) ? 1 : 0)) inSection: 0]
+                        atScrollPosition: UITableViewScrollPositionMiddle
+                        animated: true];
+                } else {
+                    [self.tableView
+                        scrollToRowAtIndexPath: [NSIndexPath indexPathForRow: smallestdistanceindex inSection: 0]
+                        atScrollPosition: UITableViewScrollPositionTop
+                        animated: true];
+                }
             }
             completion:^(BOOL finished){
                 // [self.tableView endUpdates];

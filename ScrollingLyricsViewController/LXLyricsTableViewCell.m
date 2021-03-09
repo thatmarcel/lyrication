@@ -9,6 +9,7 @@
     @synthesize standardLineColor;
     @synthesize distanceFromHighlighted;
     @synthesize expandedViewFontSizeMultiplier;
+    @synthesize shouldCenterText;
 
     - (void) setup {
         [UIView performWithoutAnimation:^{
@@ -21,7 +22,7 @@
         
         if (self.lineLabel) {
             self.lineLabel.transform = CGAffineTransformMakeScale(0.8, 0.8);
-            self.lineLabelLeftConstraint.constant = -((self.bounds.size.width - 32) * 0.1);
+            self.lineLabelLeftConstraint.constant = self.shouldCenterText ? 0 : -((self.bounds.size.width - 32) * 0.1);
 
             [self.lineLabel updateBlurWithRadius: [self blurRadius]];
 
@@ -40,8 +41,14 @@
 
         HBPreferences *preferences = [[HBPreferences alloc] initWithIdentifier: @"com.thatmarcel.tweaks.lyrication.hbprefs"];
         [preferences registerDefaults: @{
-            @"expandedviewfontsizemultiplier": @1
+            @"expandedviewfontsizemultiplier": @1,
+            @"expandedviewcenterstyle": @false
         }];
+
+        self.shouldCenterText = [preferences boolForKey: @"expandedviewcenterstyle"];
+
+        self.lineLabel.textAlignment = self.shouldCenterText ? NSTextAlignmentCenter : NSTextAlignmentLeft;
+
         self.expandedViewFontSizeMultiplier = [preferences doubleForKey: @"expandedviewfontsizemultiplier"];
 
         if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
@@ -53,7 +60,7 @@
         self.lineLabelTopConstraint = [self.lineLabel.topAnchor constraintEqualToAnchor: self.topAnchor constant: 16];
         self.lineLabelTopConstraint.active = YES;
         [self.lineLabel.bottomAnchor constraintEqualToAnchor: self.bottomAnchor constant: 0].active = YES;
-        self.lineLabelLeftConstraint = [self.lineLabel.leftAnchor constraintEqualToAnchor: self.leftAnchor constant: -((self.bounds.size.width - 32) * 0.1)];
+        self.lineLabelLeftConstraint = [self.lineLabel.leftAnchor constraintEqualToAnchor: self.leftAnchor constant: self.shouldCenterText ? 0 : -((self.bounds.size.width - 32) * 0.1)];
         self.lineLabelLeftConstraint.active = YES;
         [self.lineLabel.rightAnchor constraintEqualToAnchor: self.rightAnchor constant: -32].active = YES;
 
@@ -99,18 +106,20 @@
         if (!self.lineHighlighted) {
             [self.lineLabel updateBlurWithRadius: [self blurRadius]];
             // Needed for rotation changes
-            self.lineLabelLeftConstraint.constant = -((self.bounds.size.width - 32) * 0.1);
+            self.lineLabelLeftConstraint.constant = self.shouldCenterText ? 0 : -((self.bounds.size.width - 32) * 0.1);
             [self layoutIfNeeded];
             // return;
         }
 
-        self.lineHighlighted = false;
+        [UIView animateWithDuration: 0.4 delay: 0.0 options: UIViewAnimationOptionCurveEaseInOut
+            animations:^{
+                self.lineLabel.transform = CGAffineTransformMakeScale(0.8, 0.8);
+                self.lineLabelLeftConstraint.constant = self.shouldCenterText ? 0 : -((self.bounds.size.width - 32) * 0.1);
 
-        self.lineLabel.transform = CGAffineTransformMakeScale(0.8, 0.8);
-        self.lineLabelLeftConstraint.constant = -((self.bounds.size.width - 32) * 0.1);
+                [self.lineLabel updateBlurWithRadius: [self blurRadius]];
 
-        [self.lineLabel updateBlurWithRadius: [self blurRadius]];
-
-        [self layoutIfNeeded];
+                [self layoutIfNeeded];
+            }
+            completion:^(BOOL finished){ self.lineHighlighted = false; }];
     }
 @end

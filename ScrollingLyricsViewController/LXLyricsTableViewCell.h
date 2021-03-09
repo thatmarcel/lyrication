@@ -22,6 +22,8 @@
 
     @property int distanceFromHighlighted;
 
+    @property BOOL shouldCenterText;
+
     - (void) setup;
     - (void) highlight;
     - (void) unhighlight;

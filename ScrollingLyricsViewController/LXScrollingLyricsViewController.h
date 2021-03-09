@@ -33,6 +33,10 @@
 
     @property (retain) UIButton *closeButton;
 
+    @property (retain) HBPreferences *preferences;
+
+    @property BOOL shouldScrollLineToMiddle;
+
     // The lyrics of the currently playing song
     @property (retain) NSArray *lyrics;
     // The song that was playing on the last execution of the timer
@@ -49,6 +53,9 @@
     // If set to true, lyrics won't update
     // Used to make skipping to a line more smooth
     @property BOOL updatesPaused;
+
+    @property (retain) UIView *lyricsViewsContainer;
+    @property (retain) CAGradientLayer *lyricsViewsContainerGradientLayer;
 
     // Configurates the view, called by viewDidLoad
     - (void) setupView;
