@@ -554,6 +554,14 @@
         [self start];
 
         [UIApplication sharedApplication].idleTimerDisabled = true;
+
+        NSMutableDictionary *userInfo = [NSMutableDictionary new];
+        [userInfo setObject: @"viewWillAppear" forKey: @"event"];
+        [[NSDistributedNotificationCenter defaultCenter]
+            postNotificationName: @"com.thatmarcel.tweaks.lyrication/expandEvents"
+            object: nil
+            userInfo: userInfo
+        ];
     }
 
     - (void) viewDidDisappear:(BOOL)animated {
@@ -572,6 +580,14 @@
         }
 
         [UIApplication sharedApplication].idleTimerDisabled = false;
+
+        NSMutableDictionary *userInfo = [NSMutableDictionary new];
+        [userInfo setObject: @"viewDidDisappear" forKey: @"event"];
+        [[NSDistributedNotificationCenter defaultCenter]
+            postNotificationName: @"com.thatmarcel.tweaks.lyrication/expandEvents"
+            object: nil
+            userInfo: userInfo
+        ];
     }
 
     - (void) dismiss {

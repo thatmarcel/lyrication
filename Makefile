@@ -9,6 +9,7 @@ SUBPROJECTS += SpotifyPlayerScreen
 SUBPROJECTS += ControlCenterModule
 SUBPROJECTS += LockscreenButton
 SUBPROJECTS += MultiplaWidget
+SUBPROJECTS += FloatingOverlay
 SUBPROJECTS += Prefs
 
 include $(THEOS_MAKE_PATH)/aggregate.mk

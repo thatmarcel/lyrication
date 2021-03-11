@@ -4,6 +4,7 @@
 #import "UIView+lxFillSuperview.h"
 #import "LXLyricsTableViewCell.h"
 #import "LXScrollingLyricsViewControllerPresenter.h"
+#import "../NSDistributedNotificationCenter.h"
 
 @interface LXScrollingLyricsViewController: UIViewController
 
