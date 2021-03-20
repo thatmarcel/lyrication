@@ -26,7 +26,7 @@ BOOL shouldShowUpgradeAlert = false;
 
     - (void) present {
         NSLog(@"Lyrication presenting");
-        BOOL shouldShowAlert = [[%c(SBLockStateAggregator) sharedInstance] lockState] <= 1 && self.twitterAlertAllowed && ![[NSUserDefaults standardUserDefaults] boolForKey: @"com.thatmarcel.tweaks.lyrication.defaultprefs.showntwtalertonce"];
+        BOOL shouldShowAlert = [[%c(SBLockStateAggregator) sharedInstance] lockState] <= 1 && self.twitterAlertAllowed && ![[NSUserDefaults standardUserDefaults] boolForKey: @"com.thatmarcel.tweaks.lyrication.defaultprefs.showntwtalertonceV2"];
 
         LXScrollingLyricsViewController *vc = [LXScrollingLyricsViewController new];
 
@@ -55,25 +55,29 @@ BOOL shouldShowUpgradeAlert = false;
         vc.presenter = self;
 
         if (shouldShowAlert) {
-            [[NSUserDefaults standardUserDefaults] setBool: true forKey:@"com.thatmarcel.tweaks.lyrication.defaultprefs.showntwtalertonce"];
+            [[NSUserDefaults standardUserDefaults] setBool: true forKey:@"com.thatmarcel.tweaks.lyrication.defaultprefs.showntwtalertonceV2"];
             [[NSUserDefaults standardUserDefaults] synchronize];
 
             UIAlertController * alert = [UIAlertController
-                                 alertControllerWithTitle: @"Twitter?"
-                                 message: @"Heyy, this message is from Marcel, the developer of this tweak. If you wouldn't mind following on Twitter, I'd really appreciate it. If not, that's absolutely fine too. No matter what you choose, this message will never show again."
+                                 alertControllerWithTitle: @"Receive the newest tweak updates & more"
+                                 message: @"Lyrication is (and will always stay) free. Maintaining the tweak and the required servers is a lot of work, so I'd really appreciate if you could check out my Twitter (@thatmarcelbraun) to get the newest updates :)"
                                  preferredStyle: UIAlertControllerStyleAlert];
 
-            [alert addAction: [UIAlertAction
-                                actionWithTitle: @"Rather not"
-                                style: UIAlertActionStyleDefault
-                                handler: ^(UIAlertAction * action) {
-                                [alert dismissViewControllerAnimated: false completion: ^{
-                                        [[self overlayViewController] presentViewController: vc animated: true completion: nil];
+            [NSTimer scheduledTimerWithTimeInterval: 3
+                                    repeats: false
+                                    block: ^(NSTimer *timer) {
+                                        [alert addAction: [UIAlertAction
+                                            actionWithTitle: @"Rather not"
+                                            style: UIAlertActionStyleDestructive
+                                            handler: ^(UIAlertAction * action) {
+                                                [alert dismissViewControllerAnimated: false completion: ^{
+                                                [[self overlayViewController] presentViewController: vc animated: true completion: nil];
+                                            }];
+                                        }]];
                                     }];
-                                }]];
 
             [alert addAction: [UIAlertAction
-                                actionWithTitle: @"Sure"
+                                actionWithTitle: @"Take a look at my twitter"
                                 style: UIAlertActionStyleDefault
                                 handler: ^(UIAlertAction * action) {
                                     [self.overlayViewController dismissViewControllerAnimated: false completion: nil];

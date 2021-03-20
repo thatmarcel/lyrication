@@ -543,6 +543,26 @@ BOOL addedBottomLyricsCardLabel = NO;
 
 %end
 
+%hook SPTLyricsFeatureProperties
+
+- (BOOL) enableLyrics {
+	if (![preferences boolForKey: @"showinsidespotify"]) {
+		return %orig;
+	}
+	
+	return true;
+}
+
+- (BOOL) enableNewImplementation {
+	if (![preferences boolForKey: @"showinsidespotify"]) {
+		return %orig;
+	}
+	
+	return true;
+}
+
+%end
+
 %hook SPTLyricsV2TestManagerImplementation
 
 - (BOOL) isFeatureEnabled {
@@ -551,6 +571,14 @@ BOOL addedBottomLyricsCardLabel = NO;
 	}
 	
 	return true;
+}
+
+- (BOOL) isNewImplementationEnabled {
+	if (![preferences boolForKey: @"showinsidespotify"]) {
+		return %orig;
+	}
+	
+	return false;
 }
 
 %end

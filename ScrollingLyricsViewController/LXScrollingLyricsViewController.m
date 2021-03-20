@@ -25,6 +25,7 @@
     @synthesize shouldScrollLineToMiddle;
     @synthesize lyricsViewsContainerGradientLayer;
     @synthesize lyricsViewsContainer;
+    @synthesize shouldShowSyncedLyrics;
 
     - (BOOL) _canShowWhileLocked {
         return true;
@@ -37,7 +38,8 @@
             @"expandedviewcenterstyle": @false,
             @"expandedviewshowsongname": @true,
             @"expandedviewshowsongartist": @true,
-            @"expandedviewfadeoutgradient": @true
+            @"expandedviewfadeoutgradient": @true,
+            @"expandedviewsynced": @true
         }];
 
         BOOL shouldShowCloseButton = [preferences boolForKey: @"expandedviewshowclosebutton"];
@@ -47,6 +49,8 @@
         BOOL shouldShowSongArtist = [preferences boolForKey: @"expandedviewshowsongartist"];
 
         BOOL shouldShowFadeoutGradient = [preferences boolForKey: @"expandedviewfadeoutgradient"];
+
+        self.shouldShowSyncedLyrics = [preferences boolForKey: @"expandedviewsynced"];
 
         if (@available(iOS 13, *)) { } else {
             shouldShowCloseButton = true;
@@ -426,6 +430,12 @@
         self.staticLyricsTextView.hidden = true;
 
         [self fetchStaticLyricsForSong: song byArtist: artist];
+
+        if (!shouldShowSyncedLyrics) {
+            self.tableView.hidden = true;
+            self.staticLyricsTextView.hidden = false;
+            return;
+        }
 
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
 	    dispatch_async(queue, ^{

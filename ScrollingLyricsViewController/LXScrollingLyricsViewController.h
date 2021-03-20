@@ -38,6 +38,8 @@
 
     @property BOOL shouldScrollLineToMiddle;
 
+    @property BOOL shouldShowSyncedLyrics;
+
     // The lyrics of the currently playing song
     @property (retain) NSArray *lyrics;
     // The song that was playing on the last execution of the timer
