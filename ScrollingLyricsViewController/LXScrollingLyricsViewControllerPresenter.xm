@@ -63,18 +63,14 @@ BOOL shouldShowUpgradeAlert = false;
                                  message: @"Lyrication is (and will always stay) free. Maintaining the tweak and the required servers is a lot of work, so I'd really appreciate if you could check out my Twitter (@thatmarcelbraun) to get the newest updates :)"
                                  preferredStyle: UIAlertControllerStyleAlert];
 
-            [NSTimer scheduledTimerWithTimeInterval: 3
-                                    repeats: false
-                                    block: ^(NSTimer *timer) {
-                                        [alert addAction: [UIAlertAction
-                                            actionWithTitle: @"Rather not"
-                                            style: UIAlertActionStyleDestructive
-                                            handler: ^(UIAlertAction * action) {
-                                                [alert dismissViewControllerAnimated: false completion: ^{
-                                                [[self overlayViewController] presentViewController: vc animated: true completion: nil];
-                                            }];
-                                        }]];
-                                    }];
+            [alert addAction: [UIAlertAction
+                                actionWithTitle: @"Rather not"
+                                style: UIAlertActionStyleDestructive
+                                handler: ^(UIAlertAction * action) {
+                                    [alert dismissViewControllerAnimated: false completion: ^{
+                                    [[self overlayViewController] presentViewController: vc animated: true completion: nil];
+                                }];
+            }]];
 
             [alert addAction: [UIAlertAction
                                 actionWithTitle: @"Take a look at my twitter"

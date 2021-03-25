@@ -60,6 +60,55 @@ HBPreferences *preferences;
     }
 %end
 
+// Spectral SPCMusicView
+
+UILongPressGestureRecognizer *spectralPlayPauseLongPressGestureRecognizer;
+
+@interface SPCMusicView: UIView
+    - (void) lxPlayPauseLongPressRecognized:(UIGestureRecognizer*)sender;
+@end
+
+%hook SPCMusicView
+
+    - (void) start {
+        %orig;
+
+        if (spectralPlayPauseLongPressGestureRecognizer || !self.superview) {
+            return;
+        }
+
+        for (UIView *superviewSubview in [self.superview subviews]) {
+            if (![superviewSubview isKindOfClass: %c(MRUNowPlayingTransportControlsView)]) {
+                continue;
+            }
+
+            UIView *playPauseButton = [superviewSubview subviews][2];
+
+            playPauseButton.userInteractionEnabled = true;
+
+            if (!presenter) {
+                presenter = [[LXScrollingLyricsViewControllerPresenter alloc] init];
+                presenter.twitterAlertAllowed = true;
+            }
+
+            spectralPlayPauseLongPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] init];
+            [spectralPlayPauseLongPressGestureRecognizer addTarget: self action: @selector(lxPlayPauseLongPressRecognized:)];
+            spectralPlayPauseLongPressGestureRecognizer.minimumPressDuration = 0.5;
+            [playPauseButton addGestureRecognizer: spectralPlayPauseLongPressGestureRecognizer];
+        }
+    }
+
+    %new
+    - (void) lxPlayPauseLongPressRecognized:(UIGestureRecognizer*)sender {
+        if (sender.state != UIGestureRecognizerStateBegan) {
+            return;
+        }
+
+        [presenter present];
+    }
+
+%end
+
 // Quart
 
 UILongPressGestureRecognizer *quartApplicationContainerLongPressGestureRecognizer;
