@@ -166,7 +166,7 @@
 			<key>cell</key>
 			<string>PSSwitchCell</string>
 			<key>label</key>
-			<string>Synced lyrics (disabling experimental)</string>
+			<string>Synced lyrics</string>
 			<key>default</key>
 			<true />
 			<key>defaults</key>
