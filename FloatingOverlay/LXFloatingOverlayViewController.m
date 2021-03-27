@@ -6,6 +6,8 @@
     @synthesize overlayLyricLabel;
     @synthesize overlayTopConstraint;
     @synthesize overlayRightConstraint;
+    @synthesize overlayTopConstraintConstantBeforeAlign;
+    @synthesize overlayRightConstraintConstantBeforeAlign;
 
     - (void) viewDidLoad {
         [self setupViews];
@@ -107,6 +109,67 @@
 
     - (BOOL) _canShowWhileLocked {
         return true;
+    }
+
+    - (void) hideBackground {
+        [UIView animateWithDuration: 0.2 delay: 0.0 options: UIViewAnimationOptionCurveEaseInOut
+            animations:^{
+                self.overlayVisualEffectView.alpha = 0;
+            }
+            completion:^(BOOL finished){ }];
+    }
+
+    - (void) showBackground {
+        [UIView animateWithDuration: 0.2 delay: 0.0 options: UIViewAnimationOptionCurveEaseInOut
+            animations:^{
+                self.overlayVisualEffectView.alpha = 1;
+            }
+            completion:^(BOOL finished){ }];
+    }
+
+    - (void) alignOverlay {
+        self.overlayTopConstraintConstantBeforeAlign = overlayTopConstraint.constant;
+        self.overlayRightConstraintConstantBeforeAlign = overlayRightConstraint.constant;
+        
+        overlayTopConstraint.constant = [[UIScreen mainScreen] bounds].size.height - 150;
+        overlayRightConstraint.constant = -([[UIScreen mainScreen] bounds].size.width / 2 - (270 / 2));
+    }
+
+    - (void) revertOverlayAlign {
+        overlayTopConstraint.constant = self.overlayTopConstraintConstantBeforeAlign;
+        overlayRightConstraint.constant = self.overlayRightConstraintConstantBeforeAlign;
+    }
+
+    - (void) alignOverlayAnimated {
+        [UIView animateWithDuration: 0.2 delay: 0.0 options: UIViewAnimationOptionCurveEaseInOut
+            animations:^{
+                self.overlayLyricLabel.alpha = 0;
+            }
+            completion:^(BOOL finished){
+                [self alignOverlay];
+
+                [UIView animateWithDuration: 0.2 delay: 0.0 options: UIViewAnimationOptionCurveEaseInOut
+                    animations:^{
+                        self.overlayLyricLabel.alpha = 1;
+                    }
+                    completion:^(BOOL finished){ }];
+            }];
+    }
+
+    - (void) revertOverlayAlignAnimated {
+        [UIView animateWithDuration: 0.2 delay: 0.0 options: UIViewAnimationOptionCurveEaseInOut
+            animations:^{
+                self.overlayLyricLabel.alpha = 0;
+            }
+            completion:^(BOOL finished){
+                [self revertOverlayAlign];
+
+                [UIView animateWithDuration: 0.2 delay: 0.0 options: UIViewAnimationOptionCurveEaseInOut
+                    animations:^{
+                        self.overlayLyricLabel.alpha = 1;
+                    }
+                    completion:^(BOOL finished){ }];
+            }];
     }
 
 @end

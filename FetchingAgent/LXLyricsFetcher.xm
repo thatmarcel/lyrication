@@ -6,6 +6,12 @@
     + (id) sharedInstanceIfExists;
 @end
 
+@interface LastLookManager: NSObject
+    - (BOOL) isActive;
+
+    + (instancetype) sharedInstance;
+@end
+
 @implementation LXLyricsFetcher
     @synthesize lyrics;
     @synthesize lastSong;
@@ -25,8 +31,10 @@
     }
 
     - (void) fire {
+        LastLookManager *lastLookManager = [%c(LastLookManager) sharedInstance];
         SBLockScreenManager *manager = [%c(SBLockScreenManager) sharedInstanceIfExists];
-        if (manager) {
+        
+        if ((!lastLookManager || (lastLookManager && ![lastLookManager isActive])) && manager) {
             BOOL isScreenOn = MSHookIvar<BOOL>(manager, "_isScreenOn");
             if (!isScreenOn) {
                 return;
