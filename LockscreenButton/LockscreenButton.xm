@@ -301,20 +301,37 @@ UILongPressGestureRecognizer *flowLongPressGestureRecognizer;
 // MRUArtworkView
 // MPUArtworkView
 
+@interface UIView (PRV)
+    - (UIViewController*) _viewControllerForAncestor;
+@end
+
 @interface MPUArtworkView: UIView
     @property (retain) UILongPressGestureRecognizer *artworkLongPressGestureRecognizer;
+    @property (retain) UITapGestureRecognizer *artworkTapGestureRecognizer;
 
     - (void) lxLongPressRecognized:(UIGestureRecognizer*)sender;
+    - (void) lxTapRecognized:(UIGestureRecognizer*)sender;
 @end
 
 @interface MRUArtworkView: UIView
     @property (retain) UILongPressGestureRecognizer *artworkLongPressGestureRecognizer;
+    @property (retain) UITapGestureRecognizer *artworkTapGestureRecognizer;
     
     - (void) lxLongPressRecognized:(UIGestureRecognizer*)sender;
+    - (void) lxTapRecognized:(UIGestureRecognizer*)sender;
+@end
+
+@interface MPUNowPlayingViewController: UIViewController
+    - (void) didSelectHeaderView:(id)view;
+@end
+
+@interface MRUNowPlayingViewController: UIViewController
+    - (void) didSelectHeaderView:(id)view;
 @end
 
 %hook MRUArtworkView
     %property (retain) UILongPressGestureRecognizer *artworkLongPressGestureRecognizer;
+    %property (retain) UITapGestureRecognizer *artworkTapGestureRecognizer;
 
     - (id) initWithFrame:(CGRect)frame {
         self = %orig;
@@ -335,6 +352,10 @@ UILongPressGestureRecognizer *flowLongPressGestureRecognizer;
         self.artworkLongPressGestureRecognizer.minimumPressDuration = 0.5;
         [self addGestureRecognizer: self.artworkLongPressGestureRecognizer];
 
+        self.artworkTapGestureRecognizer = [[UITapGestureRecognizer alloc] init];
+        [self.artworkTapGestureRecognizer addTarget: self action: @selector(lxTapRecognized:)];
+        [self addGestureRecognizer: self.artworkTapGestureRecognizer];
+
         return self;
     }
 
@@ -347,6 +368,12 @@ UILongPressGestureRecognizer *flowLongPressGestureRecognizer;
         adjustPresenterProgressDelay();
 
         [presenter present];
+    }
+
+    %new
+    - (void) lxTapRecognized:(UIGestureRecognizer*)sender {
+        MRUNowPlayingViewController *npvc = (MRUNowPlayingViewController*) [self _viewControllerForAncestor];
+        [npvc didSelectHeaderView: nil];
     }
 
     - (void) setUserInteractionEnabled:(BOOL)enabled {
@@ -357,6 +384,7 @@ UILongPressGestureRecognizer *flowLongPressGestureRecognizer;
 
 %hook MPUArtworkView
     %property (retain) UILongPressGestureRecognizer *artworkLongPressGestureRecognizer;
+    %property (retain) UITapGestureRecognizer *artworkTapGestureRecognizer;
 
     - (id) initWithFrame:(CGRect)frame {
         self = %orig;
@@ -377,6 +405,10 @@ UILongPressGestureRecognizer *flowLongPressGestureRecognizer;
         self.artworkLongPressGestureRecognizer.minimumPressDuration = 0.5;
         [self addGestureRecognizer: self.artworkLongPressGestureRecognizer];
 
+        self.artworkTapGestureRecognizer = [[UITapGestureRecognizer alloc] init];
+        [self.artworkTapGestureRecognizer addTarget: self action: @selector(lxTapRecognized:)];
+        [self addGestureRecognizer: self.artworkTapGestureRecognizer];
+
         return self;
     }
 
@@ -389,6 +421,12 @@ UILongPressGestureRecognizer *flowLongPressGestureRecognizer;
         adjustPresenterProgressDelay();
 
         [presenter present];
+    }
+
+    %new
+    - (void) lxTapRecognized:(UIGestureRecognizer*)sender {
+        MPUNowPlayingViewController *npvc = (MPUNowPlayingViewController*) [self _viewControllerForAncestor];
+        [npvc didSelectHeaderView: nil];
     }
 
     - (void) setUserInteractionEnabled:(BOOL)enabled {
