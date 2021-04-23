@@ -510,9 +510,8 @@ UILongPressGestureRecognizer *flowLongPressGestureRecognizer;
     // lyricsButton.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent: 0.9];
     if (@available(iOS 13, *)) {
             [lyricsButton setTitleColor: [UIColor labelColor] forState: UIControlStateNormal];
-        } else {
-            [lyricsButton setTitleColor: [UIColor blackColor] forState: UIControlStateNormal];
-        }
+    } else {
+        [lyricsButton setTitleColor: [UIColor blackColor] forState: UIControlStateNormal];
     }
 
     lyricsButton.layer.masksToBounds = true;
@@ -627,7 +626,6 @@ UILongPressGestureRecognizer *flowLongPressGestureRecognizer;
             [lyricsButton setTitleColor: [UIColor labelColor] forState: UIControlStateNormal];
         } else {
             [lyricsButton setTitleColor: [UIColor blackColor] forState: UIControlStateNormal];
-        }
     }
 
     lyricsButton.layer.masksToBounds = true;
