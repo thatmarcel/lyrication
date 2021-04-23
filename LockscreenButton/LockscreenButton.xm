@@ -452,7 +452,11 @@ UILongPressGestureRecognizer *flowLongPressGestureRecognizer;
 %new
 - (void) lxRevertUI:(NSNotification *)notification {
     if (lyricsButton) {
-        [lyricsButton setTitleColor: [UIColor labelColor] forState: UIControlStateNormal];
+        if (@available(iOS 13, *)) {
+            [lyricsButton setTitleColor: [UIColor labelColor] forState: UIControlStateNormal];
+        } else {
+            [lyricsButton setTitleColor: [UIColor blackColor] forState: UIControlStateNormal];
+        }
     }
 }
 
@@ -504,7 +508,12 @@ UILongPressGestureRecognizer *flowLongPressGestureRecognizer;
     [lyricsButton setTitle: @"LYRICS" forState: UIControlStateNormal];
 
     // lyricsButton.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent: 0.9];
-    [lyricsButton setTitleColor: [UIColor labelColor] forState: UIControlStateNormal];
+    if (@available(iOS 13, *)) {
+            [lyricsButton setTitleColor: [UIColor labelColor] forState: UIControlStateNormal];
+        } else {
+            [lyricsButton setTitleColor: [UIColor blackColor] forState: UIControlStateNormal];
+        }
+    }
 
     lyricsButton.layer.masksToBounds = true;
     lyricsButton.layer.cornerRadius = 8;
@@ -556,7 +565,11 @@ UILongPressGestureRecognizer *flowLongPressGestureRecognizer;
 %new
 - (void) lxRevertUI:(NSNotification *)notification {
     if (lyricsButton) {
-        [lyricsButton setTitleColor: [UIColor labelColor] forState: UIControlStateNormal];
+        if (@available(iOS 13, *)) {
+            [lyricsButton setTitleColor: [UIColor labelColor] forState: UIControlStateNormal];
+        } else {
+            [lyricsButton setTitleColor: [UIColor blackColor] forState: UIControlStateNormal];
+        }
     }
 }
 
@@ -610,7 +623,12 @@ UILongPressGestureRecognizer *flowLongPressGestureRecognizer;
     [lyricsButton setTitle: @"LYRICS" forState: UIControlStateNormal];
 
     // lyricsButton.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent: 0.9];
-    [lyricsButton setTitleColor: [UIColor labelColor] forState: UIControlStateNormal];
+    if (@available(iOS 13, *)) {
+            [lyricsButton setTitleColor: [UIColor labelColor] forState: UIControlStateNormal];
+        } else {
+            [lyricsButton setTitleColor: [UIColor blackColor] forState: UIControlStateNormal];
+        }
+    }
 
     lyricsButton.layer.masksToBounds = true;
     lyricsButton.layer.cornerRadius = 8;
