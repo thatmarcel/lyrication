@@ -12,6 +12,31 @@
     @property (retain) UIViewController* _viewDelegate;
 @end
 
+@interface AVRoutingSessionManager: NSObject
+    @property (atomic, assign, readonly) id currentRoutingSession;
+
+    + (AVRoutingSessionManager*) longFormVideoRoutingSessionManager; // doesn't return the same AVRoutingSessionManager instance as the SB original one, it probably returns a new one for video, but the original one doesn't have a sharedInstance, and both have same destination, so I'm using this one!
+@end
+
+@interface SBApplication: NSObject 
+    @property (nonatomic, readonly) NSString* bundleIdentifier;
+@end
+
+@interface SBMediaController: NSObject
+    @property (nonatomic, readonly) SBApplication* nowPlayingApplication;
+
+    - (instancetype) sharedInstance;
+@end
+
+BOOL isPlayingFromSpotify() {
+    NSString *nowPlayingBundleId = [[[%c(SBMediaController) sharedInstance] nowPlayingApplication] bundleIdentifier];
+    return [nowPlayingBundleId isEqualToString: @"com.spotify.client"];
+}
+
+BOOL isAirPlaying() {
+    return [%c(AVRoutingSessionManager) longFormVideoRoutingSessionManager].currentRoutingSession != nil;
+}
+
 UIButton *lyricsButton;
 LXScrollingLyricsViewControllerPresenter *presenter;
 UIViewController *lockscreenViewController;
@@ -25,6 +50,10 @@ HBPreferences *preferences;
         @"showexpandbuttoninspotify": @true,
         @"expandedviewlineblurenabled": @true
     }];
+}
+
+void adjustPresenterProgressDelay() {
+    presenter.necessaryProgressDelay = (isAirPlaying() && isPlayingFromSpotify()) ? 1.5 : nil;
 }
 
 // Disable screen locking on lock screen
@@ -104,6 +133,8 @@ UILongPressGestureRecognizer *spectralPlayPauseLongPressGestureRecognizer;
             return;
         }
 
+        adjustPresenterProgressDelay();
+
         [presenter present];
     }
 
@@ -143,6 +174,8 @@ UILongPressGestureRecognizer *quartApplicationContainerLongPressGestureRecognize
         if (sender.state != UIGestureRecognizerStateBegan) {
             return;
         }
+
+        adjustPresenterProgressDelay();
 
         [presenter present];
     }
@@ -217,6 +250,8 @@ UILongPressGestureRecognizer *juinPlayPauseButtonLongPressGestureRecognizer;
             return;
         }
 
+        adjustPresenterProgressDelay();
+
         [presenter present];
     }
 
@@ -256,6 +291,8 @@ UILongPressGestureRecognizer *flowLongPressGestureRecognizer;
         if (sender.state != UIGestureRecognizerStateBegan) {
             return;
         }
+
+        adjustPresenterProgressDelay();
 
         [presenter present];
     }
@@ -307,6 +344,8 @@ UILongPressGestureRecognizer *flowLongPressGestureRecognizer;
             return;
         }
 
+        adjustPresenterProgressDelay();
+
         [presenter present];
     }
 
@@ -346,6 +385,8 @@ UILongPressGestureRecognizer *flowLongPressGestureRecognizer;
         if (sender.state != UIGestureRecognizerStateBegan) {
             return;
         }
+
+        adjustPresenterProgressDelay();
 
         [presenter present];
     }
@@ -445,10 +486,17 @@ UILongPressGestureRecognizer *flowLongPressGestureRecognizer;
     presenter.twitterAlertAllowed = true;
 
     [lyricsButton
-        addTarget: presenter
-        action: @selector(present)
+        addTarget: self
+        action: @selector(lxPresentLyrics)
         forControlEvents: UIControlEventTouchUpInside
     ];
+}
+
+%new
+- (void) lxPresentLyrics {
+    adjustPresenterProgressDelay();
+
+    [presenter present];
 }
 
 %end
@@ -544,10 +592,17 @@ UILongPressGestureRecognizer *flowLongPressGestureRecognizer;
     presenter.twitterAlertAllowed = true;
 
     [lyricsButton
-        addTarget: presenter
-        action: @selector(present)
+        addTarget: self
+        action: @selector(lxPresentLyrics)
         forControlEvents: UIControlEventTouchUpInside
     ];
+}
+
+%new
+- (void) lxPresentLyrics {
+    adjustPresenterProgressDelay();
+
+    [presenter present];
 }
 
 %end

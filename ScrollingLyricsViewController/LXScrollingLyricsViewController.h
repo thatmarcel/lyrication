@@ -40,6 +40,8 @@
 
     @property BOOL shouldShowSyncedLyrics;
 
+    @property int necessaryProgressDelay;
+
     // The lyrics of the currently playing song
     @property (retain) NSArray *lyrics;
     // The song that was playing on the last execution of the timer

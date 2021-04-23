@@ -17,6 +17,8 @@
 
     @property BOOL twitterAlertAllowed;
 
+    @property int necessaryProgressDelay;
+
     - (BOOL) isPresenting;
 
     - (void) present;

@@ -12,6 +12,31 @@
     + (instancetype) sharedInstance;
 @end
 
+@interface AVRoutingSessionManager: NSObject
+    @property (atomic, assign, readonly) id currentRoutingSession;
+
+    + (AVRoutingSessionManager*) longFormVideoRoutingSessionManager; // doesn't return the same AVRoutingSessionManager instance as the SB original one, it probably returns a new one for video, but the original one doesn't have a sharedInstance, and both have same destination, so I'm using this one!
+@end
+
+@interface SBApplication: NSObject 
+    @property (nonatomic, readonly) NSString* bundleIdentifier;
+@end
+
+@interface SBMediaController: NSObject
+    @property (nonatomic, readonly) SBApplication* nowPlayingApplication;
+
+    - (instancetype) sharedInstance;
+@end
+
+BOOL isPlayingFromSpotify() {
+    NSString *nowPlayingBundleId = [[[%c(SBMediaController) sharedInstance] nowPlayingApplication] bundleIdentifier];
+    return [nowPlayingBundleId isEqualToString: @"com.spotify.client"];
+}
+
+BOOL isAirPlaying() {
+    return [%c(AVRoutingSessionManager) longFormVideoRoutingSessionManager].currentRoutingSession != nil;
+}
+
 @implementation LXLyricsFetcher
     @synthesize lyrics;
     @synthesize lastSong;
@@ -63,6 +88,10 @@
             }
             // Set current playback progress (e.g. 204.34 seconds)
             self.playbackProgress = timeInterval;
+
+            if (isAirPlaying() && isPlayingFromSpotify() && self.playbackProgress > 1.5) {
+                self.playbackProgress -= 1.5;
+            }
 
             NSNumber *_rate = (NSNumber*) info[@"kMRMediaRemoteNowPlayingInfoPlaybackRate"];
 			double rate = [_rate doubleValue];

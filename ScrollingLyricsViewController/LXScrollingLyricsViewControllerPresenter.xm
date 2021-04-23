@@ -8,6 +8,7 @@ BOOL shouldShowUpgradeAlert = false;
     @synthesize overlayViewController;
     @synthesize notifyToken;
     @synthesize twitterAlertAllowed;
+    @synthesize necessaryProgressDelay;
 
     - (instancetype) init {
         self = [super init];
@@ -29,6 +30,8 @@ BOOL shouldShowUpgradeAlert = false;
         BOOL shouldShowAlert = [[%c(SBLockStateAggregator) sharedInstance] lockState] <= 1 && self.twitterAlertAllowed && ![[NSUserDefaults standardUserDefaults] boolForKey: @"com.thatmarcel.tweaks.lyrication.defaultprefs.showntwtalertonceV2"];
 
         LXScrollingLyricsViewController *vc = [LXScrollingLyricsViewController new];
+
+        vc.necessaryProgressDelay = self.necessaryProgressDelay;
 
         self.overlayViewController = [[UIViewController alloc] init];
 
