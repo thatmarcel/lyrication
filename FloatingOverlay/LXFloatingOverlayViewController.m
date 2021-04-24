@@ -8,8 +8,13 @@
     @synthesize overlayRightConstraint;
     @synthesize overlayTopConstraintConstantBeforeAlign;
     @synthesize overlayRightConstraintConstantBeforeAlign;
+    @synthesize userActivatedShouldHideOverlay;
+    @synthesize showingInLastLook;
 
     - (void) viewDidLoad {
+        self.userActivatedShouldHideOverlay = false;
+        self.showingInLastLook = false;
+        
         [self setupViews];
         [self setupReceivers];
     }
@@ -170,6 +175,22 @@
                     }
                     completion:^(BOOL finished){ }];
             }];
+    }
+
+    - (void) userActivatedHide {
+        self.userActivatedShouldHideOverlay = true;
+
+        if (!self.showingInLastLook) {
+            self.view.hidden = true;
+        }
+    }
+
+    - (void) userActivatedShow {
+        self.userActivatedShouldHideOverlay = false;
+
+        if (!self.showingInLastLook) {
+            self.view.hidden = false;
+        }
     }
 
 @end

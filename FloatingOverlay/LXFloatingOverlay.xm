@@ -1,9 +1,16 @@
 #import <Cephei/HBPreferences.h>
 #import "LXFloatingOverlayViewController.h"
 #import "LXFloatingOverlaySecureWindow.h"
+#import "ActivatorSupport/ToggleAction.h"
+#import "ActivatorSupport/ShowAction.h"
+#import "ActivatorSupport/HideAction.h"
 
 LXFloatingOverlaySecureWindow *overlayWindow;
 LXFloatingOverlayViewController *overlayViewController;
+
+LyricationOverlayToggleAction *toggleAction;
+LyricationOverlayShowAction *showAction;
+LyricationOverlayHideAction *hideAction;
 
 BOOL showOverlayInLL = true;
 BOOL hideOverlayOutsideLL = false;
@@ -55,6 +62,20 @@ BOOL autoPositionOverlayInLL = true;
         overlayWindow.backgroundColor = [UIColor clearColor];
 	    overlayWindow.windowLevel = UIWindowLevelAlert + 1;
         [overlayWindow makeKeyAndVisible];
+
+        if (NSClassFromString(@"LAActivator")) {
+            toggleAction = [[LyricationOverlayToggleAction alloc] init];
+            showAction = [[LyricationOverlayShowAction alloc] init];
+            hideAction = [[LyricationOverlayHideAction alloc] init];
+
+            toggleAction.overlayViewController = overlayViewController;
+            showAction.overlayViewController = overlayViewController;
+            hideAction.overlayViewController = overlayViewController;
+
+            [[%c(LAActivator) sharedInstance] registerListener: toggleAction forName: @"ToggleLyricationFloatingOverlay"];
+            [[%c(LAActivator) sharedInstance] registerListener: showAction forName: @"ShowLyricationFloatingOverlay"];
+            [[%c(LAActivator) sharedInstance] registerListener: hideAction forName: @"HideLyricationFloatingOverlay"];
+        }
     }
 
 %end
@@ -68,6 +89,8 @@ BOOL autoPositionOverlayInLL = true;
         if (!overlayViewController) {
            return;
         }
+
+        overlayViewController.showingInLastLook = active && showOverlayInLL;
 
         if (active) {
             if (showOverlayInLL) {
@@ -100,7 +123,7 @@ BOOL autoPositionOverlayInLL = true;
                     [overlayViewController revertOverlayAlignAnimated];
                 }
 
-                overlayViewController.view.hidden = false;
+                overlayViewController.view.hidden = overlayViewController.userActivatedShouldHideOverlay;
             }
         }
     }

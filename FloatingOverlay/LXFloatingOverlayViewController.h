@@ -13,6 +13,11 @@
     @property CGFloat overlayTopConstraintConstantBeforeAlign;
     @property CGFloat overlayRightConstraintConstantBeforeAlign;
 
+    // Controls if the user chose to hide the overlay via Activator action (does not apply to LastLook)
+    @property BOOL userActivatedShouldHideOverlay;
+
+    @property BOOL showingInLastLook;
+
     - (void) viewDidLoad;
     - (void) setupReceivers;
     - (void) setupViews;
@@ -28,4 +33,7 @@
     - (void) revertOverlayAlign;
     - (void) alignOverlayAnimated;
     - (void) revertOverlayAlignAnimated;
+
+    - (void) userActivatedHide;
+    - (void) userActivatedShow;
 @end
