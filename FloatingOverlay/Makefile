@@ -1,5 +1,5 @@
-SDKVERSION = 13.5
-SYSROOT = /opt/theos/sdks/iPhoneOS13.5.sdk
+SDKVERSION = 13.7
+SYSROOT = $(THEOS)/sdks/iPhoneOS13.7.sdk
 ARCHS = arm64 arm64e
 
 include $(THEOS)/makefiles/common.mk

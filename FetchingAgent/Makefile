@@ -1,5 +1,5 @@
-SDKVERSION = 11.2
-SYSROOT = /opt/theos/sdks/iPhoneOS11.2.sdk
+SDKVERSION = 11.4
+SYSROOT = $(THEOS)/sdks/iPhoneOS11.4.sdk
 ARCHS = arm64 arm64e
 
 include $(THEOS)/makefiles/common.mk

@@ -1,5 +1,5 @@
 #import "Lyrication.h"
-#import <ControlCenterUI/ControlCenterUI-Structs.h>
+#import "ControlCenterUI-Structs.h"
 #import <objc/runtime.h>
 
 @implementation Lyrication

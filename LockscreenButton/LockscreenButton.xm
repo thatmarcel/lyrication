@@ -53,7 +53,11 @@ HBPreferences *preferences;
 }
 
 void adjustPresenterProgressDelay() {
-    presenter.necessaryProgressDelay = (isAirPlaying() && isPlayingFromSpotify()) ? 1.5 : nil;
+    if (isAirPlaying() && isPlayingFromSpotify()) {
+        presenter.necessaryProgressDelay = 1.5;
+    } else {
+        presenter.necessaryProgressDelay = 0;
+    }
 }
 
 // Disable screen locking on lock screen
