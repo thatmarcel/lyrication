@@ -21,7 +21,6 @@
         [preferences registerDefaults: @{
             @"showonlockscreen": @true,
             @"showinsidespotify": @true,
-            @"showexpandbuttoninspotify": @true,
             @"expandedviewlineblurenabled": @true
         }];
 

@@ -6,7 +6,7 @@ include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = LyricationSpotifyPlayerScreen
 
-$(TWEAK_NAME)_FILES = TweakV2.xm $(wildcard ../ScrollingLyricsViewController/*.m) $(wildcard ../ScrollingLyricsViewController/*.xm)
+$(TWEAK_NAME)_FILES = TweakV3.xm $(wildcard ../ScrollingLyricsViewController/*.m) $(wildcard ../ScrollingLyricsViewController/*.xm)
 $(TWEAK_NAME)_CFLAGS = -fobjc-arc
 $(TWEAK_NAME)_FRAMEWORKS = UIKit
 $(TWEAK_NAME)_PRIVATE_FRAMEWORKS = MediaRemote
