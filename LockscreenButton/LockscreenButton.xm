@@ -695,6 +695,29 @@ NSLayoutConstraint* lx16_lyricsButtonBottomConstraint;
 @interface CSActivityItemContentView: UIView
 @end
 
+bool lx16_activity_view_is_now_playing_view(CSActivityItemContentView* questionedView) {
+    BOOL isNowPlayingView = false;
+    
+    CSActivityItemViewController* itemViewController = (CSActivityItemViewController*) questionedView.nextResponder;
+    if (itemViewController && [itemViewController isKindOfClass: %c(CSActivityItemViewController)]) {
+        ACUISActivityHostViewController* activityHostViewController = itemViewController.activityHostViewController;
+        if (activityHostViewController && [activityHostViewController isKindOfClass: %c(ACUISActivityHostViewController)]) {
+            CSListItemActivityProvider* ahvcDelegate = activityHostViewController.delegate;
+            if (ahvcDelegate && [ahvcDelegate isKindOfClass: %c(CSListItemActivityProvider)]) {
+                NSDictionary* activityItemsByBundleId = ahvcDelegate.activityItemsByBundleId;
+                if (activityItemsByBundleId && [activityItemsByBundleId isKindOfClass: [NSDictionary class]]) {
+                    NSArray* activityItems = activityItemsByBundleId[@"com.apple.MediaRemoteUI"];
+                    if (activityItems && [activityItems isKindOfClass: [NSArray class]] && activityItems.count > 0) {
+                        isNowPlayingView = true;
+                    }
+                }
+            }
+        }
+    }
+    
+    return isNowPlayingView;
+}
+
 %hook CSActivityItemContentView
 
     %new
@@ -703,8 +726,51 @@ NSLayoutConstraint* lx16_lyricsButtonBottomConstraint;
 
         [presenter present];
     }
-
+    
+    - (void) setFrame:(CGRect)newFrame {
+        %orig;
+        
+        if (lyricsButton && [self.subviews containsObject: lyricsButton]) {
+            if (lx16_lyricsButtonBottomConstraint) {
+                // If the view is higher due to an AirPlay volume bar,
+                // we need to move the button up so it doesn't overlap
+                if (newFrame.size.height >= 170) {
+                    lx16_lyricsButtonBottomConstraint.constant = -47;
+                } else if (newFrame.size.height >= 120) {
+                    lx16_lyricsButtonBottomConstraint.constant = -15;
+                }
+            }
+        }
+    }
+    
+    - (void) setBounds:(CGRect)newBounds {
+        %orig;
+        
+        if (lyricsButton && [self.subviews containsObject: lyricsButton]) {
+            if (lx16_lyricsButtonBottomConstraint) {
+                // If the view is higher due to an AirPlay volume bar,
+                // we need to move the button up so it doesn't overlap
+                if (newBounds.size.height >= 170) {
+                    lx16_lyricsButtonBottomConstraint.constant = -47;
+                } else if (newBounds.size.height >= 120) {
+                    lx16_lyricsButtonBottomConstraint.constant = -15;
+                }
+            }
+        }
+    }
+    
     - (void) layoutSubviews {
+        %orig;
+        
+        BOOL isNowPlayingView = lx16_activity_view_is_now_playing_view(self);
+        
+        if (!isNowPlayingView && lyricsButton && [self.subviews containsObject: lyricsButton]) {
+            [lyricsButton removeFromSuperview];
+            lyricsButton = nil;
+        }
+    }
+
+    - (void) didMoveToWindow {
         %orig;
         
         if (@available(iOS 16, *)) {
@@ -715,21 +781,7 @@ NSLayoutConstraint* lx16_lyricsButtonBottomConstraint;
             // Make sure the button is only added to the now playing UI
             // and not to other live activities
             
-            BOOL isNowPlayingView = false;
-            
-            CSActivityItemViewController* itemViewController = (CSActivityItemViewController*) self.nextResponder;
-            if (itemViewController && [itemViewController isKindOfClass: %c(CSActivityItemViewController)]) {
-                ACUISActivityHostViewController* activityHostViewController = itemViewController.activityHostViewController;
-                if (activityHostViewController && [activityHostViewController isKindOfClass: %c(ACUISActivityHostViewController)]) {
-                    CSListItemActivityProvider* ahvcDelegate = activityHostViewController.delegate;
-                    if (ahvcDelegate && [ahvcDelegate isKindOfClass: %c(CSListItemActivityProvider)]) {
-                        NSDictionary* activityItemsByBundleId = ahvcDelegate.activityItemsByBundleId;
-                        if (activityItemsByBundleId && [activityItemsByBundleId isKindOfClass: [NSDictionary class]] && activityItemsByBundleId[@"com.apple.MediaRemoteUI"]) {
-                            isNowPlayingView = true;
-                        }
-                    }
-                }
-            }
+            BOOL isNowPlayingView = lx16_activity_view_is_now_playing_view(self);
             
             if (!isNowPlayingView) {
                 if (lyricsButton && [self.subviews containsObject: lyricsButton]) {
@@ -755,7 +807,12 @@ NSLayoutConstraint* lx16_lyricsButtonBottomConstraint;
                     return;
                 }
                 
-                [lyricsButton removeFromSuperview];
+                @try {
+                    if (lyricsButton.superview) {
+                        [lyricsButton removeFromSuperview];
+                    }
+                } @catch (id ignored) { }
+                
                 lyricsButton = nil;
             }
             
@@ -792,6 +849,15 @@ NSLayoutConstraint* lx16_lyricsButtonBottomConstraint;
                 forControlEvents: UIControlEventTouchUpInside
             ];
         }
+    }
+    
+    - (void) dealloc {
+        if (lyricsButton && self && self.subviews && [self.subviews containsObject: lyricsButton]) {
+            [lyricsButton removeFromSuperview];
+            lyricsButton = nil;
+        }
+        
+        %orig;
     }
 
 %end

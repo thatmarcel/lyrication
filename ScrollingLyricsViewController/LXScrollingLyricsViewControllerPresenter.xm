@@ -15,6 +15,10 @@
             "com.apple.springboard.hasBlankedScreen",
             &notifyToken,
             dispatch_get_main_queue(), ^(int t) {
+                if (!self.overlayViewController || !self.overlayWindow) {
+                    return;
+                }
+                
                 [self.overlayViewController dismissViewControllerAnimated: false completion: nil];
                 self.overlayWindow.hidden = true;
                 self.overlayWindow = nil;
