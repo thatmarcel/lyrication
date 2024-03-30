@@ -43,8 +43,8 @@ UIViewController *lockscreenViewController;
 
 HBPreferences *preferences;
 %ctor {
-    preferences = [[HBPreferences alloc] initWithIdentifier:@"com.thatmarcel.tweaks.lyrication.hbprefs"];
-    [preferences registerDefaults:@{
+    preferences = [[HBPreferences alloc] initWithIdentifier: @"com.thatmarcel.tweaks.lyrication.hbprefs"];
+    [preferences registerDefaults: @{
         @"showonlockscreen": @true,
         @"showinsidespotify": @true,
         @"expandedviewlineblurenabled": @true
@@ -470,14 +470,19 @@ UILongPressGestureRecognizer *flowLongPressGestureRecognizer;
     }
     self = %orig(CGRectMake(frame.origin.x, frame.origin.y, frame.size.width - 70 - 32, frame.size.height));
 
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                            selector:@selector(lxRevertUI:)
-                                            name:@"ColorFlowLockScreenColorReversionNotification"
-                                            object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                            selector:@selector(lxColorizeUI:)
-                                            name:@"ColorFlowLockScreenColorizationNotification"
-                                            object:nil];
+    [[NSNotificationCenter defaultCenter]
+        addObserver: self
+        selector: @selector(lxRevertUI:)
+        name: @"ColorFlowLockScreenColorReversionNotification"
+        object: nil
+    ];
+    
+    [[NSNotificationCenter defaultCenter]
+        addObserver: self
+        selector: @selector(lxColorizeUI:)
+        name: @"ColorFlowLockScreenColorizationNotification"
+        object: nil
+    ];
 
     return self;
 }
@@ -526,10 +531,10 @@ UILongPressGestureRecognizer *flowLongPressGestureRecognizer;
 
     [self.superview addSubview: lyricsButton];
 
-    [lyricsButton.topAnchor constraintEqualToAnchor: self.topAnchor constant: 6].active = YES;
-    [lyricsButton.bottomAnchor constraintEqualToAnchor: self.bottomAnchor constant: -6].active = YES;
-    [lyricsButton.leftAnchor constraintEqualToAnchor: self.rightAnchor constant: 16].active = YES;
-    [lyricsButton.rightAnchor constraintEqualToAnchor: self.superview.rightAnchor constant: -16].active = YES;
+    [lyricsButton.topAnchor constraintEqualToAnchor: self.topAnchor constant: 6].active = true;
+    [lyricsButton.bottomAnchor constraintEqualToAnchor: self.bottomAnchor constant: -6].active = true;
+    [lyricsButton.leftAnchor constraintEqualToAnchor: self.rightAnchor constant: 16].active = true;
+    [lyricsButton.rightAnchor constraintEqualToAnchor: self.superview.rightAnchor constant: -16].active = true;
 
     presenter = [[LXScrollingLyricsViewControllerPresenter alloc] init];
     presenter.twitterAlertAllowed = true;
@@ -582,14 +587,19 @@ UILongPressGestureRecognizer *flowLongPressGestureRecognizer;
     }
     self = %orig(CGRectMake(frame.origin.x, frame.origin.y, frame.size.width - 70 - 32, frame.size.height));
 
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                            selector:@selector(lxRevertUI:)
-                                            name:@"ColorFlowLockScreenColorReversionNotification"
-                                            object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                            selector:@selector(lxColorizeUI:)
-                                            name:@"ColorFlowLockScreenColorizationNotification"
-                                            object:nil];
+    [[NSNotificationCenter defaultCenter]
+        addObserver: self
+        selector: @selector(lxRevertUI:)
+        name: @"ColorFlowLockScreenColorReversionNotification"
+        object: nil
+    ];
+    
+    [[NSNotificationCenter defaultCenter]
+        addObserver: self
+        selector: @selector(lxColorizeUI:)
+        name: @"ColorFlowLockScreenColorizationNotification"
+        object:nil
+    ];
     
     return self;
 }
@@ -640,10 +650,10 @@ UILongPressGestureRecognizer *flowLongPressGestureRecognizer;
 
     [self.superview addSubview: lyricsButton];
 
-    [lyricsButton.topAnchor constraintEqualToAnchor: self.topAnchor constant: 12].active = YES;
-    [lyricsButton.bottomAnchor constraintEqualToAnchor: self.bottomAnchor constant: -12].active = YES;
-    [lyricsButton.leftAnchor constraintEqualToAnchor: self.rightAnchor constant: 16].active = YES;
-    [lyricsButton.rightAnchor constraintEqualToAnchor: self.superview.rightAnchor constant: -16].active = YES;
+    [lyricsButton.topAnchor constraintEqualToAnchor: self.topAnchor constant: 12].active = true;
+    [lyricsButton.bottomAnchor constraintEqualToAnchor: self.bottomAnchor constant: -12].active = true;
+    [lyricsButton.leftAnchor constraintEqualToAnchor: self.rightAnchor constant: 16].active = true;
+    [lyricsButton.rightAnchor constraintEqualToAnchor: self.superview.rightAnchor constant: -16].active = true;
 
     presenter = [[LXScrollingLyricsViewControllerPresenter alloc] init];
     presenter.twitterAlertAllowed = true;
@@ -681,41 +691,39 @@ UILongPressGestureRecognizer *flowLongPressGestureRecognizer;
     - (void) layoutSubviews {
         %orig;
         
-        if (![preferences boolForKey: @"showonlockscreen"] || lyricsButton) {
-            return;
+        if (@available(iOS 16, *)) {
+            if (![preferences boolForKey: @"showonlockscreen"] || (lyricsButton && [self.subviews containsObject: lyricsButton])) {
+                return;
+            }
+            
+            lyricsButton = [[UIButton alloc] init];
+            lyricsButton.translatesAutoresizingMaskIntoConstraints = false;
+            
+            [lyricsButton setTitle: @"LX" forState: UIControlStateNormal];
+            
+            [lyricsButton setTitleColor: [[UIColor labelColor] colorWithAlphaComponent: 0.5] forState: UIControlStateNormal];
+            
+            lyricsButton.layer.masksToBounds = true;
+            lyricsButton.layer.cornerRadius = 8;
+            
+            if (lyricsButton.titleLabel) {
+                lyricsButton.titleLabel.font = [UIFont systemFontOfSize: 24.0 weight: UIFontWeightBold];
+            }
+            
+            [self addSubview: lyricsButton];
+            
+            [lyricsButton.bottomAnchor constraintEqualToAnchor: self.bottomAnchor constant: -14].active = true;
+            [lyricsButton.leftAnchor constraintEqualToAnchor: self.leftAnchor constant: 24].active = true;
+            
+            presenter = [[LXScrollingLyricsViewControllerPresenter alloc] init];
+            presenter.twitterAlertAllowed = true;
+            
+            [lyricsButton
+                addTarget: self
+                action: @selector(lxPresentLyrics)
+                forControlEvents: UIControlEventTouchUpInside
+            ];
         }
-        
-        if (@available(iOS 16, *)) { } else {
-            return;
-        }
-        
-        lyricsButton = [[UIButton alloc] init];
-        lyricsButton.translatesAutoresizingMaskIntoConstraints = false;
-        
-        [lyricsButton setTitle: @"LX" forState: UIControlStateNormal];
-        
-        [lyricsButton setTitleColor: [[UIColor labelColor] colorWithAlphaComponent: 0.5] forState: UIControlStateNormal];
-        
-        lyricsButton.layer.masksToBounds = true;
-        lyricsButton.layer.cornerRadius = 8;
-        
-        if (lyricsButton.titleLabel) {
-            lyricsButton.titleLabel.font = [UIFont systemFontOfSize: 24.0 weight: UIFontWeightBold];
-        }
-        
-        [self addSubview: lyricsButton];
-        
-        [lyricsButton.bottomAnchor constraintEqualToAnchor: self.bottomAnchor constant: -14].active = YES;
-        [lyricsButton.leftAnchor constraintEqualToAnchor: self.leftAnchor constant: 24].active = YES;
-        
-        presenter = [[LXScrollingLyricsViewControllerPresenter alloc] init];
-        presenter.twitterAlertAllowed = true;
-        
-        [lyricsButton
-            addTarget: self
-            action: @selector(lxPresentLyrics)
-            forControlEvents: UIControlEventTouchUpInside
-        ];
     }
 
 %end

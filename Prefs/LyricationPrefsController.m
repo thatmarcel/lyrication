@@ -1,5 +1,5 @@
 #import "LyricationPrefsController.h"
-#import "../libroot/src/libroot.h"
+#import "lx_root_helper.h"
 
 @implementation LyricationPrefsController
     + (nullable NSString*) hb_specifierPlist {
@@ -27,9 +27,9 @@
     }
 
     - (void) respring:(id)sender {
-	    pid_t pid;
+        pid_t pid;
 	    const char* args[] = { "sbreload", NULL };
-	    posix_spawn(&pid, JBROOT_PATH_CSTRING("/usr/bin/sbreload"), NULL, NULL, (char* const*) args, NULL);
+	    posix_spawn(&pid, LX_CONVERT_JBROOT_PATH_CSTRING("/usr/bin/sbreload"), NULL, NULL, (char* const*) args, NULL);
     }
 
 @end

@@ -20,7 +20,7 @@ include $(THEOS)/makefiles/common.mk
 
 BUNDLE_NAME = LyricationPrefs
 
-$(BUNDLE_NAME)_FILES = $(wildcard *.m) ../libroot/src/dyn.c
+$(BUNDLE_NAME)_FILES = $(wildcard *.m)
 $(BUNDLE_NAME)_INSTALL_PATH = /Library/PreferenceBundles
 $(BUNDLE_NAME)_FRAMEWORKS += UIKit
 $(BUNDLE_NAME)_PRIVATE_FRAMEWORKS += Preferences

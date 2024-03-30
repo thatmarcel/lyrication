@@ -71,7 +71,7 @@
             UIVisualEffect* effect;
             
             if (@available(iOS 13, *)) {
-                effect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleSystemChromeMaterial];
+                effect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleSystemThickMaterial];
             } else {
                 effect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleRegular];
             }
@@ -96,12 +96,12 @@
             [self.songNameLabel setTextColor: [UIColor blackColor]];
         }
         [self.view addSubview: self.songNameLabel];
-        [self.songNameLabel.topAnchor constraintEqualToAnchor: self.view.topAnchor constant: 32].active = YES;
-        [self.songNameLabel.leftAnchor constraintEqualToAnchor: self.view.leftAnchor constant: 32].active = YES;
-        [self.songNameLabel.rightAnchor constraintEqualToAnchor: self.view.rightAnchor constant: -32 - (shouldShowCloseButton ? 50 : 0)].active = YES;
+        [self.songNameLabel.topAnchor constraintEqualToAnchor: self.view.topAnchor constant: 32].active = true;
+        [self.songNameLabel.leftAnchor constraintEqualToAnchor: self.view.leftAnchor constant: 32].active = true;
+        [self.songNameLabel.rightAnchor constraintEqualToAnchor: self.view.rightAnchor constant: -32 - (shouldShowCloseButton ? 50 : 0)].active = true;
 
         if (!shouldShowSongName) {
-            [self.songNameLabel.heightAnchor constraintEqualToConstant: 0].active = YES;
+            [self.songNameLabel.heightAnchor constraintEqualToConstant: 0].active = true;
         }
 
         self.songNameLabel.minimumScaleFactor = 0.8;
@@ -118,28 +118,28 @@
             [self.songArtistLabel setTextColor: [[UIColor blackColor] colorWithAlphaComponent: 0.8]];
         }
         [self.view addSubview: self.songArtistLabel];
-        [self.songArtistLabel.topAnchor constraintEqualToAnchor: self.songNameLabel.bottomAnchor constant: 0].active = YES;
-        [self.songArtistLabel.leftAnchor constraintEqualToAnchor: self.view.leftAnchor constant: 32].active = YES;
-        [self.songArtistLabel.rightAnchor constraintEqualToAnchor: self.view.rightAnchor constant: -32 - (shouldShowCloseButton ? 50 : 0)].active = YES;
+        [self.songArtistLabel.topAnchor constraintEqualToAnchor: self.songNameLabel.bottomAnchor constant: 0].active = true;
+        [self.songArtistLabel.leftAnchor constraintEqualToAnchor: self.view.leftAnchor constant: 32].active = true;
+        [self.songArtistLabel.rightAnchor constraintEqualToAnchor: self.view.rightAnchor constant: -32 - (shouldShowCloseButton ? 50 : 0)].active = true;
 
         if (!shouldShowSongArtist) {
-            [self.songArtistLabel.heightAnchor constraintEqualToConstant: 0].active = YES;
+            [self.songArtistLabel.heightAnchor constraintEqualToConstant: 0].active = true;
         }
 
         self.lyricsViewsContainer = [[UIView alloc] init];
         self.lyricsViewsContainer.translatesAutoresizingMaskIntoConstraints = false;
         [self.view addSubview: self.lyricsViewsContainer];
-        [self.lyricsViewsContainer.bottomAnchor constraintEqualToAnchor: self.view.bottomAnchor constant: 0].active = YES;
-        [self.lyricsViewsContainer.leftAnchor constraintEqualToAnchor: self.view.leftAnchor constant: 0].active = YES;
-        [self.lyricsViewsContainer.rightAnchor constraintEqualToAnchor: self.view.rightAnchor constant: 0].active = YES;
+        [self.lyricsViewsContainer.bottomAnchor constraintEqualToAnchor: self.view.bottomAnchor constant: 0].active = true;
+        [self.lyricsViewsContainer.leftAnchor constraintEqualToAnchor: self.view.leftAnchor constant: 0].active = true;
+        [self.lyricsViewsContainer.rightAnchor constraintEqualToAnchor: self.view.rightAnchor constant: 0].active = true;
 
         self.tableView = [[UITableView alloc] init];
         self.tableView.translatesAutoresizingMaskIntoConstraints = false;
         [self.lyricsViewsContainer addSubview: self.tableView];
-        [self.tableView.topAnchor constraintEqualToAnchor: self.lyricsViewsContainer.topAnchor constant: 0].active = YES;
-        [self.tableView.bottomAnchor constraintEqualToAnchor: self.lyricsViewsContainer.bottomAnchor constant: 0].active = YES;
-        [self.tableView.leftAnchor constraintEqualToAnchor: self.lyricsViewsContainer.leftAnchor constant: 32].active = YES;
-        [self.tableView.rightAnchor constraintEqualToAnchor: self.lyricsViewsContainer.rightAnchor constant: 0].active = YES;
+        [self.tableView.topAnchor constraintEqualToAnchor: self.lyricsViewsContainer.topAnchor constant: 0].active = true;
+        [self.tableView.bottomAnchor constraintEqualToAnchor: self.lyricsViewsContainer.bottomAnchor constant: 0].active = true;
+        [self.tableView.leftAnchor constraintEqualToAnchor: self.lyricsViewsContainer.leftAnchor constant: 32].active = true;
+        [self.tableView.rightAnchor constraintEqualToAnchor: self.lyricsViewsContainer.rightAnchor constant: 0].active = true;
         self.tableView.dataSource = self;
         self.tableView.delegate = self;
         self.tableView.backgroundColor = [UIColor clearColor];
@@ -154,10 +154,10 @@
         self.staticLyricsTextView = [[UITextView alloc] init];
         self.staticLyricsTextView.translatesAutoresizingMaskIntoConstraints = false;
         [self.lyricsViewsContainer addSubview: self.staticLyricsTextView];
-        [self.staticLyricsTextView.topAnchor constraintEqualToAnchor: self.lyricsViewsContainer.topAnchor constant: 0].active = YES;
-        [self.staticLyricsTextView.bottomAnchor constraintEqualToAnchor: self.lyricsViewsContainer.bottomAnchor constant: 0].active = YES;
-        [self.staticLyricsTextView.leftAnchor constraintEqualToAnchor: self.lyricsViewsContainer.leftAnchor constant: 0].active = YES;
-        [self.staticLyricsTextView.rightAnchor constraintEqualToAnchor: self.lyricsViewsContainer.rightAnchor constant: 0].active = YES;
+        [self.staticLyricsTextView.topAnchor constraintEqualToAnchor: self.lyricsViewsContainer.topAnchor constant: 0].active = true;
+        [self.staticLyricsTextView.bottomAnchor constraintEqualToAnchor: self.lyricsViewsContainer.bottomAnchor constant: 0].active = true;
+        [self.staticLyricsTextView.leftAnchor constraintEqualToAnchor: self.lyricsViewsContainer.leftAnchor constant: 0].active = true;
+        [self.staticLyricsTextView.rightAnchor constraintEqualToAnchor: self.lyricsViewsContainer.rightAnchor constant: 0].active = true;
         self.staticLyricsTextView.text = @"";
         self.staticLyricsTextView.editable = false;
         self.staticLyricsTextView.selectable = false;
@@ -178,9 +178,9 @@
         if (shouldHideNameAndArtist) {
             self.songNameLabel.hidden = true;
             self.songArtistLabel.hidden = true;
-            [self.lyricsViewsContainer.topAnchor constraintEqualToAnchor: self.view.bottomAnchor constant: 32].active = YES;
+            [self.lyricsViewsContainer.topAnchor constraintEqualToAnchor: self.view.bottomAnchor constant: 32].active = true;
         } else {
-            [self.lyricsViewsContainer.topAnchor constraintEqualToAnchor: self.songArtistLabel.bottomAnchor constant: 8].active = YES;
+            [self.lyricsViewsContainer.topAnchor constraintEqualToAnchor: self.songArtistLabel.bottomAnchor constant: 8].active = true;
         }
 
         if (!self.highlightedLineColor) {
@@ -213,8 +213,8 @@
                 [self.closeButton setTitleColor: [UIColor blackColor] forState: UIControlStateNormal];
             }
 
-            [self.closeButton.topAnchor constraintEqualToAnchor: self.view.topAnchor constant: 50].active = YES;
-            [self.closeButton.rightAnchor constraintEqualToAnchor: self.view.rightAnchor constant: -32].active = YES;
+            [self.closeButton.topAnchor constraintEqualToAnchor: self.view.topAnchor constant: 50].active = true;
+            [self.closeButton.rightAnchor constraintEqualToAnchor: self.view.rightAnchor constant: -32].active = true;
             [self.closeButton
                 addTarget: self
                 action: @selector(dismiss)
@@ -252,11 +252,14 @@
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
 	    dispatch_async(queue, ^{
 		    NSURLSessionConfiguration* defaultSessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    	    NSURLSession* defaultSession = [NSURLSession sessionWithConfiguration:defaultSessionConfiguration];
-		    NSString* escapedSong = [song stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
-            NSString* escapedArtist = [artist stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
-		    NSURL* url = [NSURL URLWithString:[NSString stringWithFormat: @"https://prv.textyl.co/api/staticlyrics?name=%@&artist=%@", escapedSong, escapedArtist]];
-		    NSURLSessionDataTask* dataTask = [defaultSession dataTaskWithURL: url completionHandler:^(NSData* data, NSURLResponse* response, NSError* error) {
+    	    NSURLSession* defaultSession = [NSURLSession sessionWithConfiguration: defaultSessionConfiguration];
+		    NSString* escapedSong = [song stringByAddingPercentEncodingWithAllowedCharacters: [NSCharacterSet URLHostAllowedCharacterSet]];
+            NSString* escapedArtist = [artist stringByAddingPercentEncodingWithAllowedCharacters: [NSCharacterSet URLHostAllowedCharacterSet]];
+            
+            // Please don't use this API for other projects :)
+		    NSURL* urlPleaseDontCopyThanks = [NSURL URLWithString: [NSString stringWithFormat: @"https://prv.textyl.co/api/staticlyrics?name=%@&artist=%@", escapedSong, escapedArtist]];
+            
+		    NSURLSessionDataTask* dataTask = [defaultSession dataTaskWithURL: urlPleaseDontCopyThanks completionHandler:^(NSData* data, NSURLResponse* response, NSError* error) {
 			    dispatch_async(dispatch_get_main_queue(), ^{
                     if (![[self lastSong] isEqual: [NSString stringWithFormat: @"%@%@%@",  song, @" ", artist]]) {
 					    return;
@@ -264,7 +267,7 @@
 
 				    NSInteger statusCode = 0;
 
-				    if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
+				    if ([response isKindOfClass: [NSHTTPURLResponse class]]) {
     				    NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*) response;
     				    statusCode = httpResponse.statusCode;
 				    }
@@ -320,8 +323,10 @@
 			NSDictionary* info = (__bridge NSDictionary*) information;
 
             CFAbsoluteTime absoluteTime = CFAbsoluteTimeGetCurrent();
-            CFAbsoluteTime timestamp = CFDateGetAbsoluteTime((CFDateRef)[info objectForKey:@"kMRMediaRemoteNowPlayingInfoTimestamp"]);
-            double timeIntervalifPause = [[info objectForKey:@"kMRMediaRemoteNowPlayingInfoElapsedTime"] doubleValue];
+            CFAbsoluteTime timestamp = CFDateGetAbsoluteTime((CFDateRef) [info
+                objectForKey: @"kMRMediaRemoteNowPlayingInfoTimestamp"]
+            );
+            double timeIntervalifPause = [[info objectForKey: @"kMRMediaRemoteNowPlayingInfoElapsedTime"] doubleValue];
             NSTimeInterval timeInterval = (absoluteTime - timestamp) + timeIntervalifPause;
             if (isnan(timeInterval)) {
                 timeInterval = 0;
@@ -371,7 +376,7 @@
 		int index = 0;
 
 		for (NSDictionary* dict in [self lyrics]) {
-			double seconds = [[dict objectForKey:@"seconds"] doubleValue];
+			double seconds = [[dict objectForKey: @"seconds"] doubleValue];
 
 			double itemsmallestdistance = seconds - progress;
 
@@ -454,8 +459,11 @@
     	    NSURLSession* defaultSession = [NSURLSession sessionWithConfiguration: defaultSessionConfiguration];
             NSString* escapedSong = [song stringByAddingPercentEncodingWithAllowedCharacters: [NSCharacterSet URLHostAllowedCharacterSet]];
             NSString* escapedArtist = [artist stringByAddingPercentEncodingWithAllowedCharacters: [NSCharacterSet URLHostAllowedCharacterSet]];
-		    NSURL* url = [NSURL URLWithString:[NSString stringWithFormat: @"https://prv.textyl.co/api/lyrics?name=%@&artist=%@", escapedSong, escapedArtist]];
-		    NSURLSessionDataTask* dataTask = [defaultSession dataTaskWithURL: url completionHandler: ^(NSData* data, NSURLResponse* response, NSError* error) {
+            
+		    // Please don't use this API for other projects :)
+            NSURL* urlPleaseDontCopyThanks = [NSURL URLWithString: [NSString stringWithFormat: @"https://prv.textyl.co/api/lyrics?name=%@&artist=%@", escapedSong, escapedArtist]];
+            
+		    NSURLSessionDataTask* dataTask = [defaultSession dataTaskWithURL: urlPleaseDontCopyThanks completionHandler: ^(NSData* data, NSURLResponse* response, NSError* error) {
 			    dispatch_async(dispatch_get_main_queue(), ^{
 				    if (![[self lastSong] isEqual: [NSString stringWithFormat: @"%@%@%@",  song, @" ", artist]]) {
 					    return;
@@ -463,7 +471,7 @@
 
 				    NSInteger statusCode = 0;
 
-				    if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
+				    if ([response isKindOfClass: [NSHTTPURLResponse class]]) {
     				    NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*) response;
     				    statusCode = httpResponse.statusCode;
 				    }

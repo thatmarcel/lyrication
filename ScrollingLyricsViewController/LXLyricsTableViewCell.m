@@ -58,11 +58,11 @@
         }
 
         self.lineLabelTopConstraint = [self.lineLabel.topAnchor constraintEqualToAnchor: self.topAnchor constant: 16];
-        self.lineLabelTopConstraint.active = YES;
-        [self.lineLabel.bottomAnchor constraintEqualToAnchor: self.bottomAnchor constant: 0].active = YES;
+        self.lineLabelTopConstraint.active = true;
+        [self.lineLabel.bottomAnchor constraintEqualToAnchor: self.bottomAnchor constant: 0].active = true;
         self.lineLabelLeftConstraint = [self.lineLabel.leftAnchor constraintEqualToAnchor: self.leftAnchor constant: self.shouldCenterText ? 0 : -((self.bounds.size.width - 32) * 0.1)];
-        self.lineLabelLeftConstraint.active = YES;
-        [self.lineLabel.rightAnchor constraintEqualToAnchor: self.rightAnchor constant: -32].active = YES;
+        self.lineLabelLeftConstraint.active = true;
+        [self.lineLabel.rightAnchor constraintEqualToAnchor: self.rightAnchor constant: -32].active = true;
 
         self.lineLabel.blurredColor = self.standardLineColor;
         self.lineLabel.normalColor = self.highlightedLineColor;

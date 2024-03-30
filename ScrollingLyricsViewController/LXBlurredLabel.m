@@ -10,7 +10,7 @@
     - (void) initializeBlur {
         self.blurFilter = [CIFilter filterWithName: @"CIGaussianBlur"];
         [self.blurFilter setDefaults];
-        [self.blurFilter setValue:@(self.blurRadius) forKey:@"inputRadius"];
+        [self.blurFilter setValue: @(self.blurRadius) forKey: @"inputRadius"];
 
         self.layer.opaque = false;
         self.layer.contentsScale = [UIScreen mainScreen].scale;
@@ -68,7 +68,7 @@
 
         self.textColor = radius == 0 ? self.normalColor : self.blurredColor;
 
-        [self.blurFilter setValue:@(radius) forKey:@"inputRadius"];
+        [self.blurFilter setValue: @(radius) forKey: @"inputRadius"];
 
         [self setNeedsDisplay];
     }

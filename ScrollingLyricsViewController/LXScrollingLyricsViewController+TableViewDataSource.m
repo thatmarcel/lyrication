@@ -25,7 +25,7 @@
 
         NSDictionary* item = self.lyrics[indexPath.row];
 
-		cell.lineLabel.text = [item objectForKey:@"lyrics"];
+		cell.lineLabel.text = [item objectForKey: @"lyrics"];
 
         if (self.lastIndex && self.lastIndex == indexPath.row) {
             [cell highlight];

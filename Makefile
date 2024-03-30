@@ -29,9 +29,3 @@ SUBPROJECTS += FloatingOverlay
 SUBPROJECTS += Prefs
 
 include $(THEOS_MAKE_PATH)/aggregate.mk
-
-# The version of libroot included with Theos is not compatible
-# with the arm64e ABI we use so we have to compile it ourselves
-# (this might soon be unnecessary: https://github.com/opa334/libroot/commit/48e76f29f22a40ab2866b55c0d8f14baa0a4335e)
-before-all::
-    cd libroot && git apply -q ../libroot.patch || :

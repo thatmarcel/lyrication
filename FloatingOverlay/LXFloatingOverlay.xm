@@ -31,8 +31,8 @@ BOOL autoPositionOverlayInLL = true;
     - (void) applicationDidFinishLaunching:(id)application {
         %orig;
 
-        HBPreferences *preferences = [[HBPreferences alloc] initWithIdentifier:@"com.thatmarcel.tweaks.lyrication.hbprefs"];
-        [preferences registerDefaults:@{
+        HBPreferences *preferences = [[HBPreferences alloc] initWithIdentifier: @"com.thatmarcel.tweaks.lyrication.hbprefs"];
+        [preferences registerDefaults: @{
             @"showlyricsoverlay": @false
         }];
         BOOL shouldShowLyricsOverlay = [preferences boolForKey: @"showlyricsoverlay"];
@@ -52,7 +52,7 @@ BOOL autoPositionOverlayInLL = true;
         
         if (@available(iOS 16, *)) {
             for (UIScene *scene in [UIApplication sharedApplication].connectedScenes) {
-                if ([scene isKindOfClass:[UIWindowScene class]]) {
+                if ([scene isKindOfClass: [UIWindowScene class]]) {
                     overlayWindow = [[%c(LXFloatingOverlaySecureWindow) alloc] initWithWindowScene: scene rootViewController: overlayViewController role: 0 debugName: @"LyricationOverlay"];
                 }
             }

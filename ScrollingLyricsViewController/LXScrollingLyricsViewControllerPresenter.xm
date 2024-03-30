@@ -11,14 +11,16 @@
     - (instancetype) init {
         self = [super init];
 
-        notify_register_dispatch("com.apple.springboard.hasBlankedScreen",
-                                      &notifyToken,
-                                      dispatch_get_main_queue(), ^(int t) {
-                                          [self.overlayViewController dismissViewControllerAnimated: false completion: nil];
-                                          self.overlayWindow.hidden = true;
-                                          self.overlayWindow = nil;
-                                          self.overlayViewController = nil;
-                                      });
+        notify_register_dispatch(
+            "com.apple.springboard.hasBlankedScreen",
+            &notifyToken,
+            dispatch_get_main_queue(), ^(int t) {
+                [self.overlayViewController dismissViewControllerAnimated: false completion: nil];
+                self.overlayWindow.hidden = true;
+                self.overlayWindow = nil;
+                self.overlayViewController = nil;
+            }
+        );
 
         return self;
     }

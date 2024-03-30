@@ -19,7 +19,7 @@
     - (void) loadLabel {
         self.lineLabel = [[UILabel alloc] init];
         self.lineLabel.numberOfLines = 0;
-        self.lineLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        self.lineLabel.translatesAutoresizingMaskIntoConstraints = true;
         self.lineLabel.textAlignment = NSTextAlignmentCenter;
 
         [self.lineLabel setFont: [UIFont boldSystemFontOfSize: 18]];
@@ -27,10 +27,10 @@
 
         [self addSubview: self.lineLabel];
 
-        [self.lineLabel.topAnchor constraintEqualToAnchor: self.topAnchor constant: 16].active = YES;
-        [self.lineLabel.bottomAnchor constraintEqualToAnchor: self.bottomAnchor constant: -16].active = YES;
-        [self.lineLabel.leftAnchor constraintEqualToAnchor: self.leftAnchor constant: 24].active = YES;
-        [self.lineLabel.rightAnchor constraintEqualToAnchor: self.rightAnchor constant: -24].active = YES;
+        [self.lineLabel.topAnchor constraintEqualToAnchor: self.topAnchor constant: 16].active = true;
+        [self.lineLabel.bottomAnchor constraintEqualToAnchor: self.bottomAnchor constant: -16].active = true;
+        [self.lineLabel.leftAnchor constraintEqualToAnchor: self.leftAnchor constant: 24].active = true;
+        [self.lineLabel.rightAnchor constraintEqualToAnchor: self.rightAnchor constant: -24].active = true;
     }
 
     - (void) setupReceiver {
