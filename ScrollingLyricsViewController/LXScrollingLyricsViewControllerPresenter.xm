@@ -36,7 +36,19 @@
         self.overlayViewController = [[UIViewController alloc] init];
 
         if ([[%c(SBLockStateAggregator) sharedInstance] lockState] > 1) { // Locked
-            self.overlayWindow = [[%c(LXSecureWindow) alloc] initWithScreen: UIScreen.mainScreen debugName: @"Lyrication" rootViewController: self.overlayViewController];
+            if (@available(iOS 16, *)) {
+                for (UIScene *scene in [[UIApplication sharedApplication] connectedScenes]) {
+                    if ([scene isKindOfClass: [UIWindowScene class]]) {
+                        self.overlayWindow = [[%c(LXSecureWindow) alloc] initWithWindowScene: scene rootViewController: self.overlayViewController role: 0 debugName: @"Lyrication"];
+                    }
+                }
+                
+                if (!self.overlayWindow) {
+                    return;
+                }
+            } else {
+                self.overlayWindow = [[%c(LXSecureWindow) alloc] initWithScreen: UIScreen.mainScreen debugName: @"Lyrication" rootViewController: self.overlayViewController];
+            }
         } else if (@available(iOS 13, *)) {
             for (UIScene *scene in [[UIApplication sharedApplication] connectedScenes]) {
                 if ([scene isKindOfClass: [UIWindowScene class]]) {

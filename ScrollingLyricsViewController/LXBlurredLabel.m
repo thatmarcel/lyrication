@@ -1,16 +1,28 @@
 #import "./LXBlurredLabel.h"
+#import "./LXBlurredLabelLayer.h"
 
 @implementation LXBlurredLabel
-    @synthesize blurRadius;
     @synthesize blurFilter;
     @synthesize blurredColor;
     @synthesize normalColor;
     @synthesize blurEnabled;
+    
+    - (CGFloat) blurRadius {
+        return ((LXBlurredLabelLayer*) self.layer).presentationLayer.blurRadius;
+    }
+    
+    - (void) setBlurRadius:(CGFloat)newBlurRadius {
+        ((LXBlurredLabelLayer*) self.layer).blurRadius = newBlurRadius;
+    }
+    
+    + (Class) layerClass {
+        return [LXBlurredLabelLayer class];
+    }
 
     - (void) initializeBlur {
         self.blurFilter = [CIFilter filterWithName: @"CIGaussianBlur"];
         [self.blurFilter setDefaults];
-        [self.blurFilter setValue: @(self.blurRadius) forKey: @"inputRadius"];
+        // [self.blurFilter setValue: @(self.blurRadius) forKey: @"inputRadius"];
 
         self.layer.opaque = false;
         self.layer.contentsScale = [UIScreen mainScreen].scale;
@@ -21,7 +33,7 @@
         [preferences registerDefaults: @{
             @"showonlockscreen": @true,
             @"showinsidespotify": @true,
-            @"expandedviewlineblurenabled": @true
+            @"expandedviewlineblurenabled": @false
         }];
 
         self.blurEnabled = [preferences boolForKey: @"expandedviewlineblurenabled"];
@@ -37,11 +49,13 @@
         [self.layer drawInContext: UIGraphicsGetCurrentContext()];
         UIImage* image = UIGraphicsGetImageFromCurrentImageContext();
 
-        if (blurRadius == 0 || !self.blurEnabled) {
+        if (/* self.blurRadius == 0 || */ !self.blurEnabled) {
             layer.contents = (__bridge id) [image CGImage];
             UIGraphicsEndImageContext();
             return;
         }
+        
+        [self.blurFilter setValue: @(self.blurRadius) forKey: @"inputRadius"];
     
         CIImage* imageToBlur = [CIImage imageWithCGImage: image.CGImage];
         [self.blurFilter setValue: imageToBlur forKey: kCIInputImageKey];
@@ -67,8 +81,6 @@
         }
 
         self.textColor = radius == 0 ? self.normalColor : self.blurredColor;
-
-        [self.blurFilter setValue: @(radius) forKey: @"inputRadius"];
 
         [self setNeedsDisplay];
     }

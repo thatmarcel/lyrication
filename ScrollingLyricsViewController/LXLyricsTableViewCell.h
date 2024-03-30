@@ -23,6 +23,8 @@
     @property int distanceFromHighlighted;
 
     @property BOOL shouldCenterText;
+    
+    @property BOOL blurEnabled;
 
     - (void) setup;
     - (void) highlight;

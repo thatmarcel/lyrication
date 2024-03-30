@@ -51,7 +51,7 @@ BOOL autoPositionOverlayInLL = true;
         overlayViewController = [[LXFloatingOverlayViewController alloc] init];
         
         if (@available(iOS 16, *)) {
-            for (UIScene *scene in [UIApplication sharedApplication].connectedScenes) {
+            for (UIScene *scene in [[UIApplication sharedApplication] connectedScenes]) {
                 if ([scene isKindOfClass: [UIWindowScene class]]) {
                     overlayWindow = [[%c(LXFloatingOverlaySecureWindow) alloc] initWithWindowScene: scene rootViewController: overlayViewController role: 0 debugName: @"LyricationOverlay"];
                 }

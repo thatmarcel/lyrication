@@ -47,11 +47,13 @@ HBPreferences *preferences;
     [preferences registerDefaults: @{
         @"showonlockscreen": @true,
         @"showinsidespotify": @true,
-        @"expandedviewlineblurenabled": @true
+        @"expandedviewlineblurenabled": @false
     }];
 }
 
 void adjustPresenterProgressDelay() {
+    // TODO: Detect AirPlay 1.0 / AirPlay with delay properly
+    
     if (isAirPlaying() && isPlayingFromSpotify()) {
         presenter.necessaryProgressDelay = 1.5;
     } else {
@@ -676,6 +678,20 @@ UILongPressGestureRecognizer *flowLongPressGestureRecognizer;
 
 // iOS 16
 
+NSLayoutConstraint* lx16_lyricsButtonBottomConstraint;
+
+@interface CSListItemActivityProvider: NSObject
+    - (NSDictionary*) activityItemsByBundleId;
+@end
+
+@interface ACUISActivityHostViewController: UIViewController
+    - (CSListItemActivityProvider*) delegate;
+@end
+
+@interface CSActivityItemViewController: UIViewController
+    - (ACUISActivityHostViewController*) activityHostViewController;
+@end
+
 @interface CSActivityItemContentView: UIView
 @end
 
@@ -692,8 +708,55 @@ UILongPressGestureRecognizer *flowLongPressGestureRecognizer;
         %orig;
         
         if (@available(iOS 16, *)) {
-            if (![preferences boolForKey: @"showonlockscreen"] || (lyricsButton && [self.subviews containsObject: lyricsButton])) {
+            if (![preferences boolForKey: @"showonlockscreen"]) {
                 return;
+            }
+            
+            // Make sure the button is only added to the now playing UI
+            // and not to other live activities
+            
+            BOOL isNowPlayingView = false;
+            
+            CSActivityItemViewController* itemViewController = (CSActivityItemViewController*) self.nextResponder;
+            if (itemViewController && [itemViewController isKindOfClass: %c(CSActivityItemViewController)]) {
+                ACUISActivityHostViewController* activityHostViewController = itemViewController.activityHostViewController;
+                if (activityHostViewController && [activityHostViewController isKindOfClass: %c(ACUISActivityHostViewController)]) {
+                    CSListItemActivityProvider* ahvcDelegate = activityHostViewController.delegate;
+                    if (ahvcDelegate && [ahvcDelegate isKindOfClass: %c(CSListItemActivityProvider)]) {
+                        NSDictionary* activityItemsByBundleId = ahvcDelegate.activityItemsByBundleId;
+                        if (activityItemsByBundleId && [activityItemsByBundleId isKindOfClass: [NSDictionary class]] && activityItemsByBundleId[@"com.apple.MediaRemoteUI"]) {
+                            isNowPlayingView = true;
+                        }
+                    }
+                }
+            }
+            
+            if (!isNowPlayingView) {
+                if (lyricsButton && [self.subviews containsObject: lyricsButton]) {
+                    [lyricsButton removeFromSuperview];
+                    lyricsButton = nil;
+                }
+                
+                return;
+            }
+            
+            if (lyricsButton) {
+                if ([self.subviews containsObject: lyricsButton]) {
+                    if (lx16_lyricsButtonBottomConstraint) {
+                        // If the view is higher due to an AirPlay volume bar,
+                        // we need to move the button up so it doesn't overlap
+                        if (self.bounds.size.height >= 170) {
+                            lx16_lyricsButtonBottomConstraint.constant = -47;
+                        } else if (self.bounds.size.height >= 120) {
+                            lx16_lyricsButtonBottomConstraint.constant = -15;
+                        }
+                    }
+                    
+                    return;
+                }
+                
+                [lyricsButton removeFromSuperview];
+                lyricsButton = nil;
             }
             
             lyricsButton = [[UIButton alloc] init];
@@ -703,16 +766,21 @@ UILongPressGestureRecognizer *flowLongPressGestureRecognizer;
             
             [lyricsButton setTitleColor: [[UIColor labelColor] colorWithAlphaComponent: 0.5] forState: UIControlStateNormal];
             
-            lyricsButton.layer.masksToBounds = true;
-            lyricsButton.layer.cornerRadius = 8;
-            
             if (lyricsButton.titleLabel) {
                 lyricsButton.titleLabel.font = [UIFont systemFontOfSize: 24.0 weight: UIFontWeightBold];
             }
             
             [self addSubview: lyricsButton];
             
-            [lyricsButton.bottomAnchor constraintEqualToAnchor: self.bottomAnchor constant: -14].active = true;
+            // If the view is higher due to an AirPlay volume bar,
+            // we need to move the button up so it doesn't overlap
+            if (self.bounds.size.height >= 170) {
+               lx16_lyricsButtonBottomConstraint = [lyricsButton.bottomAnchor constraintEqualToAnchor: self.bottomAnchor constant: -47];
+            } else {
+                lx16_lyricsButtonBottomConstraint = [lyricsButton.bottomAnchor constraintEqualToAnchor: self.bottomAnchor constant: -15];
+            }
+            
+            lx16_lyricsButtonBottomConstraint.active = true;
             [lyricsButton.leftAnchor constraintEqualToAnchor: self.leftAnchor constant: 24].active = true;
             
             presenter = [[LXScrollingLyricsViewControllerPresenter alloc] init];

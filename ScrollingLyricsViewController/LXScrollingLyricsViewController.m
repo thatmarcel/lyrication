@@ -86,9 +86,9 @@
         self.songNameLabel.translatesAutoresizingMaskIntoConstraints = false;
         self.songNameLabel.numberOfLines = 1;
         if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-            [self.songNameLabel setFont: [UIFont systemFontOfSize: 56 weight: UIFontWeightBlack]];
+            [self.songNameLabel setFont: [UIFont systemFontOfSize: 54 weight: UIFontWeightBlack]];
         } else {
-            [self.songNameLabel setFont: [UIFont systemFontOfSize: 42 weight: UIFontWeightBlack]];
+            [self.songNameLabel setFont: [UIFont systemFontOfSize: 38 weight: UIFontWeightBlack]];
         }
         if (@available(iOS 13, *)) {
             [self.songNameLabel setTextColor: [UIColor labelColor]];
@@ -110,7 +110,7 @@
         self.songArtistLabel = [[UILabel alloc] init];
         self.songArtistLabel.translatesAutoresizingMaskIntoConstraints = false;
         self.songArtistLabel.numberOfLines = 1;
-        [self.songArtistLabel setFont: [UIFont systemFontOfSize: 26 weight: UIFontWeightHeavy]];
+        [self.songArtistLabel setFont: [UIFont systemFontOfSize: 20 weight: UIFontWeightMedium]];
         [self.songArtistLabel setTextColor: [[UIColor blackColor] colorWithAlphaComponent: 0.8]];
         if (@available(iOS 13, *)) {
             [self.songArtistLabel setTextColor: [[UIColor labelColor] colorWithAlphaComponent: 0.8]];
@@ -118,7 +118,7 @@
             [self.songArtistLabel setTextColor: [[UIColor blackColor] colorWithAlphaComponent: 0.8]];
         }
         [self.view addSubview: self.songArtistLabel];
-        [self.songArtistLabel.topAnchor constraintEqualToAnchor: self.songNameLabel.bottomAnchor constant: 0].active = true;
+        [self.songArtistLabel.topAnchor constraintEqualToAnchor: self.songNameLabel.bottomAnchor constant: -2].active = true;
         [self.songArtistLabel.leftAnchor constraintEqualToAnchor: self.view.leftAnchor constant: 32].active = true;
         [self.songArtistLabel.rightAnchor constraintEqualToAnchor: self.view.rightAnchor constant: -32 - (shouldShowCloseButton ? 50 : 0)].active = true;
 
@@ -145,7 +145,7 @@
         self.tableView.backgroundColor = [UIColor clearColor];
         self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         [self.tableView registerClass: LXLyricsTableViewCell.class forCellReuseIdentifier: @"LXLyricsTableViewCell"];
-        [self.tableView setContentInset: UIEdgeInsetsMake(shouldShowFadeoutGradient ? 8 : 0, 0, 32, 0)];
+        [self.tableView setContentInset: UIEdgeInsetsMake(shouldShowFadeoutGradient ? 4 : 0, 0, 32, 0)];
         self.tableView.rowHeight = UITableViewAutomaticDimension;
         self.tableView.estimatedRowHeight = 300;
         self.tableView.showsHorizontalScrollIndicator = false;
@@ -257,7 +257,7 @@
             NSString* escapedArtist = [artist stringByAddingPercentEncodingWithAllowedCharacters: [NSCharacterSet URLHostAllowedCharacterSet]];
             
             // Please don't use this API for other projects :)
-		    NSURL* urlPleaseDontCopyThanks = [NSURL URLWithString: [NSString stringWithFormat: @"https://prv.textyl.co/api/staticlyrics?name=%@&artist=%@", escapedSong, escapedArtist]];
+		    NSURL* urlPleaseDontCopyThanks = [NSURL URLWithString: [NSString stringWithFormat: @"https://prv.textyl.co/api/staticlyrics?name=%@&artist=%@&pleasedontusethisapiwithoutpermission=thanks", escapedSong, escapedArtist]];
             
 		    NSURLSessionDataTask* dataTask = [defaultSession dataTaskWithURL: urlPleaseDontCopyThanks completionHandler:^(NSData* data, NSURLResponse* response, NSError* error) {
 			    dispatch_async(dispatch_get_main_queue(), ^{
@@ -402,7 +402,7 @@
 
         self.lastIndex = smallestdistanceindex;
 
-        [self.tableView beginUpdates];
+        // [self.tableView beginUpdates];
 
         for (LXLyricsTableViewCell* cell in [self.tableView visibleCells]) {
             cell.distanceFromHighlighted = cell.index - smallestdistanceindex;
@@ -417,20 +417,25 @@
             }
         }
 
-        [self.tableView endUpdates];
+        // [self.tableView endUpdates];
 
-        [UIView animateWithDuration: 0.4 delay: 0.0 options: UIViewAnimationOptionCurveEaseInOut
-            animations:^{
+        [UIView
+            animateWithDuration: 0.4
+            delay: 0.0
+            options: UIViewAnimationOptionCurveEaseInOut
+            animations: ^{
                 if (self.shouldScrollLineToMiddle) {
                     [self.tableView
                         scrollToRowAtIndexPath: [NSIndexPath indexPathForRow: (smallestdistanceindex + ((smallestdistanceindex < [[self lyrics] count] - 1) ? 1 : 0)) inSection: 0]
                         atScrollPosition: UITableViewScrollPositionMiddle
-                        animated: true];
+                        animated: false
+                    ];
                 } else {
                     [self.tableView
                         scrollToRowAtIndexPath: [NSIndexPath indexPathForRow: smallestdistanceindex inSection: 0]
                         atScrollPosition: UITableViewScrollPositionTop
-                        animated: true];
+                        animated: false
+                    ];
                 }
             }
             completion:^(BOOL finished){
@@ -461,7 +466,7 @@
             NSString* escapedArtist = [artist stringByAddingPercentEncodingWithAllowedCharacters: [NSCharacterSet URLHostAllowedCharacterSet]];
             
 		    // Please don't use this API for other projects :)
-            NSURL* urlPleaseDontCopyThanks = [NSURL URLWithString: [NSString stringWithFormat: @"https://prv.textyl.co/api/lyrics?name=%@&artist=%@", escapedSong, escapedArtist]];
+            NSURL* urlPleaseDontCopyThanks = [NSURL URLWithString: [NSString stringWithFormat: @"https://prv.textyl.co/api/lyrics?name=%@&artist=%@&pleasedontusethisapiwithoutpermission=thanks", escapedSong, escapedArtist]];
             
 		    NSURLSessionDataTask* dataTask = [defaultSession dataTaskWithURL: urlPleaseDontCopyThanks completionHandler: ^(NSData* data, NSURLResponse* response, NSError* error) {
 			    dispatch_async(dispatch_get_main_queue(), ^{
@@ -534,7 +539,12 @@
     }
 
     - (void) updateMetadataWithInfo:(NSDictionary*)info {
-        self.artworkImageView.image = [[UIImage alloc] initWithData: (NSData*) [info objectForKey: @"kMRMediaRemoteNowPlayingInfoArtworkData"]];
+        if ([info objectForKey: @"kMRMediaRemoteNowPlayingInfoArtworkData"]) {
+            self.artworkImageView.image = [[UIImage alloc] initWithData: (NSData*) [info objectForKey: @"kMRMediaRemoteNowPlayingInfoArtworkData"]];
+        } else {
+            self.artworkImageView.image = nil;
+        }
+        
         NSString* name = (NSString*) info[@"kMRMediaRemoteNowPlayingInfoTitle"];
         if ([[name lowercaseString] containsString: @"nightcore"]) {
             name = [name stringByReplacingOccurrencesOfString: @"Nightcore" withString: @""];
@@ -569,7 +579,6 @@
         }
         self.songNameLabel.text = name;
         self.songArtistLabel.text = (NSString*) info[@"kMRMediaRemoteNowPlayingInfoArtist"];
-        // stringByReplacingOccurrencesOfString
     }
 
     - (void) viewWillAppear:(BOOL)animated {
