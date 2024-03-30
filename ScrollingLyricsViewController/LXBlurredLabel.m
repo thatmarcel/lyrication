@@ -1,4 +1,4 @@
-#import "LXBlurredLabel.h"
+#import "./LXBlurredLabel.h"
 
 @implementation LXBlurredLabel
     @synthesize blurRadius;
@@ -17,7 +17,7 @@
 
         self.contentMode = UIViewContentModeRedraw;
 
-        HBPreferences *preferences = [[HBPreferences alloc] initWithIdentifier: @"com.thatmarcel.tweaks.lyrication.hbprefs"];
+        HBPreferences* preferences = [[HBPreferences alloc] initWithIdentifier: @"com.thatmarcel.tweaks.lyrication.hbprefs"];
         [preferences registerDefaults: @{
             @"showonlockscreen": @true,
             @"showinsidespotify": @true,
@@ -27,7 +27,7 @@
         self.blurEnabled = [preferences boolForKey: @"expandedviewlineblurenabled"];
     }
 
-    - (void) displayLayer:(CALayer *)layer {
+    - (void) displayLayer:(CALayer*)layer {
         if (CGRectIsEmpty(layer.bounds)) {
             layer.contents = nil;
             return;
@@ -35,7 +35,7 @@
 
         UIGraphicsBeginImageContextWithOptions(layer.bounds.size, layer.opaque, layer.contentsScale);
         [self.layer drawInContext: UIGraphicsGetCurrentContext()];
-        UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+        UIImage* image = UIGraphicsGetImageFromCurrentImageContext();
 
         if (blurRadius == 0 || !self.blurEnabled) {
             layer.contents = (__bridge id) [image CGImage];
@@ -43,11 +43,11 @@
             return;
         }
     
-        CIImage *imageToBlur = [CIImage imageWithCGImage: image.CGImage];
+        CIImage* imageToBlur = [CIImage imageWithCGImage: image.CGImage];
         [self.blurFilter setValue: imageToBlur forKey: kCIInputImageKey];
 
-        CIImage *outputImage = self.blurFilter.outputImage;
-        CIContext *context = [CIContext contextWithCGContext: UIGraphicsGetCurrentContext() options: nil];
+        CIImage* outputImage = self.blurFilter.outputImage;
+        CIContext* context = [CIContext contextWithCGContext: UIGraphicsGetCurrentContext() options: nil];
         CGImageRef cgimg = [context createCGImage: outputImage fromRect: [outputImage extent]];
 
         layer.contents = (__bridge id) cgimg;

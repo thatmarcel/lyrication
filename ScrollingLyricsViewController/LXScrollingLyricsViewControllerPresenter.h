@@ -1,7 +1,7 @@
 #import <UIKit/UIKit.h>
 #import <notify.h>
 #import <spawn.h>
-#import "LXSecureWindow.h"
+#import "./LXSecureWindow.h"
 
 @interface SBLockStateAggregator
     + (id) sharedInstance;
@@ -10,8 +10,8 @@
 
 @interface LXScrollingLyricsViewControllerPresenter: NSObject
 
-    @property (retain) UIWindow *overlayWindow;
-    @property (retain) UIViewController *overlayViewController;
+    @property (retain) UIWindow* overlayWindow;
+    @property (retain) UIViewController* overlayViewController;
 
     @property int notifyToken;
 

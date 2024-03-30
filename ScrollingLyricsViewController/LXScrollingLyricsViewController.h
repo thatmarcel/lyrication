@@ -1,9 +1,9 @@
 #import <UIKit/UIKit.h>
 #include <MediaRemote/MediaRemote.h>
 #import <Cephei/HBPreferences.h>
-#import "UIView+lxFillSuperview.h"
-#import "LXLyricsTableViewCell.h"
-#import "LXScrollingLyricsViewControllerPresenter.h"
+#import "./UIView+lxFillSuperview.h"
+#import "./LXLyricsTableViewCell.h"
+#import "./LXScrollingLyricsViewControllerPresenter.h"
 #import "../NSDistributedNotificationCenter.h"
 
 @interface LXScrollingLyricsViewController: UIViewController
@@ -13,28 +13,28 @@
     // Hides the name and artist bar and gives the tableview full height
     @property BOOL shouldHideNameAndArtist;
     // The color for the highlighted lyrics line
-    @property UIColor *highlightedLineColor;
+    @property UIColor* highlightedLineColor;
     // The color for the other lyrics lines
-    @property UIColor *standardLineColor;
+    @property UIColor* standardLineColor;
 
     // The presenter of the view controller, used to remove the window on viewDidDisappear,
     // if NULL / nil, the view controller won't crash, viewDidDisappear will just do nothing
-    @property (retain) LXScrollingLyricsViewControllerPresenter *presenter;
+    @property (retain) LXScrollingLyricsViewControllerPresenter* presenter;
 
     // The background image view
-    @property (retain) UIImageView *artworkImageView;
+    @property (retain) UIImageView* artworkImageView;
     // The background blur effect view, subview of the image view
-    @property (retain) UIVisualEffectView *visualEffectView;
+    @property (retain) UIVisualEffectView* visualEffectView;
 
-    @property (retain) UILabel *songNameLabel;
-    @property (retain) UILabel *songArtistLabel;
-    @property (retain) UITableView *tableView;
+    @property (retain) UILabel* songNameLabel;
+    @property (retain) UILabel* songArtistLabel;
+    @property (retain) UITableView* tableView;
 
-    @property (retain) UITextView *staticLyricsTextView;
+    @property (retain) UITextView* staticLyricsTextView;
 
-    @property (retain) UIButton *closeButton;
+    @property (retain) UIButton* closeButton;
 
-    @property (retain) HBPreferences *preferences;
+    @property (retain) HBPreferences* preferences;
 
     @property BOOL shouldScrollLineToMiddle;
 
@@ -43,24 +43,24 @@
     @property double necessaryProgressDelay;
 
     // The lyrics of the currently playing song
-    @property (retain) NSArray *lyrics;
+    @property (retain) NSArray* lyrics;
     // The song that was playing on the last execution of the timer
-    @property (retain) NSString *lastSong;
+    @property (retain) NSString* lastSong;
     // The current progress of the current music playback in seconds (e.g. 204.34 seconds)
     @property double playbackProgress;
 
     // The index of the last line that was shown, checked, so that animations are only done when a new line appears
     @property int lastIndex;
 
-    @property (retain) NSTimer *metadataTimer;
-    @property (retain) NSTimer *lyricsTimer;
+    @property (retain) NSTimer* metadataTimer;
+    @property (retain) NSTimer* lyricsTimer;
 
     // If set to true, lyrics won't update
     // Used to make skipping to a line more smooth
     @property BOOL updatesPaused;
 
-    @property (retain) UIView *lyricsViewsContainer;
-    @property (retain) CAGradientLayer *lyricsViewsContainerGradientLayer;
+    @property (retain) UIView* lyricsViewsContainer;
+    @property (retain) CAGradientLayer* lyricsViewsContainerGradientLayer;
 
     // Configurates the view, called by viewDidLoad
     - (void) setupView;

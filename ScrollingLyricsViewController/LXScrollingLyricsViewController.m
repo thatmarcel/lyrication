@@ -1,6 +1,6 @@
-#import "LXScrollingLyricsViewController.h"
-#import "LXScrollingLyricsViewController+TableViewDataSource.h"
-#import "LXScrollingLyricsViewController+TableViewDelegate.h"
+#import "./LXScrollingLyricsViewController.h"
+#import "./LXScrollingLyricsViewController+TableViewDataSource.h"
+#import "./LXScrollingLyricsViewController+TableViewDelegate.h"
 
 @implementation LXScrollingLyricsViewController
     @synthesize artworkImageView;
@@ -68,7 +68,13 @@
         if (self.shouldHideBackground) {
             self.artworkImageView.hidden = true;
         } else {
-            UIVisualEffect *effect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleSystemChromeMaterial];
+            UIVisualEffect* effect;
+            
+            if (@available(iOS 13, *)) {
+                effect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleSystemChromeMaterial];
+            } else {
+                effect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleRegular];
+            }
 
             self.visualEffectView = [[UIVisualEffectView alloc] initWithEffect: effect];
             self.visualEffectView.translatesAutoresizingMaskIntoConstraints = false;
@@ -199,7 +205,7 @@
             [self.view addSubview: self.closeButton];
 
             if (@available(iOS 13, *)) {
-                UIImage *closeButtonImage = [[UIImage systemImageNamed: @"xmark" withConfiguration: [UIImageSymbolConfiguration configurationWithScale: UIImageSymbolScaleLarge]] imageWithRenderingMode: UIImageRenderingModeAlwaysTemplate];
+                UIImage* closeButtonImage = [[UIImage systemImageNamed: @"xmark" withConfiguration: [UIImageSymbolConfiguration configurationWithScale: UIImageSymbolScaleLarge]] imageWithRenderingMode: UIImageRenderingModeAlwaysTemplate];
                 [self.closeButton setImage: closeButtonImage forState: UIControlStateNormal];
                 [self.closeButton setTintColor: [UIColor labelColor]];
             } else {
@@ -245,12 +251,12 @@
 
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
 	    dispatch_async(queue, ^{
-		    NSURLSessionConfiguration *defaultSessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    	    NSURLSession *defaultSession = [NSURLSession sessionWithConfiguration:defaultSessionConfiguration];
-		    NSString *escapedSong = [song stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
-            NSString *escapedArtist = [artist stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
-		    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"https://prv.textyl.co/api/staticlyrics?name=%@&artist=%@", escapedSong, escapedArtist]];
-		    NSURLSessionDataTask *dataTask = [defaultSession dataTaskWithURL: url completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+		    NSURLSessionConfiguration* defaultSessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
+    	    NSURLSession* defaultSession = [NSURLSession sessionWithConfiguration:defaultSessionConfiguration];
+		    NSString* escapedSong = [song stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
+            NSString* escapedArtist = [artist stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
+		    NSURL* url = [NSURL URLWithString:[NSString stringWithFormat: @"https://prv.textyl.co/api/staticlyrics?name=%@&artist=%@", escapedSong, escapedArtist]];
+		    NSURLSessionDataTask* dataTask = [defaultSession dataTaskWithURL: url completionHandler:^(NSData* data, NSURLResponse* response, NSError* error) {
 			    dispatch_async(dispatch_get_main_queue(), ^{
                     if (![[self lastSong] isEqual: [NSString stringWithFormat: @"%@%@%@",  song, @" ", artist]]) {
 					    return;
@@ -259,7 +265,7 @@
 				    NSInteger statusCode = 0;
 
 				    if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
-    				    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+    				    NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*) response;
     				    statusCode = httpResponse.statusCode;
 				    }
 
@@ -268,7 +274,7 @@
 					    return;
 				    }
 
-                    NSString *staticLyrics = [[NSString alloc] initWithData: data encoding: NSUTF8StringEncoding];
+                    NSString* staticLyrics = [[NSString alloc] initWithData: data encoding: NSUTF8StringEncoding];
 
                     self.staticLyricsTextView.text = staticLyrics;
                     self.staticLyricsTextView.scrollEnabled = false;
@@ -311,7 +317,7 @@
 
     - (void) fetchCurrentPlayback {
         MRMediaRemoteGetNowPlayingInfo(dispatch_get_main_queue(), ^(CFDictionaryRef information) {
-			NSDictionary *info = (__bridge NSDictionary*) information;
+			NSDictionary* info = (__bridge NSDictionary*) information;
 
             CFAbsoluteTime absoluteTime = CFAbsoluteTimeGetCurrent();
             CFAbsoluteTime timestamp = CFDateGetAbsoluteTime((CFDateRef)[info objectForKey:@"kMRMediaRemoteNowPlayingInfoTimestamp"]);
@@ -327,13 +333,13 @@
                 self.playbackProgress -= self.necessaryProgressDelay;
             }
 
-            NSNumber *_rate = (NSNumber*) info[@"kMRMediaRemoteNowPlayingInfoPlaybackRate"];
+            NSNumber* _rate = (NSNumber*) info[@"kMRMediaRemoteNowPlayingInfoPlaybackRate"];
 			double rate = [_rate doubleValue];
 			double playingRate = 1;
 			BOOL isPlaying = rate == playingRate;
-			NSString *infoTitle = (NSString *) info[@"kMRMediaRemoteNowPlayingInfoTitle"];
-            NSString *infoArtist = (NSString *) info[@"kMRMediaRemoteNowPlayingInfoArtist"];
-			NSString *queryString = [NSString stringWithFormat: @"%@%@%@",  infoTitle, @" ", infoArtist];
+			NSString* infoTitle = (NSString*) info[@"kMRMediaRemoteNowPlayingInfoTitle"];
+            NSString* infoArtist = (NSString*) info[@"kMRMediaRemoteNowPlayingInfoArtist"];
+			NSString* queryString = [NSString stringWithFormat: @"%@%@%@",  infoTitle, @" ", infoArtist];
 
             if (![queryString isEqual: lastSong] || !self.artworkImageView.image) {
                 [self updateMetadataWithInfo: info];
@@ -364,7 +370,7 @@
 
 		int index = 0;
 
-		for (NSDictionary *dict in [self lyrics]) {
+		for (NSDictionary* dict in [self lyrics]) {
 			double seconds = [[dict objectForKey:@"seconds"] doubleValue];
 
 			double itemsmallestdistance = seconds - progress;
@@ -444,12 +450,12 @@
 
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
 	    dispatch_async(queue, ^{
-		    NSURLSessionConfiguration *defaultSessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    	    NSURLSession *defaultSession = [NSURLSession sessionWithConfiguration:defaultSessionConfiguration];
-            NSString *escapedSong = [song stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
-            NSString *escapedArtist = [artist stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
-		    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"https://prv.textyl.co/api/lyrics?name=%@&artist=%@", escapedSong, escapedArtist]];
-		    NSURLSessionDataTask *dataTask = [defaultSession dataTaskWithURL: url completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+		    NSURLSessionConfiguration* defaultSessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
+    	    NSURLSession* defaultSession = [NSURLSession sessionWithConfiguration: defaultSessionConfiguration];
+            NSString* escapedSong = [song stringByAddingPercentEncodingWithAllowedCharacters: [NSCharacterSet URLHostAllowedCharacterSet]];
+            NSString* escapedArtist = [artist stringByAddingPercentEncodingWithAllowedCharacters: [NSCharacterSet URLHostAllowedCharacterSet]];
+		    NSURL* url = [NSURL URLWithString:[NSString stringWithFormat: @"https://prv.textyl.co/api/lyrics?name=%@&artist=%@", escapedSong, escapedArtist]];
+		    NSURLSessionDataTask* dataTask = [defaultSession dataTaskWithURL: url completionHandler: ^(NSData* data, NSURLResponse* response, NSError* error) {
 			    dispatch_async(dispatch_get_main_queue(), ^{
 				    if (![[self lastSong] isEqual: [NSString stringWithFormat: @"%@%@%@",  song, @" ", artist]]) {
 					    return;
@@ -458,7 +464,7 @@
 				    NSInteger statusCode = 0;
 
 				    if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
-    				    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+    				    NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*) response;
     				    statusCode = httpResponse.statusCode;
 				    }
 
@@ -467,21 +473,21 @@
 					    return;
 				    }
 
-				    NSError* errorr;
-				    NSArray* json = (NSArray*) [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&errorr];
-				    if (errorr != nil || [json count] < 1) {
+				    NSError* serializationError;
+				    NSArray* json = (NSArray*) [NSJSONSerialization JSONObjectWithData: data options: kNilOptions error: &serializationError];
+				    if (serializationError != nil || [json count] < 1) {
 					    [self showNoLyricsAvailable];
 					    return;
 				    }
 
-				    NSMutableArray *items = [NSMutableArray array];
+				    NSMutableArray* items = [NSMutableArray array];
 
-	                for (NSDictionary *dict in json) {
-		                NSString *line = [dict objectForKey:@"lyrics"];
-		                NSNumber *seconds = [NSNumber numberWithDouble:[[dict objectForKey:@"seconds"] doubleValue]];
+	                for (NSDictionary* dict in json) {
+		                NSString* line = [dict objectForKey: @"lyrics"];
+		                NSNumber* seconds = [NSNumber numberWithDouble: [[dict objectForKey: @"seconds"] doubleValue]];
 
-		                NSDictionary *newDict = @{ @"lyrics": line, @"seconds": seconds };
-		                [items addObject:newDict];
+		                NSDictionary* newDict = @{ @"lyrics": line, @"seconds": seconds };
+		                [items addObject: newDict];
 	                }
 
                     self.tableView.hidden = false;
@@ -498,8 +504,8 @@
     }
 
     - (void) showNoLyricsAvailable {
-        NSMutableArray *items = [NSMutableArray array];
-        NSDictionary *dict = @{ @"lyrics": @"Loading...", @"seconds": [NSNumber numberWithDouble: 1.0] };
+        NSMutableArray* items = [NSMutableArray array];
+        NSDictionary* dict = @{ @"lyrics": @"Loading...", @"seconds": [NSNumber numberWithDouble: 1.0] };
         [items addObject: dict];
 
         self.lyrics = items;
@@ -513,7 +519,7 @@
     // Reload metadata every 5 seconds to show artwork, if the playing app took longer to load it
     - (void) reloadMetadata {
         MRMediaRemoteGetNowPlayingInfo(dispatch_get_main_queue(), ^(CFDictionaryRef information) {
-			NSDictionary *info = (__bridge NSDictionary*) information;
+			NSDictionary* info = (__bridge NSDictionary*) information;
 
             [self updateMetadataWithInfo: info];
         });
@@ -521,7 +527,7 @@
 
     - (void) updateMetadataWithInfo:(NSDictionary*)info {
         self.artworkImageView.image = [[UIImage alloc] initWithData: (NSData*) [info objectForKey: @"kMRMediaRemoteNowPlayingInfoArtworkData"]];
-        NSString *name = (NSString *) info[@"kMRMediaRemoteNowPlayingInfoTitle"];
+        NSString* name = (NSString*) info[@"kMRMediaRemoteNowPlayingInfoTitle"];
         if ([[name lowercaseString] containsString: @"nightcore"]) {
             name = [name stringByReplacingOccurrencesOfString: @"Nightcore" withString: @""];
             name = [name stringByReplacingOccurrencesOfString: @"nightcore" withString: @""];
@@ -554,7 +560,7 @@
             name = [name stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
         }
         self.songNameLabel.text = name;
-        self.songArtistLabel.text = (NSString *) info[@"kMRMediaRemoteNowPlayingInfoArtist"];
+        self.songArtistLabel.text = (NSString*) info[@"kMRMediaRemoteNowPlayingInfoArtist"];
         // stringByReplacingOccurrencesOfString
     }
 
@@ -570,7 +576,7 @@
 
         [UIApplication sharedApplication].idleTimerDisabled = true;
 
-        NSMutableDictionary *userInfo = [NSMutableDictionary new];
+        NSMutableDictionary* userInfo = [NSMutableDictionary new];
         [userInfo setObject: @"viewWillAppear" forKey: @"event"];
         [[NSDistributedNotificationCenter defaultCenter]
             postNotificationName: @"com.thatmarcel.tweaks.lyrication/expandEvents"
@@ -596,7 +602,7 @@
 
         [UIApplication sharedApplication].idleTimerDisabled = false;
 
-        NSMutableDictionary *userInfo = [NSMutableDictionary new];
+        NSMutableDictionary* userInfo = [NSMutableDictionary new];
         [userInfo setObject: @"viewDidDisappear" forKey: @"event"];
         [[NSDistributedNotificationCenter defaultCenter]
             postNotificationName: @"com.thatmarcel.tweaks.lyrication/expandEvents"

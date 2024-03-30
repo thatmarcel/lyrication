@@ -2,5 +2,5 @@
 #import "../LXFloatingOverlayViewController.h"
 
 @interface LyricationOverlayHideAction : NSObject <LAListener>
-    @property (retain) LXFloatingOverlayViewController *overlayViewController;
+    @property (retain) LXFloatingOverlayViewController* overlayViewController;
 @end

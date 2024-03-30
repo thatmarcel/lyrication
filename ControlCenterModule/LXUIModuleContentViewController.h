@@ -1,4 +1,4 @@
-#import <UIKit/UIViewController.h>
+#import <UIKit/UIKit.h>
 #import <ControlCenterUIKit/CCUIContentModuleContentViewController-Protocol.h>
 #import "../NSDistributedNotificationCenter.h"
 
@@ -10,7 +10,7 @@
 
 @property (nonatomic, readonly) BOOL small;
 
-@property (nonatomic) UILabel *lineLabel;
+@property (nonatomic) UILabel* lineLabel;
 
 - (instancetype) initWithSmallSize:(BOOL)small;
 

@@ -23,9 +23,9 @@
         [[NSDistributedNotificationCenter defaultCenter] addObserverForName: @"com.thatmarcel.tweaks.lyrication/updateLine"
             object: nil
             queue: [NSOperationQueue mainQueue]
-            usingBlock: ^(NSNotification *notification)
+            usingBlock: ^(NSNotification* notification)
         {
-            NSString *line = [notification.userInfo objectForKey: @"line"];
+            NSString* line = [notification.userInfo objectForKey: @"line"];
 
             if ([@"Paused" isEqual: line] || [@"No lyrics available" isEqual: line]) {
                 self.overlayContainerView.hidden = true;
@@ -40,9 +40,9 @@
         [[NSDistributedNotificationCenter defaultCenter] addObserverForName: @"com.thatmarcel.tweaks.lyrication/expandEvents"
             object: nil
             queue: [NSOperationQueue mainQueue]
-            usingBlock: ^(NSNotification *notification)
+            usingBlock: ^(NSNotification* notification)
         {
-            NSString *event = [notification.userInfo objectForKey: @"event"];
+            NSString* event = [notification.userInfo objectForKey: @"event"];
 
             if ([@"viewWillAppear" isEqual: event]) {
                 [UIView animateWithDuration: 0.2 delay: 0.0 options: UIViewAnimationOptionCurveEaseInOut
@@ -73,11 +73,18 @@
         self.overlayContainerView.layer.masksToBounds = true;
         self.overlayContainerView.layer.cornerRadius = 16;
 
-        UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget: self action: @selector(overlayWasDragged:)];
+        UIPanGestureRecognizer* panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget: self action: @selector(overlayWasDragged:)];
         [self.overlayContainerView addGestureRecognizer: panRecognizer];
 
 
-        UIVisualEffect *effect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleSystemChromeMaterial];
+        UIVisualEffect* effect;
+        
+        if (@available(iOS 13, *)) {
+            effect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleSystemChromeMaterial];
+        } else {
+            effect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleRegular];
+        }
+        
         self.overlayVisualEffectView = [[UIVisualEffectView alloc] initWithEffect: effect];
         self.overlayVisualEffectView.translatesAutoresizingMaskIntoConstraints = false;
         [self.overlayContainerView addSubview: self.overlayVisualEffectView];
@@ -102,8 +109,8 @@
         }
     }
 
-    - (void) overlayWasDragged:(UIPanGestureRecognizer *)recognizer {
-        UIView *draggedView = recognizer.view;
+    - (void) overlayWasDragged:(UIPanGestureRecognizer*)recognizer {
+        UIView* draggedView = recognizer.view;
         CGPoint translation = [recognizer translationInView: draggedView];
 
         overlayTopConstraint.constant += translation.y;

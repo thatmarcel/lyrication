@@ -1,5 +1,5 @@
-#import "LXScrollingLyricsViewController.h"
-#import "LXScrollingLyricsViewControllerPresenter.h"
+#import "./LXScrollingLyricsViewController.h"
+#import "./LXScrollingLyricsViewControllerPresenter.h"
 
 @implementation LXScrollingLyricsViewControllerPresenter
     @synthesize overlayWindow;

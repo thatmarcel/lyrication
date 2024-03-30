@@ -3,7 +3,7 @@
 
 @interface LyricationMultiplaWidget: UIView
 
-    @property (nonatomic) UILabel *lineLabel;
+    @property (nonatomic) UILabel* lineLabel;
 
     - (instancetype) initWithFrame:(CGRect)arg1;
     - (void) updateWidget;

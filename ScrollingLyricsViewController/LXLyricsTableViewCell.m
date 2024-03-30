@@ -1,4 +1,4 @@
-#import "LXLyricsTableViewCell.h"
+#import "./LXLyricsTableViewCell.h"
 
 @implementation LXLyricsTableViewCell: UITableViewCell
     @synthesize lineLabel;
@@ -39,7 +39,7 @@
         [self addSubview: self.lineLabel];
         self.lineLabel.numberOfLines = 0;
 
-        HBPreferences *preferences = [[HBPreferences alloc] initWithIdentifier: @"com.thatmarcel.tweaks.lyrication.hbprefs"];
+        HBPreferences* preferences = [[HBPreferences alloc] initWithIdentifier: @"com.thatmarcel.tweaks.lyrication.hbprefs"];
         [preferences registerDefaults: @{
             @"expandedviewfontsizemultiplier": @1,
             @"expandedviewcenterstyle": @false

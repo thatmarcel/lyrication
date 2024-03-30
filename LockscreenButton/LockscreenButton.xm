@@ -512,7 +512,7 @@ UILongPressGestureRecognizer *flowLongPressGestureRecognizer;
 
     // lyricsButton.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent: 0.9];
     if (@available(iOS 13, *)) {
-            [lyricsButton setTitleColor: [UIColor labelColor] forState: UIControlStateNormal];
+        [lyricsButton setTitleColor: [UIColor labelColor] forState: UIControlStateNormal];
     } else {
         [lyricsButton setTitleColor: [UIColor blackColor] forState: UIControlStateNormal];
     }
@@ -626,9 +626,9 @@ UILongPressGestureRecognizer *flowLongPressGestureRecognizer;
 
     // lyricsButton.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent: 0.9];
     if (@available(iOS 13, *)) {
-            [lyricsButton setTitleColor: [UIColor labelColor] forState: UIControlStateNormal];
-        } else {
-            [lyricsButton setTitleColor: [UIColor blackColor] forState: UIControlStateNormal];
+        [lyricsButton setTitleColor: [UIColor labelColor] forState: UIControlStateNormal];
+    } else {
+        [lyricsButton setTitleColor: [UIColor blackColor] forState: UIControlStateNormal];
     }
 
     lyricsButton.layer.masksToBounds = true;
@@ -661,5 +661,61 @@ UILongPressGestureRecognizer *flowLongPressGestureRecognizer;
 
     [presenter present];
 }
+
+%end
+
+// iOS 16
+
+@interface CSActivityItemContentView: UIView
+@end
+
+%hook CSActivityItemContentView
+
+    %new
+    - (void) lxPresentLyrics {
+        adjustPresenterProgressDelay();
+
+        [presenter present];
+    }
+
+    - (void) layoutSubviews {
+        %orig;
+        
+        if (![preferences boolForKey: @"showonlockscreen"] || lyricsButton) {
+            return;
+        }
+        
+        if (@available(iOS 16, *)) { } else {
+            return;
+        }
+        
+        lyricsButton = [[UIButton alloc] init];
+        lyricsButton.translatesAutoresizingMaskIntoConstraints = false;
+        
+        [lyricsButton setTitle: @"LX" forState: UIControlStateNormal];
+        
+        [lyricsButton setTitleColor: [[UIColor labelColor] colorWithAlphaComponent: 0.5] forState: UIControlStateNormal];
+        
+        lyricsButton.layer.masksToBounds = true;
+        lyricsButton.layer.cornerRadius = 8;
+        
+        if (lyricsButton.titleLabel) {
+            lyricsButton.titleLabel.font = [UIFont systemFontOfSize: 24.0 weight: UIFontWeightBold];
+        }
+        
+        [self addSubview: lyricsButton];
+        
+        [lyricsButton.bottomAnchor constraintEqualToAnchor: self.bottomAnchor constant: -14].active = YES;
+        [lyricsButton.leftAnchor constraintEqualToAnchor: self.leftAnchor constant: 24].active = YES;
+        
+        presenter = [[LXScrollingLyricsViewControllerPresenter alloc] init];
+        presenter.twitterAlertAllowed = true;
+        
+        [lyricsButton
+            addTarget: self
+            action: @selector(lxPresentLyrics)
+            forControlEvents: UIControlEventTouchUpInside
+        ];
+    }
 
 %end

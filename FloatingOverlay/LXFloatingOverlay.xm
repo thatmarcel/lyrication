@@ -49,8 +49,20 @@ BOOL autoPositionOverlayInLL = true;
         hideOverlayOutsideLL = !shouldShowLyricsOverlay && lastLookLyricationEnabled;
 
         overlayViewController = [[LXFloatingOverlayViewController alloc] init];
-
-        overlayWindow = [[%c(LXFloatingOverlaySecureWindow) alloc] initWithScreen: UIScreen.mainScreen debugName: @"LyricationOverlay" rootViewController: overlayViewController];
+        
+        if (@available(iOS 16, *)) {
+            for (UIScene *scene in [UIApplication sharedApplication].connectedScenes) {
+                if ([scene isKindOfClass:[UIWindowScene class]]) {
+                    overlayWindow = [[%c(LXFloatingOverlaySecureWindow) alloc] initWithWindowScene: scene rootViewController: overlayViewController role: 0 debugName: @"LyricationOverlay"];
+                }
+            }
+            
+            if (!overlayWindow) {
+                return;
+            }
+        } else {
+            overlayWindow = [[%c(LXFloatingOverlaySecureWindow) alloc] initWithScreen: UIScreen.mainScreen debugName: @"LyricationOverlay" rootViewController: overlayViewController];
+        }
 
         if (hideOverlayOutsideLL) {
             overlayViewController.view.hidden = true;
@@ -115,7 +127,11 @@ BOOL autoPositionOverlayInLL = true;
             if (hideOverlayOutsideLL) {
                 overlayViewController.view.hidden = true;
             } else {
-                overlayViewController.overlayLyricLabel.textColor = [UIColor labelColor];
+                if (@available(iOS 13, *)) {
+                    overlayViewController.overlayLyricLabel.textColor = [UIColor labelColor];
+                } else {
+                    overlayViewController.overlayLyricLabel.textColor = [UIColor blackColor];
+                }
 
                 [overlayViewController showBackground];
 

@@ -37,9 +37,9 @@
         [[NSDistributedNotificationCenter defaultCenter] addObserverForName: @"com.thatmarcel.tweaks.lyrication/updateLine"
             object: nil
             queue: [NSOperationQueue mainQueue]
-            usingBlock: ^(NSNotification *notification)
+            usingBlock: ^(NSNotification* notification)
         {
-            NSString *line = [notification.userInfo objectForKey: @"line"];
+            NSString* line = [notification.userInfo objectForKey: @"line"];
 
             [self.lineLabel setText: line];
         }];

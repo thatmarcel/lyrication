@@ -1,4 +1,4 @@
-#import "LXScrollingLyricsViewController+TableViewDelegate.h"
+#import "./LXScrollingLyricsViewController+TableViewDelegate.h"
 
 @implementation LXScrollingLyricsViewController (TableViewDelegate)
     - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {

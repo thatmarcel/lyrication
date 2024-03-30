@@ -1,4 +1,4 @@
-#import "LXSecureWindow.h"
+#import "./LXSecureWindow.h"
 
 %subclass LXSecureWindow: SBSecureWindow
     + (BOOL) _isSecure {

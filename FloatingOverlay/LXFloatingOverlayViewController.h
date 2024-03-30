@@ -3,12 +3,12 @@
 #import "../NSDistributedNotificationCenter.h"
 
 @interface LXFloatingOverlayViewController: UIViewController
-    @property (retain) UIView *overlayContainerView;
-    @property (retain) UIVisualEffectView *overlayVisualEffectView;
-    @property (retain) UILabel *overlayLyricLabel;
+    @property (retain) UIView* overlayContainerView;
+    @property (retain) UIVisualEffectView* overlayVisualEffectView;
+    @property (retain) UILabel* overlayLyricLabel;
 
-    @property (retain) NSLayoutConstraint *overlayTopConstraint;
-    @property (retain) NSLayoutConstraint *overlayRightConstraint;
+    @property (retain) NSLayoutConstraint* overlayTopConstraint;
+    @property (retain) NSLayoutConstraint* overlayRightConstraint;
 
     @property CGFloat overlayTopConstraintConstantBeforeAlign;
     @property CGFloat overlayRightConstraintConstantBeforeAlign;
@@ -22,7 +22,7 @@
     - (void) setupReceivers;
     - (void) setupViews;
 
-    - (void) overlayWasDragged:(UIPanGestureRecognizer *)recognizer;
+    - (void) overlayWasDragged:(UIPanGestureRecognizer*)recognizer;
 
     - (BOOL) _canShowWhileLocked;
 
